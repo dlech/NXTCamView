@@ -1,0 +1,12 @@
+NXTCamView
+----------
+
+v1.0.4
+- added COMPort settings
+
+v1.0.5
+- added release notes
+
+v1.0.6
+- re-wrote to use sticky window & fixed them for MDI
+- changed flashing color to yellow/average color
