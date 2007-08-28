@@ -63,6 +63,8 @@ namespace NXTCamView
             this.tsmTileVertical = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmTileHorizontal = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmArrangeIcons = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmSnapWindows = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,8 +95,7 @@ namespace NXTCamView
             this.tsbTrackingColors = new System.Windows.Forms.ToolStripButton();
             this.tsbTracking = new System.Windows.Forms.ToolStripButton();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.tsmSnapWindows = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmCheckForUpdates = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenu.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -380,6 +381,18 @@ namespace NXTCamView
             this.tsmArrangeIcons.Text = "Arrange Icons";
             this.tsmArrangeIcons.Click += new System.EventHandler(this.tsmArrangeIcons_Click);
             // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 6);
+            // 
+            // tsmSnapWindows
+            // 
+            this.tsmSnapWindows.Name = "tsmSnapWindows";
+            this.tsmSnapWindows.Size = new System.Drawing.Size(155, 22);
+            this.tsmSnapWindows.Text = "Snap Windows";
+            this.tsmSnapWindows.Click += new System.EventHandler(this.snapWindowsToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -387,7 +400,8 @@ namespace NXTCamView
             this.indexToolStripMenuItem,
             this.searchToolStripMenuItem,
             this.toolStripSeparator5,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.tsmCheckForUpdates});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -395,34 +409,34 @@ namespace NXTCamView
             // contentsToolStripMenuItem
             // 
             this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.contentsToolStripMenuItem.Text = "&Contents";
             this.contentsToolStripMenuItem.Visible = false;
             // 
             // indexToolStripMenuItem
             // 
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.indexToolStripMenuItem.Text = "&Index";
             this.indexToolStripMenuItem.Visible = false;
             // 
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.searchToolStripMenuItem.Text = "&Search";
             this.searchToolStripMenuItem.Visible = false;
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(126, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(182, 6);
             this.toolStripSeparator5.Visible = false;
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -619,17 +633,12 @@ namespace NXTCamView
             this.serialPort.StopBits = global::NXTCamView.Properties.Settings.Default.StopBits;
             this.serialPort.WriteTimeout = global::NXTCamView.Properties.Settings.Default.WriteTimeout;
             // 
-            // tsmSnapWindows
+            // tsmCheckForUpdates
             // 
-            this.tsmSnapWindows.Name = "tsmSnapWindows";
-            this.tsmSnapWindows.Size = new System.Drawing.Size(155, 22);
-            this.tsmSnapWindows.Text = "Snap Windows";
-            this.tsmSnapWindows.Click += new System.EventHandler(this.snapWindowsToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 6);
+            this.tsmCheckForUpdates.Name = "tsmCheckForUpdates";
+            this.tsmCheckForUpdates.Size = new System.Drawing.Size(185, 22);
+            this.tsmCheckForUpdates.Text = "Check for updates...";
+            this.tsmCheckForUpdates.Click += new System.EventHandler(this.tsmCheckForUpdates_Click);
             // 
             // MainForm
             // 
@@ -723,6 +732,7 @@ namespace NXTCamView
         private System.Windows.Forms.ToolStripMenuItem tsmArrangeIcons;
         private System.Windows.Forms.ToolStripMenuItem tsmSnapWindows;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem tsmCheckForUpdates;
     }
 }
 

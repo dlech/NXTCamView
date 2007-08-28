@@ -130,6 +130,8 @@ namespace NXTCamView
             cbUseAutoAdjust.Checked = settings.AutoAdjustMode;
             cbUseFlourescentLightFilter.Checked = settings.FlourescentLightFilter;
 
+            cbCheckForUpdates.Checked = settings.CheckForUpdates;
+
             _isChangeUploaded = true;
             lbMessage.Text = "";
 
@@ -191,6 +193,11 @@ namespace NXTCamView
             {
                 hasChanged = true;
                 settings.StopBits = (StopBits) ((StrIntBinder)cobStopBits.SelectedItem).IntValue;
+            }
+            if ( settings.CheckForUpdates != cbCheckForUpdates.Checked )
+            {
+                hasChanged = true;
+                settings.CheckForUpdates = cbCheckForUpdates.Checked;
             }
             if( hasChanged )
             {
@@ -356,6 +363,7 @@ namespace NXTCamView
                 settings.AutoWhiteBalance = cbUseAutoWhiteBalance.Checked;
                 settings.AutoAdjustMode = cbUseAutoAdjust.Checked;
                 settings.FlourescentLightFilter = cbUseFlourescentLightFilter.Checked;
+                settings.Save();
             }
 
             lbMessage.Text = isOk ? "Upload succeeded" : cmd.ErrorDescription;

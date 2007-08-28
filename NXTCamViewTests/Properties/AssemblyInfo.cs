@@ -1,25 +1,26 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NXTCamView")]
-[assembly: AssemblyDescription("NXTCamView provides monitoring and control for the Mindsensors NXT camera. It can capture, save and load pictures on a PC, and select and store colors for tracking.  NXTCamView is not supported or endorsed by Mindsensors in any way.")]
+[assembly: AssemblyTitle("NXTCamViewTests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NXTCamView")]
-[assembly: AssemblyCopyright("Copyright Paul Tingey  ©  2007")]
+[assembly: AssemblyProduct("NXTCamViewTests")]
+[assembly: AssemblyCopyright("Copyright ©  2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
+// to COM componenets.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c968d187-f595-44e4-9d19-fdc012e11814")]
+[assembly: Guid("9785dcf2-b046-4f8b-b6fa-8d917a2aea61")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -28,5 +29,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.1.7.0")]
-[assembly: AssemblyFileVersion("0.1.7.0")]
+// You can specify all the values or you can default the Revision and Build Numbers 
+// by using the '*' as shown below:
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

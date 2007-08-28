@@ -63,10 +63,13 @@ namespace NXTCamView
             this.btnOk = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.cbCheckForUpdates = new System.Windows.Forms.CheckBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tcOptions.SuspendLayout();
             this.tabConnection.SuspendLayout();
             this.tabNXTCamSettings.SuspendLayout();
             this.tabNXTCamSettingsAdv.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcOptions
@@ -77,6 +80,7 @@ namespace NXTCamView
             this.tcOptions.Controls.Add(this.tabConnection);
             this.tcOptions.Controls.Add(this.tabNXTCamSettings);
             this.tcOptions.Controls.Add(this.tabNXTCamSettingsAdv);
+            this.tcOptions.Controls.Add(this.tabPage1);
             this.tcOptions.Location = new System.Drawing.Point(14, 12);
             this.tcOptions.Name = "tcOptions";
             this.tcOptions.SelectedIndex = 0;
@@ -400,6 +404,27 @@ namespace NXTCamView
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
+            // cbCheckForUpdates
+            // 
+            this.cbCheckForUpdates.AutoSize = true;
+            this.cbCheckForUpdates.Location = new System.Drawing.Point(20, 17);
+            this.cbCheckForUpdates.Name = "cbCheckForUpdates";
+            this.cbCheckForUpdates.Size = new System.Drawing.Size(219, 17);
+            this.cbCheckForUpdates.TabIndex = 0;
+            this.cbCheckForUpdates.Text = "Check for updates during start up";
+            this.cbCheckForUpdates.UseVisualStyleBackColor = true;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.cbCheckForUpdates);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(355, 338);
+            this.tabPage1.TabIndex = 3;
+            this.tabPage1.Text = "General";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -423,6 +448,8 @@ namespace NXTCamView
             this.tabNXTCamSettings.ResumeLayout(false);
             this.tabNXTCamSettings.PerformLayout();
             this.tabNXTCamSettingsAdv.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -462,5 +489,7 @@ namespace NXTCamView
         private System.Windows.Forms.Button btnRestoreDefaults;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.CheckBox cbCheckForUpdates;
     }
 }

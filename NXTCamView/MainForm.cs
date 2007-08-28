@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using Blue.Windows;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
+using NXTCamView.VersionUpdater;
 
 namespace NXTCamView
 {
@@ -185,7 +186,23 @@ namespace NXTCamView
             ColorForm.Instance.VisibleChanged += ColorForm_VisibleChanged;
             TrackingForm.Instance.VisibleChanged += TrackingForm_VisibleChanged;
 
-            if( Array.IndexOf(SerialPort.GetPortNames(), Settings.Default.COMPort) == -1 )
+            if( Settings.Default.CheckForUpdates ) Updater.Instance.CheckForUpdates();
+
+            setupSerialPort();
+        }
+
+        private void setupSerialPort()
+        {
+            bool isFound = false;
+            string portSettings = Settings.Default.COMPort;
+            foreach( string port in SerialPort.GetPortNames() )
+            {
+                if( port.Equals( portSettings ))
+                {
+                    isFound = true;
+                }
+            }
+            if( !isFound )
             {
                 if( MessageBox.Show(
                         string.Format("{0} is not a valid serial port on this PC. \nSet another port now?",
@@ -271,6 +288,11 @@ namespace NXTCamView
             StickyWindow.Active = !StickyWindow.Active;
             Settings.Default.SnapWindows = StickyWindow.Active;
             tsmSnapWindows.Checked = StickyWindow.Active;
+        }
+
+        private void tsmCheckForUpdates_Click(object sender, EventArgs e)
+        {
+            Updater.Instance.CheckForUpdates( true );
         }
     }
 }

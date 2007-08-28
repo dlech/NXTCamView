@@ -2,10 +2,38 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamView", "NXTCamView\NXTCamView.csproj", "{3B21513D-9D72-4301-B835-DD246194A9AE}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NXTCamViewSetup", "NXTCamViewSetup\NXTCamViewSetup.vdproj", "{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9787A8FB-2497-48B2-BF89-FEF565A03236}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		localtestrun.testrunconfig = localtestrun.testrunconfig
+		build\NXTCamView.proj = build\NXTCamView.proj
+		NXTCamView.vsmdi = NXTCamView.vsmdi
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamViewTests", "NXTCamViewTests\NXTCamViewTests.csproj", "{39F1EA52-1B27-46C1-8C8E-578CDD644E12}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NXTCamView.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -17,6 +45,10 @@ Global
 		{3B21513D-9D72-4301-B835-DD246194A9AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}.Debug|Any CPU.ActiveCfg = Debug
 		{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}.Release|Any CPU.ActiveCfg = Release
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
