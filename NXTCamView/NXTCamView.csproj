@@ -205,10 +205,13 @@
     <EmbeddedResource Include="Resources\Error.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="camera.ico" />
-    <Content Include="COPYING.txt">
+    <None Include="camera.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
+    <None Include="COPYING.txt" />
+    <None Include="COPYING.RTF">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="ReleaseNotes.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

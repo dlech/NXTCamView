@@ -4,9 +4,9 @@
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:NXTCamViewSetup"
-"LanguageId" = "3:1033"
+"LanguageId" = "3:0"
 "CodePage" = "3:1252"
-"UILanguageId" = "3:1033"
+"UILanguageId" = "3:0"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -15,14 +15,26 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_389CC138518A414994A17FD1673DCF2E"
+        "MsmKey" = "8:_255E49365CF648AB83671114357C28B7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4D5837EE630044CD9AFA87AB0F8AF909"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CD43CE62FA82493F88358631416C3B75"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_389CC138518A414994A17FD1673DCF2E"
+        "OwnerKey" = "8:_4D5837EE630044CD9AFA87AB0F8AF909"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -115,6 +127,46 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_255E49365CF648AB83671114357C28B7"
+            {
+            "SourcePath" = "8:..\\NXTCamView\\COPYING.RTF"
+            "TargetName" = "8:COPYING.RTF"
+            "Tag" = "8:"
+            "Folder" = "8:_98EB4C57EED44F299E0581B92C826DCA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CD43CE62FA82493F88358631416C3B75"
+            {
+            "SourcePath" = "8:..\\NXTCamView\\camera.ico"
+            "TargetName" = "8:camera.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_D5973784428843718D00E8DC3C3D79AC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -134,7 +186,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_D5973784428843718D00E8DC3C3D79AC"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -175,19 +227,19 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:1033"
+        "LangId" = "3:0"
         }
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NXTCamView"
         "ProductCode" = "8:{BDB06CD6-CC4F-48CD-893B-10A63B0C31CA}"
-        "PackageCode" = "8:{4735A359-B4CD-4E93-BFEB-C818138AFF1C}"
+        "PackageCode" = "8:{0DB78DD3-F1CB-410A-9D0E-72E8F626CB93}"
         "UpgradeCode" = "8:{E2B624FA-1D6D-4B52-87A1-6BFAEDE7CA21}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
+        "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:0.1.0"
         "Manufacturer" = "8:NXTCamView"
         "ARPHELPTELEPHONE" = "8:"
@@ -195,7 +247,7 @@
         "Title" = "8:NXTCamView"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Paul Tingey"
-        "Keywords" = "8:"
+        "Keywords" = "8:Lego NXT"
         "ARPCOMMENTS" = "8:Setup and control of the NXTCam"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
@@ -301,6 +353,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FD3453EF4D0D48F7982D5CB2993D8D3C"
+            {
+            "Name" = "8:NXTCamView"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_4D5837EE630044CD9AFA87AB0F8AF909"
+            "Folder" = "8:_98EB4C57EED44F299E0581B92C826DCA"
+            "WorkingFolder" = "8:_D5973784428843718D00E8DC3C3D79AC"
+            "Icon" = "8:_CD43CE62FA82493F88358631416C3B75"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -560,9 +626,9 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_A085B15546AE47A98ED15AB8BBA4D1AF"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_54DE8E4F755344C2B52BC1B3680A27AF"
                     {
-                    "Sequence" = "3:200"
+                    "Sequence" = "3:430"
                     "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -595,9 +661,56 @@
                             }
                         }
                     }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_B6A5A18AD43948F19770E4C450838BA9"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_B11E783E11CB4DA2A1D1C964006B2684"
                     {
                     "Sequence" = "3:300"
+                    "DisplayName" = "8:License Agreement"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdLicenseDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "EulaText"
+                            {
+                            "Name" = "8:EulaText"
+                            "DisplayName" = "8:#1008"
+                            "Description" = "8:#1108"
+                            "Type" = "3:6"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_255E49365CF648AB83671114357C28B7"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Sunken"
+                            {
+                            "Name" = "8:Sunken"
+                            "DisplayName" = "8:#1007"
+                            "Description" = "8:#1107"
+                            "Type" = "3:5"
+                            "ContextData" = "8:4;True=4;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:4"
+                            "DefaultValue" = "3:4"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_DD17348CB0154B35AF32C1787D63BFCB"
+                    {
+                    "Sequence" = "3:440"
                     "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -700,7 +813,35 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_389CC138518A414994A17FD1673DCF2E"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_43DC04D3B6DE40E7BBA1EBCDB51AC3F3"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D5973784428843718D00E8DC3C3D79AC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{3B21513D-9D72-4301-B835-DD246194A9AE}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4D5837EE630044CD9AFA87AB0F8AF909"
             {
             "SourcePath" = "8:..\\NXTCamView\\obj\\Debug\\NXTCamView.exe"
             "TargetName" = "8:"
@@ -728,12 +869,12 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_61F78C24FBE34C73A734B12F4267D464"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FF8435D0FD0F45CCB68300F0A9088EFC"
             {
             "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_D5973784428843718D00E8DC3C3D79AC"
+            "Folder" = "8:_98EB4C57EED44F299E0581B92C826DCA"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
