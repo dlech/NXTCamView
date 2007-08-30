@@ -1,0 +1,1 @@
+set path=%path%;%~p0..\tools\nant\nant-0.85\bin
