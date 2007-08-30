@@ -51,7 +51,8 @@ namespace NXTCamView.VersionUpdater
                 Match match = regex.Match( Title );
                 //capture[0] is in the form "1.2.3"
                 if (match.Groups.Count == 2) return new Version(match.Groups[1].Value);
-                return null;
+                //this is not a valid version
+                return new Version("0.0.0.1");
             }
         }
 
