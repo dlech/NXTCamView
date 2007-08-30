@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_0D6E8000E2604F8189B083527466AADA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_255E49365CF648AB83671114357C28B7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -22,6 +28,12 @@
         "Entry"
         {
         "MsmKey" = "8:_4D5837EE630044CD9AFA87AB0F8AF909"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BA0EFB8BE000459EB31CBE9FEDF7B594"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,6 +99,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
         "Release"
         {
@@ -170,6 +193,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D6E8000E2604F8189B083527466AADA"
+            {
+            "SourcePath" = "8:..\\build\\ReleaseNotes.txt"
+            "TargetName" = "8:ReleaseNotes.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_98EB4C57EED44F299E0581B92C826DCA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_255E49365CF648AB83671114357C28B7"
             {
             "SourcePath" = "8:..\\NXTCamView\\COPYING.RTF"
@@ -187,6 +230,26 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BA0EFB8BE000459EB31CBE9FEDF7B594"
+            {
+            "SourcePath" = "8:..\\build\\ReleaseNotes.txt"
+            "TargetName" = "8:ReleaseNotes.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_D5973784428843718D00E8DC3C3D79AC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
@@ -277,7 +340,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NXTCamView"
         "ProductCode" = "8:{BDB06CD6-CC4F-48CD-893B-10A63B0C31CA}"
-        "PackageCode" = "8:{0DB78DD3-F1CB-410A-9D0E-72E8F626CB93}"
+        "PackageCode" = "8:{6D517EDD-B4B8-4CC0-B958-256063D3833F}"
         "UpgradeCode" = "8:{E2B624FA-1D6D-4B52-87A1-6BFAEDE7CA21}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -856,37 +919,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_43DC04D3B6DE40E7BBA1EBCDB51AC3F3"
-            {
-            "SourcePath" = "8:"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D5973784428843718D00E8DC3C3D79AC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:ContentFiles"
-            "OutputProjectGuid" = "8:{3B21513D-9D72-4301-B835-DD246194A9AE}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4D5837EE630044CD9AFA87AB0F8AF909"
             {
-            "SourcePath" = "8:..\\NXTCamView\\obj\\ReleaseInstall\\NXTCamView.exe"
+            "SourcePath" = "8:..\\NXTCamView\\obj\\Debug\\NXTCamView.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D5973784428843718D00E8DC3C3D79AC"
@@ -906,34 +941,6 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{3B21513D-9D72-4301-B835-DD246194A9AE}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FF8435D0FD0F45CCB68300F0A9088EFC"
-            {
-            "SourcePath" = "8:"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_98EB4C57EED44F299E0581B92C826DCA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{3B21513D-9D72-4301-B835-DD246194A9AE}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"

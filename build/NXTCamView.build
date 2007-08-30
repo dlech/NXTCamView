@@ -2,26 +2,43 @@
 <project name="NXTCamView" default="buildAll">
     <property name="baseDir" value="${path::get-full-path(path::combine(project::get-base-directory(),'..\'))}" />
     <property name="outputDir" value="${path::combine(baseDir,'output')}"/>
-    <property name="devenv" value="${path::get-full-path(path::combine(environment::get-variable('VS80COMNTOOLS'),'..\ide\devenv.exe'))}"/>    
+    <property name="devenv" value="${path::get-full-path(path::combine(environment::get-variable('VS80COMNTOOLS'),'..\ide\devenv.exe'))}"/>
+    <property name="assemblyInfoCommonFile" value="${path::get-full-path(path::combine(baseDir,'build\AssemblyInfoCommon.cs'))}"/>
+    <property name="versionFile" value="${path::get-full-path(path::combine(baseDir,'build\version.txt'))}"/>
+    <property name="version" value="x.x.x"/>
 
     <target name="buildAll" >
         <call target="buildBins" /> 
         <call target="buildSourceZip" />
     </target>
+
+    <target name="setVersion" >
+        <!-- Read in the desired version and use it to create the shared AssemblyInfo file-->
+        <loadfile file="${versionFile}" property="version"/>
+        <echo message="Version:${version}" />
+        <asminfo output="${assemblyInfoCommonFile}" language="CSharp">
+            <imports>
+                <import namespace="System.Reflection" />
+            </imports>
+            <attributes>
+                <attribute type="AssemblyVersionAttribute" value="${version}" />
+                <attribute type="AssemblyFileVersionAttribute" value="${version}" />
+            </attributes>
+            <references>
+                <include name="System.Reflection.dll" />
+            </references>
+        </asminfo>
+    </target>
     
-    <target name="buildBins" >        
+    <target name="buildBins" depends="setVersion" >        
         <!-- setup not supported <exec program="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe" commandline='"${baseDir}\NXTCamView.sln" /v:q /nologo /p:Configuration=ReleaseInstall' failonerror="true" />  -->
         <exec program="${devenv}" commandline="${baseDir}NXTCamView.sln /build DebugInstall" failonerror="true" timeout="60000" />
-        <copy overwrite="true" todir="${outputDir}" >
-            <fileset>
-                <include name="${path::combine(baseDir,'NXTCamViewSetup\Debug\*.msi')}" />
-            </fileset>
-        </copy>              
+        <copy overwrite="true" file="${path::combine(baseDir,'NXTCamViewSetup\Debug\NXTCamView.msi')}" tofile="${outputDir}\NXTCamView-${version}.msi" />
     </target>
 
-    <target name="buildSourceZip" >
+    <target name="buildSourceZip" depends="setVersion" >
         <echo message="baseDir=${baseDir}" />
-        <zip zipfile="${outputDir}\NXTCamView-source.zip" >
+        <zip zipfile="${outputDir}\NXTCamView-${version}-source.zip" >
             <fileset basedir="${baseDir}" >
                 <include name="**\*.sln" />
                 <include name="**\*.csproj" />

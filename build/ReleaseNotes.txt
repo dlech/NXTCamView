@@ -3,6 +3,7 @@ NXTCamView Release Notes
 
 v0.1.7
 - added version checker to look for new versions on sourceforge
+- created NAnt build process to make releases
 
 v0.1.6
 - re-wrote to use sticky window & fixed them for MDI
