@@ -11,7 +11,7 @@
 <body>
 
 <p><b><font face="Verdana" size="6"><font color="#FF6600">NXT</font><font color="#0000FF">CamView</font></font></b><font face="Verdana" size="2"> 
-A manager for you NXTCam camera sensor</font></p>
+A manager for your NXTCam camera sensor</font></p>
 <hr noshade color="#0000FF" size="9">
 <table border="0" width="944" height="337">
 	<!-- MSTableType="layout" -->
