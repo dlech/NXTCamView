@@ -11,7 +11,8 @@
 <body>
 
 <p><b><font face="Verdana" size="6"><font color="#FF6600">NXT</font><font color="#0000FF">CamView</font></font></b><font face="Verdana" size="2"> 
-A manager for your NXTCam camera sensor</font></p>
+A manager for your NXTCam camera sensor<br>
+<a href="index.php">home</a></font></p>
 <hr noshade color="#0000FF" size="9">
 <table border="0" width="944" height="337">
 	<!-- MSTableType="layout" -->
@@ -47,7 +48,9 @@ A manager for your NXTCam camera sensor</font></p>
 						<font color="#FFFFFF">Download</font></a></font></p>
 						<p><font face="Verdana" size="2" color="#FFFFFF">
 						<a title="Send any queries or requests here" href="mailto:NXTCamView@tingeys.com?subject=NXTCamView">
-						<font color="#FFFFFF">Contact</font></a></font></td>
+						<font color="#FFFFFF">Contact</font></a></font><p>
+						<font face="Verdana" size="2" color="#FFFFFF">
+						<a href="DemoScreenCam.htm"><font color="#FFFFFF">Demo</font></a></font></td>
 					</tr>
 				</table>
 				</td>
