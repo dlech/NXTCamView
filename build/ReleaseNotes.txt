@@ -1,6 +1,12 @@
 NXTCamView Release Notes
 ------------------------
 
+v0.1.8
+- added status bar with connection state
+- added NXTCam version to status bar
+- added connect/disconnect to menus
+- standardised icons
+
 v0.1.7
 - added version checker to look for new versions on sourceforge
 - created NAnt build process to make releases
