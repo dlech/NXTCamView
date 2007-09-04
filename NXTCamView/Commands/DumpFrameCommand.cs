@@ -20,6 +20,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
+using NXTCamView;
 using NXTCamView.Commands;
 
 public class DumpFrameCommand : FetchFrameCommand
@@ -32,12 +33,12 @@ public class DumpFrameCommand : FetchFrameCommand
     public override void Execute()
     {
         ////DEBUG
-        //_isSucessiful = true;
+        //_isSuccessful = true;
         //_isCompleted = true;
         //return;
 
         try
-        {
+        {            
             _request = "DF";
             SendAndReceive();
             if( _isLogging ) Debug.WriteLine("Capture start:");

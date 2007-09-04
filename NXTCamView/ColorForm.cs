@@ -22,11 +22,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
+using NXTCamView.Resources;
 
 namespace NXTCamView
 {
@@ -76,11 +76,7 @@ namespace NXTCamView
 
         private void initErrorImage()
         {
-            using (Stream stream = GetType().Assembly.GetManifestResourceStream("NXTCamView.Resources.Error.bmp"))
-            {
-                _errorImage = Image.FromStream(stream);
-                ((Bitmap)_errorImage).MakeTransparent(((Bitmap)_errorImage).GetPixel(0, 0));
-            }
+            _errorImage = AppImages.Error;
             for (int i = 0; i < TRACKED_COLORS; i++)
             {
                 _overlapInfos[i] = new OverlapInfo();
@@ -335,7 +331,7 @@ namespace NXTCamView
                 SetColorMapCommand cmd = new SetColorMapCommand(MainForm.Instance.SerialPort);
                 cmd.ColorMap = new List< byte >(colorMap);
                 cmd.Execute();
-                if( cmd.IsSucessiful )
+                if( cmd.IsSuccessful )
                 {
                     Settings.Default.UploadedMinColors = (Color[]) Settings.Default.MinColors.Clone();
                     Settings.Default.UploadedMaxColors = (Color[]) Settings.Default.MaxColors.Clone();
@@ -504,12 +500,12 @@ namespace NXTCamView
 
         private void ColorForm_SizeChanged(object sender, EventArgs e)
         {
-            Debug.WriteLine(this.Bounds);
+            Debug.WriteLine(Bounds);
         }
 
         private void ColorForm_Move(object sender, EventArgs e)
         {
-            Debug.WriteLine(this.Bounds);
+            Debug.WriteLine(Bounds);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace NXTCamView
         {
             InitializeComponent();
             _serialPort = serialPort;
-            MainForm.Instance.SerialPortChanged += new EventHandler(mainForm_SerialPortChanged);
+            MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
             ColorForm.Instance.HighlightColorsChanged += colorDetail_HighlightColorsChanged;
 
             StickyWindowsUtil.MakeStickyMDIChild(this);
@@ -98,7 +98,7 @@ namespace NXTCamView
         {            
             FetchFrameCommand cmd = new DumpFrameCommand(worker, _serialPort);
             cmd.Execute();
-            if( !cmd.IsSucessiful || cmd.Aborted )
+            if( !cmd.IsSuccessful || cmd.Aborted )
             {
                 e.Cancel = cmd.Aborted;
                 e.Result = cmd.ErrorDescription;
@@ -262,7 +262,7 @@ namespace NXTCamView
             Image image = (Image) e.Argument;
             InterpolateFrameCommand cmd = new InterpolateFrameCommand(worker, null, image);
             cmd.Execute();
-            if (!cmd.IsSucessiful || cmd.Aborted)
+            if (!cmd.IsSuccessful || cmd.Aborted)
             {
                 e.Cancel = cmd.Aborted;
                 e.Result = cmd.ErrorDescription;

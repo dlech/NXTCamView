@@ -30,18 +30,24 @@ namespace NXTCamView
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.mainMenu = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.msMainMenu = new System.Windows.Forms.MenuStrip();
+            this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmConnect = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmDisconnect = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmCapture = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmOpenFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmSaveFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmSaveFileAs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.printToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.printPreviewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmOpenColors = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmOpenTracking = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,13 +57,10 @@ namespace NXTCamView
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmColors = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmTracking = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmOpenOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCascade = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmTileVertical = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,6 +74,7 @@ namespace NXTCamView
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmCheckForUpdates = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,95 +94,115 @@ namespace NXTCamView
             this.tspPing = new System.Windows.Forms.ToolStripButton();
             this.tsbOptions = new System.Windows.Forms.ToolStripButton();
             this.tsbTrackColors = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbNewCapture = new System.Windows.Forms.ToolStripButton();
-            this.tsbTrackingColors = new System.Windows.Forms.ToolStripButton();
-            this.tsbTracking = new System.Windows.Forms.ToolStripButton();
+            this.tsToolBar = new System.Windows.Forms.ToolStrip();
+            this.tsbConnect = new System.Windows.Forms.ToolStripButton();
+            this.tsbDisconnect = new System.Windows.Forms.ToolStripButton();
+            this.tsbCapture = new System.Windows.Forms.ToolStripButton();
+            this.tsbOpenColors = new System.Windows.Forms.ToolStripButton();
+            this.tsbOpenTracking = new System.Windows.Forms.ToolStripButton();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.tsmCheckForUpdates = new System.Windows.Forms.ToolStripMenuItem();
-            this.mainMenu.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.ssStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.tsslConnectionStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.msMainMenu.SuspendLayout();
+            this.tsToolBar.SuspendLayout();
+            this.ssStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // mainMenu
+            // msMainMenu
             // 
-            this.mainMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
-            this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem1,
-            this.editToolStripMenuItem,
+            this.msMainMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
+            this.msMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiFile,
             this.viewToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.windowToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.mainMenu.Location = new System.Drawing.Point(0, 0);
-            this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(455, 24);
-            this.mainMenu.TabIndex = 0;
-            this.mainMenu.Text = "menuStrip1";
+            this.msMainMenu.Location = new System.Drawing.Point(0, 0);
+            this.msMainMenu.Name = "msMainMenu";
+            this.msMainMenu.Size = new System.Drawing.Size(455, 24);
+            this.msMainMenu.TabIndex = 0;
+            this.msMainMenu.Text = "menuStrip1";
             // 
-            // fileToolStripMenuItem1
+            // tsmiFile
             // 
-            this.fileToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem1,
-            this.openToolStripMenuItem1,
+            this.tsmiFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmConnect,
+            this.tsmDisconnect,
+            this.toolStripSeparator10,
+            this.tsmCapture,
+            this.tsmOpenFile,
             this.toolStripSeparator6,
-            this.saveToolStripMenuItem1,
-            this.saveAsToolStripMenuItem1,
+            this.tsmSaveFile,
+            this.tsmSaveFileAs,
             this.toolStripSeparator7,
             this.printToolStripMenuItem1,
             this.printPreviewToolStripMenuItem1,
             this.toolStripSeparator9,
             this.exitToolStripMenuItem1});
-            this.fileToolStripMenuItem1.Name = "fileToolStripMenuItem1";
-            this.fileToolStripMenuItem1.Size = new System.Drawing.Size(35, 20);
-            this.fileToolStripMenuItem1.Text = "&File";
+            this.tsmiFile.Name = "tsmiFile";
+            this.tsmiFile.Size = new System.Drawing.Size(35, 20);
+            this.tsmiFile.Text = "&File";
+            this.tsmiFile.DropDownOpening += new System.EventHandler(this.menu_DropDownOpening);
             // 
-            // newToolStripMenuItem1
+            // tsmConnect
             // 
-            this.newToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem1.Image")));
-            this.newToolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
-            this.newToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
-            this.newToolStripMenuItem1.Text = "&Capture";
-            this.newToolStripMenuItem1.Click += new System.EventHandler(this.newCapture);
+            this.tsmConnect.Name = "tsmConnect";
+            this.tsmConnect.Size = new System.Drawing.Size(184, 22);
+            this.tsmConnect.Text = "tsmConnect";
             // 
-            // openToolStripMenuItem1
+            // tsmDisconnect
             // 
-            this.openToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem1.Image")));
-            this.openToolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
-            this.openToolStripMenuItem1.Text = "&Open";
-            this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.tsmDisconnect.Name = "tsmDisconnect";
+            this.tsmDisconnect.Size = new System.Drawing.Size(184, 22);
+            this.tsmDisconnect.Text = "tsmDisconnect";
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(181, 6);
+            // 
+            // tsmCapture
+            // 
+            this.tsmCapture.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmCapture.Name = "tsmCapture";
+            this.tsmCapture.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.tsmCapture.Size = new System.Drawing.Size(184, 22);
+            this.tsmCapture.Text = "tsmCapture";
+            // 
+            // tsmOpenFile
+            // 
+            this.tsmOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmOpenFile.Name = "tsmOpenFile";
+            this.tsmOpenFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.tsmOpenFile.Size = new System.Drawing.Size(184, 22);
+            this.tsmOpenFile.Text = "tsmOpenFile";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(160, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(181, 6);
             // 
-            // saveToolStripMenuItem1
+            // tsmSaveFile
             // 
-            this.saveToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem1.Image")));
-            this.saveToolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
-            this.saveToolStripMenuItem1.Text = "&Save";
-            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.tsmSaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmSaveFile.Name = "tsmSaveFile";
+            this.tsmSaveFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.tsmSaveFile.Size = new System.Drawing.Size(184, 22);
+            this.tsmSaveFile.Text = "tsmSaveFile";
             // 
-            // saveAsToolStripMenuItem1
+            // tsmSaveFileAs
             // 
-            this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
-            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
-            this.saveAsToolStripMenuItem1.Text = "Save &As";
-            this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            this.tsmSaveFileAs.Name = "tsmSaveFileAs";
+            this.tsmSaveFileAs.Size = new System.Drawing.Size(184, 22);
+            this.tsmSaveFileAs.Text = "tsmSaveFileAs";
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(160, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(181, 6);
             this.toolStripSeparator7.Visible = false;
             // 
             // printToolStripMenuItem1
@@ -187,7 +211,7 @@ namespace NXTCamView
             this.printToolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printToolStripMenuItem1.Name = "printToolStripMenuItem1";
             this.printToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
+            this.printToolStripMenuItem1.Size = new System.Drawing.Size(184, 22);
             this.printToolStripMenuItem1.Text = "&Print";
             this.printToolStripMenuItem1.Visible = false;
             // 
@@ -196,21 +220,45 @@ namespace NXTCamView
             this.printPreviewToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem1.Image")));
             this.printPreviewToolStripMenuItem1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printPreviewToolStripMenuItem1.Name = "printPreviewToolStripMenuItem1";
-            this.printPreviewToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
+            this.printPreviewToolStripMenuItem1.Size = new System.Drawing.Size(184, 22);
             this.printPreviewToolStripMenuItem1.Text = "Print Pre&view";
             this.printPreviewToolStripMenuItem1.Visible = false;
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(160, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(181, 6);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(163, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(184, 22);
             this.exitToolStripMenuItem1.Text = "E&xit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmOpenColors,
+            this.tsmOpenTracking});
+            this.viewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            this.viewToolStripMenuItem.DropDownOpening += new System.EventHandler(this.menu_DropDownOpening);
+            // 
+            // tsmOpenColors
+            // 
+            this.tsmOpenColors.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+            this.tsmOpenColors.Name = "tsmOpenColors";
+            this.tsmOpenColors.Size = new System.Drawing.Size(168, 22);
+            this.tsmOpenColors.Text = "tsmOpenColors";
+            // 
+            // tsmOpenTracking
+            // 
+            this.tsmOpenTracking.Name = "tsmOpenTracking";
+            this.tsmOpenTracking.Size = new System.Drawing.Size(168, 22);
+            this.tsmOpenTracking.Text = "tsmOpenTracking";
             // 
             // editToolStripMenuItem
             // 
@@ -227,6 +275,7 @@ namespace NXTCamView
             this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.editToolStripMenuItem.Text = "&Edit";
             this.editToolStripMenuItem.Visible = false;
+            this.editToolStripMenuItem.DropDownOpening += new System.EventHandler(this.menu_DropDownOpening);
             // 
             // undoToolStripMenuItem
             // 
@@ -282,63 +331,36 @@ namespace NXTCamView
             this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.selectAllToolStripMenuItem.Text = "Select &All";
             // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmColors,
-            this.tsmTracking});
-            this.viewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // tsmColors
-            // 
-            this.tsmColors.Image = ((System.Drawing.Image)(resources.GetObject("tsmColors.Image")));
-            this.tsmColors.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-            this.tsmColors.Name = "tsmColors";
-            this.tsmColors.Size = new System.Drawing.Size(125, 22);
-            this.tsmColors.Text = "Colors";
-            this.tsmColors.Click += new System.EventHandler(this.tsmTrackingColors_Click);
-            // 
-            // tsmTracking
-            // 
-            this.tsmTracking.Image = ((System.Drawing.Image)(resources.GetObject("tsmTracking.Image")));
-            this.tsmTracking.Name = "tsmTracking";
-            this.tsmTracking.Size = new System.Drawing.Size(125, 22);
-            this.tsmTracking.Text = "Tracking";
-            this.tsmTracking.Click += new System.EventHandler(this.tsmTracking_Click);
-            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pingToolStripMenuItem,
             this.toolStripMenuItem3,
-            this.optionsToolStripMenuItem});
+            this.tsmOpenOptions});
             this.toolsToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
+            this.toolsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.menu_DropDownOpening);
             // 
             // pingToolStripMenuItem
             // 
             this.pingToolStripMenuItem.Image = global::NXTCamView.Properties.Resources.search;
             this.pingToolStripMenuItem.Name = "pingToolStripMenuItem";
-            this.pingToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.pingToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.pingToolStripMenuItem.Text = "Ping";
             this.pingToolStripMenuItem.Click += new System.EventHandler(this.pingToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(119, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(162, 6);
             // 
-            // optionsToolStripMenuItem
+            // tsmOpenOptions
             // 
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-            this.optionsToolStripMenuItem.Text = "&Options";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.options_Click);
+            this.tsmOpenOptions.Name = "tsmOpenOptions";
+            this.tsmOpenOptions.Size = new System.Drawing.Size(165, 22);
+            this.tsmOpenOptions.Text = "tsmOpenOptions";
             // 
             // windowToolStripMenuItem
             // 
@@ -352,6 +374,7 @@ namespace NXTCamView
             this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
             this.windowToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
             this.windowToolStripMenuItem.Text = "&Window";
+            this.windowToolStripMenuItem.DropDownOpening += new System.EventHandler(this.menu_DropDownOpening);
             // 
             // tsmCascade
             // 
@@ -405,6 +428,7 @@ namespace NXTCamView
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.DropDownOpening += new System.EventHandler(this.menu_DropDownOpening);
             // 
             // contentsToolStripMenuItem
             // 
@@ -440,6 +464,13 @@ namespace NXTCamView
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // tsmCheckForUpdates
+            // 
+            this.tsmCheckForUpdates.Name = "tsmCheckForUpdates";
+            this.tsmCheckForUpdates.Size = new System.Drawing.Size(185, 22);
+            this.tsmCheckForUpdates.Text = "Check for updates...";
+            this.tsmCheckForUpdates.Click += new System.EventHandler(this.tsmCheckForUpdates_Click);
+            // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -447,7 +478,6 @@ namespace NXTCamView
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.openToolStripMenuItem.Text = "&Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
@@ -461,14 +491,12 @@ namespace NXTCamView
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.saveToolStripMenuItem.Text = "&Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -546,7 +574,6 @@ namespace NXTCamView
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.newToolStripMenuItem.Text = "&New Capture";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newCapture);
             // 
             // tspNewCapture
             // 
@@ -555,7 +582,6 @@ namespace NXTCamView
             this.tspNewCapture.Name = "tspNewCapture";
             this.tspNewCapture.Size = new System.Drawing.Size(90, 22);
             this.tspNewCapture.Text = "New Capture";
-            this.tspNewCapture.Click += new System.EventHandler(this.newCapture);
             // 
             // tspPing
             // 
@@ -573,7 +599,6 @@ namespace NXTCamView
             this.tsbOptions.Name = "tsbOptions";
             this.tsbOptions.Size = new System.Drawing.Size(64, 22);
             this.tsbOptions.Text = "Options";
-            this.tsbOptions.Click += new System.EventHandler(this.options_Click);
             // 
             // tsbTrackColors
             // 
@@ -583,44 +608,57 @@ namespace NXTCamView
             this.tsbTrackColors.Size = new System.Drawing.Size(86, 22);
             this.tsbTrackColors.Text = "Track Colors";
             // 
-            // toolStrip1
+            // tsToolBar
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbNewCapture,
-            this.tsbTrackingColors,
-            this.tsbTracking});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(455, 25);
-            this.toolStrip1.TabIndex = 7;
-            this.toolStrip1.Text = "toolStrip1";
+            this.tsToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbConnect,
+            this.tsbDisconnect,
+            this.tsbCapture,
+            this.tsbOpenColors,
+            this.tsbOpenTracking});
+            this.tsToolBar.Location = new System.Drawing.Point(0, 24);
+            this.tsToolBar.Name = "tsToolBar";
+            this.tsToolBar.Size = new System.Drawing.Size(455, 25);
+            this.tsToolBar.TabIndex = 7;
+            this.tsToolBar.Text = "toolStrip1";
             // 
-            // tsbNewCapture
+            // tsbConnect
             // 
-            this.tsbNewCapture.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewCapture.Image")));
-            this.tsbNewCapture.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbNewCapture.Name = "tsbNewCapture";
-            this.tsbNewCapture.Size = new System.Drawing.Size(66, 22);
-            this.tsbNewCapture.Text = "Capture";
-            this.tsbNewCapture.Click += new System.EventHandler(this.newCapture);
+            this.tsbConnect.Image = ((System.Drawing.Image)(resources.GetObject("tsbConnect.Image")));
+            this.tsbConnect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbConnect.Name = "tsbConnect";
+            this.tsbConnect.Size = new System.Drawing.Size(82, 22);
+            this.tsbConnect.Text = "tsbConnect";
             // 
-            // tsbTrackingColors
+            // tsbDisconnect
             // 
-            this.tsbTrackingColors.Image = ((System.Drawing.Image)(resources.GetObject("tsbTrackingColors.Image")));
-            this.tsbTrackingColors.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbTrackingColors.Name = "tsbTrackingColors";
-            this.tsbTrackingColors.Size = new System.Drawing.Size(57, 22);
-            this.tsbTrackingColors.Text = "Colors";
-            this.tsbTrackingColors.Click += new System.EventHandler(this.tsmTrackingColors_Click);
+            this.tsbDisconnect.Image = ((System.Drawing.Image)(resources.GetObject("tsbDisconnect.Image")));
+            this.tsbDisconnect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDisconnect.Name = "tsbDisconnect";
+            this.tsbDisconnect.Size = new System.Drawing.Size(94, 22);
+            this.tsbDisconnect.Text = "tsbDisconnect";
             // 
-            // tsbTracking
+            // tsbCapture
             // 
-            this.tsbTracking.Image = ((System.Drawing.Image)(resources.GetObject("tsbTracking.Image")));
-            this.tsbTracking.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbTracking.Name = "tsbTracking";
-            this.tsbTracking.Size = new System.Drawing.Size(67, 22);
-            this.tsbTracking.Text = "Tracking";
-            this.tsbTracking.Click += new System.EventHandler(this.tsmTracking_Click);
+            this.tsbCapture.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCapture.Name = "tsbCapture";
+            this.tsbCapture.Size = new System.Drawing.Size(65, 22);
+            this.tsbCapture.Text = "tsbCapture";
+            // 
+            // tsbOpenColors
+            // 
+            this.tsbOpenColors.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOpenColors.Name = "tsbOpenColors";
+            this.tsbOpenColors.Size = new System.Drawing.Size(82, 22);
+            this.tsbOpenColors.Text = "tsbOpenColors";
+            this.tsbOpenColors.ToolTipText = "tsbOpenColors";
+            // 
+            // tsbOpenTracking
+            // 
+            this.tsbOpenTracking.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOpenTracking.Name = "tsbOpenTracking";
+            this.tsbOpenTracking.Size = new System.Drawing.Size(92, 22);
+            this.tsbOpenTracking.Text = "tsbOpenTracking";
             // 
             // serialPort
             // 
@@ -633,33 +671,61 @@ namespace NXTCamView
             this.serialPort.StopBits = global::NXTCamView.Properties.Settings.Default.StopBits;
             this.serialPort.WriteTimeout = global::NXTCamView.Properties.Settings.Default.WriteTimeout;
             // 
-            // tsmCheckForUpdates
+            // ssStatusStrip
             // 
-            this.tsmCheckForUpdates.Name = "tsmCheckForUpdates";
-            this.tsmCheckForUpdates.Size = new System.Drawing.Size(185, 22);
-            this.tsmCheckForUpdates.Text = "Check for updates...";
-            this.tsmCheckForUpdates.Click += new System.EventHandler(this.tsmCheckForUpdates_Click);
+            this.ssStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsslConnectionStatus,
+            this.toolStripStatusLabel1,
+            this.tsslVersion});
+            this.ssStatusStrip.Location = new System.Drawing.Point(0, 235);
+            this.ssStatusStrip.Name = "ssStatusStrip";
+            this.ssStatusStrip.Size = new System.Drawing.Size(455, 22);
+            this.ssStatusStrip.TabIndex = 9;
+            this.ssStatusStrip.Text = "statusStrip1";
+            // 
+            // tsslConnectionStatus
+            // 
+            this.tsslConnectionStatus.Name = "tsslConnectionStatus";
+            this.tsslConnectionStatus.Size = new System.Drawing.Size(71, 17);
+            this.tsslConnectionStatus.Text = "Disconnected";
+            this.tsslConnectionStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tsslConnectionStatus.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(327, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            // 
+            // tsslVersion
+            // 
+            this.tsslVersion.Name = "tsslVersion";
+            this.tsslVersion.Size = new System.Drawing.Size(42, 17);
+            this.tsslVersion.Text = "version";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(455, 257);
-            this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.mainMenu);
+            this.Controls.Add(this.ssStatusStrip);
+            this.Controls.Add(this.tsToolBar);
+            this.Controls.Add(this.msMainMenu);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
-            this.MainMenuStrip = this.mainMenu;
+            this.MainMenuStrip = this.msMainMenu;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NXTCamView";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.mainMenu.ResumeLayout(false);
-            this.mainMenu.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.msMainMenu.ResumeLayout(false);
+            this.msMainMenu.PerformLayout();
+            this.tsToolBar.ResumeLayout(false);
+            this.tsToolBar.PerformLayout();
+            this.ssStatusStrip.ResumeLayout(false);
+            this.ssStatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -668,7 +734,7 @@ namespace NXTCamView
         #endregion
 
         private System.IO.Ports.SerialPort serialPort;
-        private System.Windows.Forms.MenuStrip mainMenu;
+        private System.Windows.Forms.MenuStrip msMainMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
@@ -689,7 +755,7 @@ namespace NXTCamView
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmOpenOptions;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contentsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
@@ -697,9 +763,9 @@ namespace NXTCamView
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tsmTracking;
+        private System.Windows.Forms.ToolStripMenuItem tsmOpenTracking;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripMenuItem tsmColors;
+        private System.Windows.Forms.ToolStripMenuItem tsmOpenColors;
         private System.Windows.Forms.ToolStripButton tspNewCapture;
         private System.Windows.Forms.ToolStripButton tspPing;
         private System.Windows.Forms.ToolStripButton tsbOptions;
@@ -710,21 +776,21 @@ namespace NXTCamView
         private System.Windows.Forms.ToolStripMenuItem pingToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripButton tsbTrackColors;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem tsmiFile;
+        private System.Windows.Forms.ToolStripMenuItem tsmCapture;
+        private System.Windows.Forms.ToolStripMenuItem tsmOpenFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem tsmSaveFile;
+        private System.Windows.Forms.ToolStripMenuItem tsmSaveFileAs;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem printPreviewToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton tsbNewCapture;
-        private System.Windows.Forms.ToolStripButton tsbTracking;
-        private System.Windows.Forms.ToolStripButton tsbTrackingColors;
+        private System.Windows.Forms.ToolStrip tsToolBar;
+        private System.Windows.Forms.ToolStripButton tsbCapture;
+        private System.Windows.Forms.ToolStripButton tsbOpenTracking;
+        private System.Windows.Forms.ToolStripButton tsbOpenColors;
         private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmTileHorizontal;
         private System.Windows.Forms.ToolStripMenuItem tsmCascade;
@@ -733,6 +799,15 @@ namespace NXTCamView
         private System.Windows.Forms.ToolStripMenuItem tsmSnapWindows;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem tsmCheckForUpdates;
+        private System.Windows.Forms.StatusStrip ssStatusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel tsslConnectionStatus;
+        private System.Windows.Forms.ToolStripButton tsbConnect;
+        private System.Windows.Forms.ToolStripButton tsbDisconnect;
+        private System.Windows.Forms.ToolStripMenuItem tsmConnect;
+        private System.Windows.Forms.ToolStripMenuItem tsmDisconnect;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripStatusLabel tsslVersion;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

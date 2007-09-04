@@ -157,53 +157,69 @@ namespace NXTCamView
             Close();
         }
 
-        private void saveSettings()
+        private bool saveSettings()
         {
             //check whats changed and save if necessary
-            Settings settings = Settings.Default;
-
+            Settings proposed = Settings.From(Settings.Default);
+            
             //if we did a test then ensure we save to force the COMPort to reopen
             bool hasChanged = false;
-            if (!settings.COMPort.Equals(cobCOMPorts.SelectedItem) || _hasDoneTest)
+            bool hasCommsChanged = false;
+            if (!proposed.COMPort.Equals(cobCOMPorts.SelectedItem) || _hasDoneTest)
+            {
+                hasCommsChanged = true;
+                proposed.COMPort = (string)cobCOMPorts.SelectedItem;
+            }
+            if (proposed.BaudRate != ((StrIntBinder)cobBaudRate.SelectedItem).IntValue)
+            {
+                hasCommsChanged = true;
+                proposed.BaudRate = ((StrIntBinder)cobBaudRate.SelectedItem).IntValue;
+            }
+            if (proposed.Handshake != (Handshake)((StrIntBinder)cobHandshake.SelectedItem).IntValue)
+            {
+                hasCommsChanged = true;
+                proposed.Handshake = (Handshake)((StrIntBinder)cobHandshake.SelectedItem).IntValue;
+            }
+            if (proposed.Parity != (Parity)((StrIntBinder)cobParity.SelectedItem).IntValue)
+            {
+                hasCommsChanged = true;
+                proposed.Parity = (Parity)((StrIntBinder)cobParity.SelectedItem).IntValue;
+            }
+            if (proposed.DataBits != ((StrIntBinder)cobDataBits.SelectedItem).IntValue)
+            {
+                hasCommsChanged = true;
+                proposed.DataBits = ((StrIntBinder)cobDataBits.SelectedItem).IntValue;
+            }
+            if (proposed.StopBits != (StopBits)((StrIntBinder)cobStopBits.SelectedItem).IntValue)
+            {
+                hasCommsChanged = true;
+                proposed.StopBits = (StopBits)((StrIntBinder)cobStopBits.SelectedItem).IntValue;
+            }
+            if (proposed.CheckForUpdates != cbCheckForUpdates.Checked)
             {
                 hasChanged = true;
-                settings.COMPort = (string)cobCOMPorts.SelectedItem;
+                proposed.CheckForUpdates = cbCheckForUpdates.Checked;
             }
-            if (settings.BaudRate != ((StrIntBinder)cobBaudRate.SelectedItem).IntValue)
+            if( hasChanged || hasCommsChanged)
             {
-                hasChanged = true;
-                settings.BaudRate = ((StrIntBinder)cobBaudRate.SelectedItem).IntValue;
-            }
-            if (settings.Handshake != (Handshake)((StrIntBinder)cobHandshake.SelectedItem).IntValue)
-            {
-                hasChanged = true;
-                settings.Handshake = (Handshake) ((StrIntBinder)cobHandshake.SelectedItem).IntValue;
-            }
-            if (settings.Parity != (Parity)((StrIntBinder)cobParity.SelectedItem).IntValue)
-            {
-                hasChanged = true;
-                settings.Parity = (Parity) ((StrIntBinder)cobParity.SelectedItem).IntValue;
-            }
-            if (settings.DataBits != ((StrIntBinder)cobDataBits.SelectedItem).IntValue)
-            {
-                hasChanged = true;
-                settings.DataBits = ((StrIntBinder)cobDataBits.SelectedItem).IntValue;
-            }
-            if (settings.StopBits != (StopBits)((StrIntBinder)cobStopBits.SelectedItem).IntValue)
-            {
-                hasChanged = true;
-                settings.StopBits = (StopBits) ((StrIntBinder)cobStopBits.SelectedItem).IntValue;
-            }
-            if ( settings.CheckForUpdates != cbCheckForUpdates.Checked )
-            {
-                hasChanged = true;
-                settings.CheckForUpdates = cbCheckForUpdates.Checked;
-            }
-            if( hasChanged )
-            {
-                Settings.Default.Save();
+                //if we're connected and changing connection details we should offer to disconnect
+                if( AppState.Instance.State != State.NotConnected && hasCommsChanged)
+                {
+                    DialogResult result = MessageBox.Show(
+                        this,
+                        "The NXTCam will be disconnected to change the connection details.",
+                        Application.ProductName,
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1);
+                    if( result == DialogResult.Cancel ) return false;
+                    AppState.Instance.State = State.NotConnected;
+                    //TODO - maybe offer to reconnect?
+                }
+                Settings.Default.CopyFrom(proposed);                
                 _hasSavedSettings = true;
             }
+            return true;
         }
 
         private void btnTest_Click(object sender, System.EventArgs e)
@@ -227,7 +243,6 @@ namespace NXTCamView
                 lbResult.Refresh();
 
                 _hasDoneTest = true;
-                if( _serialPort.IsOpen ) _serialPort.Close();
 
                 //setup a new port to test
                 _testSerialPort = new SerialPort((string)cobCOMPorts.SelectedItem, 
@@ -264,7 +279,7 @@ namespace NXTCamView
                 PingCommand cmd = new PingCommand(_testSerialPort);
                 e.Result = cmd;
                 cmd.Execute();
-                if( cmd.IsCompleted && cmd.IsSucessiful )
+                if( cmd.IsCompleted && cmd.IsSuccessful )
                 {
                     e.Result = new Result("Success: NXTCam responded", Color.Green);
                 }
@@ -354,7 +369,7 @@ namespace NXTCamView
             cmd.HasFlourescentLightFilter = cbUseFlourescentLightFilter.Checked;
             cmd.Execute();
 
-            bool isOk = cmd.IsSucessiful;
+            bool isOk = cmd.IsSuccessful;
 
             if (isOk)
             {
@@ -423,7 +438,7 @@ namespace NXTCamView
 
                 cmd.Execute();
 
-                bool isOk = cmd.IsSucessiful;
+                bool isOk = cmd.IsSuccessful;
 
                 if( isOk )
                 {
@@ -470,7 +485,10 @@ namespace NXTCamView
 
         private void btnOk_Click(object sender, System.EventArgs e)
         {
-            saveSettings();
+            if( saveSettings() )
+            {
+                Close();
+            }
         }
     }
 }

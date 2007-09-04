@@ -55,7 +55,7 @@ namespace NXTCamView
             pnlTrackedColors.MyPaint += new PaintEventHandler(pnlTracking_Paint);
             _trackingCmd = new TrackingCommand(_serialPort, objectsDetected);
             SetupColors();
-            MainForm.Instance.SerialPortChanged += new EventHandler(mainForm_SerialPortChanged);
+            MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
 
             StickyWindowsUtil.MakeStickyMDIChild(this);
         }
@@ -132,13 +132,15 @@ namespace NXTCamView
 
         private void startTracking()
         {
+            if (!_trackingCmd.CanExecute() ) return;
+            AppState.Instance.State = State.ConnectedTracking;
             lblMessage.Text = "Starting Tracking";
             lblMessage.ForeColor = Color.Black;
             lblMessage.Refresh();
             _trackingCmd.Execute();
-            lblMessage.Text = _trackingCmd.IsSucessiful ? "Tracking Running" : _trackingCmd.ErrorDescription;
-            lblMessage.ForeColor = _trackingCmd.IsSucessiful ? Color.Black : Color.Red;
-            AppState.Instance.State = _trackingCmd.IsSucessiful ? State.Tracking : State.Idle;
+            lblMessage.Text = _trackingCmd.IsSuccessful ? "Tracking Running" : _trackingCmd.ErrorDescription;
+            lblMessage.ForeColor = _trackingCmd.IsSuccessful ? Color.Black : Color.Red;
+            AppState.Instance.State = _trackingCmd.IsSuccessful ? State.ConnectedTracking : State.Connected;
             paintTimer.Start();
         }
 
@@ -148,17 +150,10 @@ namespace NXTCamView
             lblMessage.ForeColor = Color.Black;
             lblMessage.Refresh();
             _trackingCmd.StopTracking();
-            lblMessage.Text = _trackingCmd.IsSucessiful ? "Tracking Stopped" : _trackingCmd.ErrorDescription;
-            lblMessage.ForeColor = _trackingCmd.IsSucessiful ? Color.Black : Color.Red;
-
-            AppState.Instance.State = _trackingCmd.IsSucessiful ? State.Tracking : State.Idle;
+            lblMessage.Text = _trackingCmd.IsSuccessful ? "Tracking Stopped" : _trackingCmd.ErrorDescription;
+            lblMessage.ForeColor = _trackingCmd.IsSuccessful ? Color.Black : Color.Red;
+            if( _trackingCmd.IsSuccessful ) AppState.Instance.State = State.Connected;
             paintTimer.Stop();
-        }
-
-        private void refreshState()
-        {
-            // btnStart.Enabled = AppState.Instance.State != State.Tracking;
-            // btnStop.Enabled = AppState.Instance.State == State.Tracking;
         }
 
         private void objectsDetected(object sender, ObjectsDetectedEventArgs args)
@@ -389,7 +384,7 @@ namespace NXTCamView
                 e.Cancel = true;
                 Hide();
             }
-            if (AppState.Instance.State == State.Tracking)
+            if (AppState.Instance.State == State.ConnectedTracking)
             {
                 stopTracking();
             }

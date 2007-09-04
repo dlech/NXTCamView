@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
 		build\AssemblyInfoCommon.cs = build\AssemblyInfoCommon.cs
+		web\htdocs\DemoScreenCam.htm = web\htdocs\DemoScreenCam.htm
+		web\htdocs\index.php = web\htdocs\index.php
 		localtestrun.testrunconfig = localtestrun.testrunconfig
 		build\NXTCamView.build = build\NXTCamView.build
 		NXTCamView.vsmdi = NXTCamView.vsmdi

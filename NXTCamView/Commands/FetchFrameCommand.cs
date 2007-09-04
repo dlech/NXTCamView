@@ -78,7 +78,7 @@ namespace NXTCamView.Commands
 
         protected void setAborted()
         {
-            _isSucessiful = false;
+            _isSuccessful = false;
             _aborted = true;
             _errorDescription = "Aborted";
             return;

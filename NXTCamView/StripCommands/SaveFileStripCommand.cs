@@ -16,39 +16,40 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-using System;
-using System.IO.Ports;
+using System.Windows.Forms;
 
-namespace NXTCamView.Commands
+namespace NXTCamView.StripCommands
 {
-    public class PingCommand : Command
+    public class OpenFileStripCommand : StripCommand
     {
-        public PingCommand(SerialPort _serialPort)
-            : base("Ping", _serialPort)
+        private OpenFileDialog _openFileDialog;
+        
+        public OpenFileStripCommand(OpenFileDialog openFileDialog)
         {
-        }
-
-        public override void Execute()
-        {
-            try
-            {
-                _request = "PG";
-                SendAndReceive();
-                _isCompleted = true;
-            }
-            catch (Exception ex)
-            {
-                setError(ex);
-            }
-            finally
-            {
-                completeCommand();
-            }
+            _openFileDialog = openFileDialog;
         }
 
         public override bool CanExecute()
         {
             return true;
+        }
+
+        public override bool Execute()
+        {
+            if (_openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                CaptureForm form = new CaptureForm(MainForm.Instance.SerialPort);
+                form.MdiParent = MainForm.Instance;
+                form.Show();
+                form.LoadFile(_openFileDialog.FileName);
+                return true;
+            }
+            return false;
+        }
+
+        public override bool HasExecuted()
+        {
+            return false;
         }
     }
 }

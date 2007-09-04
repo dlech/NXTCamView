@@ -44,7 +44,7 @@ namespace NXTCamView.VersionUpdater
                 if( latest > current )             
                 {
                     MessageBox.Show(
-                        string.Format("A newer version of {0} is available at sourceforge.net.\nLatest version:  {1} \nYour version: {2}",Application.ProductName,latest,current),
+                        string.Format("A newer version of {0} is available at sourceforge.net.\nYour version:\t{1}\nLatest version:\t{2}", Application.ProductName, current, latest),
                         string.Format("{0} - Check Updates", Application.ProductName),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);

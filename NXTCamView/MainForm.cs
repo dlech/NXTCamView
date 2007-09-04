@@ -24,6 +24,8 @@ using System.Windows.Forms;
 using Blue.Windows;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
+using NXTCamView.Resources;
+using NXTCamView.StripCommands;
 using NXTCamView.VersionUpdater;
 
 namespace NXTCamView
@@ -34,10 +36,14 @@ namespace NXTCamView
         
         public SerialPort SerialPort { get { return serialPort; } }
         public event EventHandler SerialPortChanged;
+        private OpenOptionsStripCommand openOptionsCmd;
+        private OpenColorStripCommand openColorCmd;
+        private OpenTrackingStripCommand openTrackingCmd;
 
         public MainForm()
         {
             InitializeComponent();
+
             serialPort.NewLine = "\r";
             Settings.Default.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(settings_PropertyChanged);
             //not 100% thread safe, but ok as the app doesn't do anything until this is up
@@ -46,10 +52,15 @@ namespace NXTCamView
             StickyWindowsUtil.MakeSticky(this);
             StickyWindow.Active = Settings.Default.SnapWindows;
             tsmSnapWindows.Checked = StickyWindow.Active;
+
+            AppState.Instance.StateChanged += AppStateChanged;
+            AppState.Instance.State = State.NotConnected;
         }
 
-        void settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            Settings settings = (Settings)sender;
+            if( settings != Settings.Default ) throw new ApplicationException("Only allow changing of Settings.Default");
             try
             {
                 switch( e.PropertyName )
@@ -62,7 +73,6 @@ namespace NXTCamView
                     case "StopBits":
                         //drop the old port and get another
                         if( serialPort.IsOpen ) serialPort.Close();
-                        Settings settings = Settings.Default;
 
                         serialPort = new SerialPort(
                             settings.COMPort,
@@ -70,6 +80,7 @@ namespace NXTCamView
                             settings.Parity,
                             settings.DataBits,
                             settings.StopBits);
+                        
                         serialPort.WriteTimeout = settings.WriteTimeout;
                         serialPort.ReadTimeout = settings.ReadTimeout;
                         serialPort.NewLine = "\r";
@@ -88,19 +99,6 @@ namespace NXTCamView
             }
         }
 
-        private void newCapture(object sender, EventArgs e)
-        {
-            capture();
-        }
-
-        private void capture()
-        {
-            CaptureForm form = new CaptureForm(serialPort);
-            form.MdiParent = this;
-            form.Visible = true;
-            form.StartCapture();
-        }
-
         private void tsbPing_Click(object sender, EventArgs e)
         {
             ping();
@@ -110,7 +108,7 @@ namespace NXTCamView
         {
             PingCommand cmd = new PingCommand(serialPort);
             cmd.Execute();
-            if( cmd.IsSucessiful )
+            if( cmd.IsSuccessful )
             {
                 MessageBox.Show(this, "Success pinging!", Application.ProductName, MessageBoxButtons.OK,
                                 MessageBoxIcon.None);
@@ -120,51 +118,6 @@ namespace NXTCamView
                 MessageBox.Show(this, string.Format("Error pinging: {0}", cmd.ErrorDescription),
                                 Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void options_Click(object sender, EventArgs e)
-        {
-            showOptions();
-        }
-
-        private void showOptions()
-        {
-            OptionsForm form = new OptionsForm(serialPort);
-            form.ShowDialog();
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                CaptureForm form = new CaptureForm(serialPort);
-                form.MdiParent = this;
-                form.Show();
-                form.LoadFile(openFileDialog.FileName);
-            }
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFile(false);
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFile(true);
-        }
-
-        private void saveFile(bool isSaveAs)
-        {
-            CaptureForm form = ActiveMdiChild as CaptureForm;
-            if (form == null) return;
-            if (form.Filename == "" || isSaveAs)
-            {
-                saveFileDialog.FileName = form.Filename != "" ? form.Filename : form.Text;
-                if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
-                form.Filename = saveFileDialog.FileName;
-            }
-            form.SaveFile(form.Filename);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -183,12 +136,85 @@ namespace NXTCamView
             Left = Screen.PrimaryScreen.WorkingArea.Width/2 - Width/2;
             Top = Screen.PrimaryScreen.WorkingArea.Height/2 - Height/2;
 
-            ColorForm.Instance.VisibleChanged += ColorForm_VisibleChanged;
-            TrackingForm.Instance.VisibleChanged += TrackingForm_VisibleChanged;
+            setupStripCommands();
 
             if( Settings.Default.CheckForUpdates ) Updater.Instance.CheckForUpdates();
 
+            tsslVersion.Text = "";
+
+            setupMenus();
             setupSerialPort();
+            updateAllEnablement();
+        }
+
+        private void setupStripCommands()
+        {
+            openOptionsCmd = new OpenOptionsStripCommand(serialPort);
+            openColorCmd = new OpenColorStripCommand();
+            openTrackingCmd = new OpenTrackingStripCommand();
+        }
+
+        private void setupMenus()
+        {
+            //file menu
+            StripCommand connectCmd = new ConnectStripCommand();
+            connectCmd.Completed += connectCmd_Completed;
+            setupButtonAndMenu(tsbConnect, tsmConnect, "Connect", "Connect to the NXTCam", AppImages.Connect, connectCmd);
+
+            StripCommand disconnectCmd = new DisconnectStripCommand();
+            disconnectCmd.Completed += disconnectCmd_Completed;
+            setupButtonAndMenu(tsbDisconnect, tsmDisconnect, "Disconnect", "Disconnect from the NXTCam", AppImages.Disconnect, disconnectCmd);
+
+            setupButtonAndMenu(tsbCapture, tsmCapture, "New Capture", "Captures an image", AppImages.Capture, new CaptureStripCommand() );
+
+            setupMenu(tsmOpenFile, "&Open", "Open a capture", AppImages.OpenFile, new OpenFileStripCommand( openFileDialog ));
+            setupMenu(tsmSaveFile, "&Save", "Save a capture", AppImages.SaveFile, new SaveFileStripCommand(saveFileDialog, false));
+            setupMenu(tsmSaveFileAs, "Save &As", "Save a capture with filename", null, new SaveFileStripCommand(saveFileDialog, true));
+            
+            //view menu
+            ColorForm.Instance.VisibleChanged += form_VisibleChanged;
+            setupButtonAndMenu(tsbOpenColors, tsmOpenColors, "&Colors", "Show/hide colors window", AppImages.OpenColors, openColorCmd);
+            TrackingForm.Instance.VisibleChanged += form_VisibleChanged;
+            setupButtonAndMenu(tsbOpenTracking, tsmOpenTracking, "&Tracking", "Show/hide tracking window", AppImages.OpenTracking, openTrackingCmd);
+
+            //option menu
+            setupMenu(tsmOpenOptions, "&Options", "Open application options", AppImages.OpenOptions, openOptionsCmd);
+        }
+
+        void connectCmd_Completed(object sender, EventArgs e)
+        {
+            ConnectStripCommand connectCmd = (ConnectStripCommand) sender;
+            tsslVersion.Text = connectCmd.GetVersion();
+        }
+
+        private void disconnectCmd_Completed(object sender, EventArgs e)        
+        {
+            tsslVersion.Text = "";
+
+        }
+
+        private void setupButtonAndMenu(ToolStripButton tsButton, ToolStripMenuItem tsMenu, string caption, string tip, Image image, StripCommand command)
+        {
+            setupButton( tsButton, caption, tip, image, command );
+            setupMenu( tsMenu, caption, tip, image, command);
+        }
+
+        private void setupButton( ToolStripButton tsButton, string caption, string tip, Image image, StripCommand command )
+        {
+            tsButton.Text = caption;
+            tsButton.Image = image;
+            tsButton.Tag = command;
+            tsButton.ToolTipText = tip;
+            tsButton.Click += ToolItem_Click;
+        }
+
+        private void setupMenu( ToolStripMenuItem tsMenu, string caption, string tip, Image image, StripCommand command )
+        {
+            tsMenu.Text = caption;
+            tsMenu.Image = image;
+            tsMenu.Tag = command;
+            tsMenu.ToolTipText = tip;
+            tsMenu.Click += ToolItem_Click;
         }
 
         private void setupSerialPort()
@@ -210,7 +236,7 @@ namespace NXTCamView
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1) == DialogResult.Yes )
                 {
-                    showOptions();
+                    openOptionsCmd.Execute();
                 }
             }
             else
@@ -224,16 +250,6 @@ namespace NXTCamView
                     Debug.WriteLine(string.Format("Error loading mainform {0}", ex));
                 }
             }
-        }
-
-        void ColorForm_VisibleChanged(object sender, EventArgs e)
-        {
-            tsmColors.Checked = ColorForm.Instance.Visible;
-        }
-
-        private void TrackingForm_VisibleChanged(object sender, EventArgs e)
-        {
-            tsmTracking.Checked = TrackingForm.Instance.Visible;
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -251,16 +267,6 @@ namespace NXTCamView
         {
             if (serialPort.IsOpen) serialPort.Close();
             Settings.Default.Save();
-        }
-
-        private void tsmTrackingColors_Click(object sender, EventArgs e)
-        {
-            ColorForm.Instance.SetVisibility(!tsmColors.Checked);
-        }
-
-        private void tsmTracking_Click(object sender, EventArgs e)
-        {
-            TrackingForm.Instance.SetVisibility(!tsmTracking.Checked);
         }
 
         private void tsmCascade_Click(object sender, EventArgs e)
@@ -294,5 +300,97 @@ namespace NXTCamView
         {
             Updater.Instance.CheckForUpdates( true );
         }
+
+        private void AppStateChanged(object sender, EventArgs args)
+        {
+            if( InvokeRequired )
+            {
+                BeginInvoke(new EventHandler(AppStateChanged), new object[] {sender, args});
+                return;
+            }
+            updateConnectionState();
+        }
+
+        private void updateConnectionState()
+        {
+            switch( AppState.Instance.State )
+            {
+                case State.NotConnected:
+                    setStatusState("Not connected", AppImages.NotConnected);
+                    break;
+                case State.Connected:
+                    setStatusState("Connected", AppImages.Connected);
+                    break;
+                case State.ConnectedBusy:
+                    setStatusState("Connected - Busy", AppImages.ConnectedBusy);
+                    break;
+                case State.ConnectedTracking:
+                    setStatusState("Connected - Tracking", AppImages.ConnectedTracking);
+                    break;
+            }
+        }
+
+        private void setStatusState( string text, Image image )
+        {
+            tsslConnectionStatus.Text = text;
+            tsslConnectionStatus.Image = image;
+        }
+
+        #region StripCommand Handling
+
+        void form_VisibleChanged(object sender, EventArgs e)
+        {
+            //if one of the forms has changed state, then update toolbar enablements
+            updateEnablement(tsToolBar.Items);
+        }
+
+        private void ToolItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = sender as ToolStripItem;
+            if (item == null) throw new ApplicationException(string.Format("sender is not a toolstrip: {0}", sender));
+
+            StripCommand cmd = item.Tag as StripCommand;
+            if (cmd == null) throw new ApplicationException(string.Format("toolstrip has not command: {0}", item.Text));
+            
+            if (cmd.CanExecute()) cmd.Execute();
+
+            updateAllEnablement();
+        }
+
+        private void updateAllEnablement()
+        {
+            updateEnablement( msMainMenu.Items );
+            updateEnablement( tsToolBar.Items );
+        }
+
+        private void updateEnablement( ToolStripItemCollection items )
+        {
+            foreach (ToolStripItem item in items)
+            {
+                if (item != null)
+                {
+                    StripCommand cmd = item.Tag as StripCommand;
+                    if( cmd != null )
+                    {
+                        item.Enabled = cmd.CanExecute();
+
+                        ToolStripButton button = item as ToolStripButton;
+                        if( button != null ) button.Checked = cmd.HasExecuted();
+
+                        ToolStripMenuItem menu = item as ToolStripMenuItem;
+                        if (menu != null) menu.Checked = cmd.HasExecuted();
+                    }
+                }
+            }
+        }
+
+        //Called before an menu downs down to update the enablement based on the attached commands
+        private void menu_DropDownOpening(object sender, EventArgs e)
+        {
+            ToolStripItemCollection items = ((ToolStripMenuItem) sender).DropDownItems;
+            updateEnablement( items );
+        }
+
+        #endregion
     }
 }

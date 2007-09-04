@@ -26,7 +26,7 @@ namespace NXTCamView.Commands
     {
         protected SerialPort _serialPort;
         protected bool _isCompleted;
-        protected bool _isSucessiful;
+        protected bool _isSuccessful;
         protected string _request;
         protected bool _isLogging;
         protected string _errorDescription;
@@ -35,7 +35,7 @@ namespace NXTCamView.Commands
 
         public string Request { get { return _request; } set { _request = value; } }
         public bool IsCompleted { get { return _isCompleted; } set { _isCompleted = value; } }
-        public bool IsSucessiful { get { return _isSucessiful; } }
+        public bool IsSuccessful { get { return _isSuccessful; } }
         public SerialPort SerialPort { get { return _serialPort; } }
         public string ErrorDescription { get { return _errorDescription; } }
         public bool Aborted { get { return _aborted; } }
@@ -59,7 +59,7 @@ namespace NXTCamView.Commands
         public void SendAndReceive()
         {
             _isCompleted = false;
-            _isSucessiful = false;
+            _isSuccessful = false;
 
             //Remove as this may be hamper tracking
             //string junk = _serialPort.ReadExisting();
@@ -70,12 +70,12 @@ namespace NXTCamView.Commands
             string responce = _serialPort.ReadLine();
 
             if (_isLogging) Debug.WriteLine(string.Format("rcv: {0}", responce));
-            _isSucessiful = responce == "ACK";
+            _isSuccessful = responce == "ACK";
         }
 
         protected void setError(Exception ex)
         {
-            _isSucessiful = false;
+            _isSuccessful = false;
             string msg = string.Format("{0} Error: {1}", _name, ex.Message);
             Debug.WriteLine(msg);
             _errorDescription = msg;
@@ -84,6 +84,11 @@ namespace NXTCamView.Commands
         protected void completeCommand()
         {
             _isCompleted = true;
+        }
+
+        public virtual bool CanExecute()
+        {
+            return AppState.Instance.State == State.Connected;
         }
     }
 

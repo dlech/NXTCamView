@@ -51,7 +51,7 @@ namespace NXTCamView.Commands
                 if( junk != "" ) Debug.WriteLine(string.Format("Discarded serial junk: {0}", junk));
                 _request = "ET";
                 _isCompleted = false;
-                _isSucessiful = false;
+                _isSuccessful = false;
 
                 if( _isLogging ) Debug.WriteLine(string.Format("snd: {0}", _request));
                 lock (_syncRoot)
@@ -64,7 +64,7 @@ namespace NXTCamView.Commands
                     if( Monitor.Wait(_syncRoot, 2000) )
                     {
                         if( !_wasACKed ) throw new ApplicationException("NACKed");
-                        _isSucessiful = true;
+                        _isSuccessful = true;
                     }
                     else
                     {
@@ -95,7 +95,7 @@ namespace NXTCamView.Commands
                     if (Monitor.Wait(_syncRoot, 2000))
                     {
                         if (!_wasACKed) throw new ApplicationException("NACKed");
-                        _isSucessiful = true;
+                        _isSuccessful = true;
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace NXTCamView.Commands
                 _serialPort.DataReceived -= processReceive;
                 completeCommand();
                 //Not true, but make it so for now as the responce form the cam seems to be bad
-                _isSucessiful = true;
+                _isSuccessful = true;
             }
             return isStopSuccessful;
         }

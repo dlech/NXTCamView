@@ -141,5 +141,27 @@ namespace NXTCamView.Properties
                 }
             }
         }
+
+        public static Settings From(Settings settings)
+        {
+            //don't use memberwiseClone as we don't want to copy the events which are hard to unhook 
+            Settings newSettings = new Settings();
+            newSettings.CopyFrom( settings );
+            return newSettings;
+        }
+
+        public void CopyFrom(Settings settings)
+        {
+            //this is only good for copying settings values that exist
+            //only changed properties care copied
+            foreach (SettingsProperty property in settings.Properties )
+            {
+                object newValue = settings.PropertyValues[property.Name].PropertyValue;
+                if( !this[property.Name].Equals(newValue))
+                {
+                    this[property.Name] = newValue;
+                }                
+            }
+        }
     }
 }

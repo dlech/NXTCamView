@@ -18,6 +18,7 @@
 //
 using System;
 using System.IO.Ports;
+using NXTCamView;
 using NXTCamView.Commands;
 
 public class GetVersionCommand : Command
@@ -31,21 +32,35 @@ public class GetVersionCommand : Command
     {
     }
 
+    /// <summary>
+    /// This get the version of the NXTCam
+    /// It is also used to text if we are  "connected" or "disconnected" and sets the state accordingly    
+    /// </summary>
     public override void Execute()
     {
         try
         {
             _request = "GV";
             SendAndReceive();
-            if( _isSucessiful )
+            if( _isSuccessful )
             {
                 _version = _serialPort.ReadLine();
             }
             _isCompleted = true;
+            //Ensure we are known as connected
+            if (AppState.Instance.State == State.NotConnected)
+            {
+                AppState.Instance.State = State.Connected;
+            }                
         }
         catch( Exception ex )
         {
             setError(ex);
+            //Ensure we are known as NOT connected
+            if (AppState.Instance.State != State.NotConnected)
+            {
+                AppState.Instance.State = State.NotConnected;
+            }
         }
         finally
         {

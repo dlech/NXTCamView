@@ -16,44 +16,24 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO.Ports;
-using NXTCamView.Commands;
-
-public class InterpolateFrameCommand : FetchFrameCommand
+namespace NXTCamView.StripCommands
 {
-    public InterpolateFrameCommand(BackgroundWorker worker, SerialPort serialPort, Image image)
-        : base("Interpolate",serialPort, worker)
+    public class OpenTrackingStripCommand : StripCommand
     {
-        _bmBayer = (Bitmap)image;
-    }
-
-    public override void Execute()
-    {
-        ////DEBUG
-        //_isSuccessful = true;
-        //_isCompleted = true;
-        //return;
-
-        try
+        public override bool CanExecute()
         {
-            updateInterpolateImage();
-            _isSuccessful = true;
+            return true;
         }
-        catch (Exception ex)
-        {
-            setError(ex);
-        }
-        finally
-        {
-            completeCommand();
-        }
-    }
 
-    public override bool CanExecute()
-    {
-        return true;
+        public override bool Execute()
+        {
+            TrackingForm.Instance.SetVisibility(!HasExecuted());
+            return true;
+        }
+
+        public override bool HasExecuted()
+        {
+            return TrackingForm.Instance.Visible;
+        }
     }
 }

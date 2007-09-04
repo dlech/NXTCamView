@@ -16,44 +16,35 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO.Ports;
-using NXTCamView.Commands;
 
-public class InterpolateFrameCommand : FetchFrameCommand
+namespace NXTCamView.StripCommands
 {
-    public InterpolateFrameCommand(BackgroundWorker worker, SerialPort serialPort, Image image)
-        : base("Interpolate",serialPort, worker)
+    public class OpenOptionsStripCommand : StripCommand
     {
-        _bmBayer = (Bitmap)image;
-    }
+        private SerialPort _serialPort;
 
-    public override void Execute()
-    {
-        ////DEBUG
-        //_isSuccessful = true;
-        //_isCompleted = true;
-        //return;
+        public OpenOptionsStripCommand(SerialPort serialPort)
+        {
+            _serialPort = serialPort;
+        }
 
-        try
+        public override bool CanExecute()
         {
-            updateInterpolateImage();
-            _isSuccessful = true;
+            //don't all options to be changed if tracking or serial comms are outstanding
+            return AppState.Instance.State == State.Connected || AppState.Instance.State == State.NotConnected;
         }
-        catch (Exception ex)
-        {
-            setError(ex);
-        }
-        finally
-        {
-            completeCommand();
-        }
-    }
 
-    public override bool CanExecute()
-    {
-        return true;
+        public override bool Execute()
+        {
+            OptionsForm form = new OptionsForm(_serialPort);
+            form.ShowDialog();
+            return true;
+        }
+
+        public override bool HasExecuted()
+        {
+            return false;
+        }
     }
 }

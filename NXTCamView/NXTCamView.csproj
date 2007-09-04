@@ -172,9 +172,18 @@
     <Compile Include="RangeBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Resources\AppImages.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StickyWindow.cs" />
     <Compile Include="StickyWindowsUtil.cs" />
+    <Compile Include="StripCommands\ConnectStripCommand.cs" />
+    <Compile Include="StripCommands\CaptureStripCommand.cs" />
+    <Compile Include="StripCommands\SaveFileStripCommand.cs" />
+    <Compile Include="StripCommands\OpenFileStripCommand.cs" />
+    <Compile Include="StripCommands\OpenTrackingStripCommand.cs" />
+    <Compile Include="StripCommands\OpenColorStripCommand.cs" />
+    <Compile Include="StripCommands\OpenOptionsStripCommand.cs" />
+    <Compile Include="StripCommands\DisconnectStripCommand.cs" />
     <Compile Include="TrackingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +193,7 @@
     <Compile Include="TransparentPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="StripCommands\StripCommand.cs" />
     <Compile Include="VersionUpdater\ReleaseInfo.cs" />
     <Compile Include="VersionUpdater\Updater.cs" />
   </ItemGroup>
@@ -202,9 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\otheroptions.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\otheroptions1.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ColorForm.resx">
@@ -229,6 +236,38 @@
     <None Include="COPYING.RTF">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ConnectedBusy.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ConnectedTracking.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Connected.bmp" />
+    <EmbeddedResource Include="Resources\NotConnected.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Connect.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Disconnect.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Capture.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Options.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Colors.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Tracking.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\OpenFile.bmp" />
+    <EmbeddedResource Include="Resources\SaveFile.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />

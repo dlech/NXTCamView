@@ -16,18 +16,39 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using System;
+
 namespace NXTCamView
 {
     public enum State
     {
-        Idle,
-        Tracking,
-        Sending
+        NotConnected,
+        Connected,
+        ConnectedBusy,
+        ConnectedTracking
     }
 
-    class AppState
+    public class AppState
     {
+        public event EventHandler<EventArgs> StateChanged;
+
         static public readonly AppState Instance = new AppState();
-        public State State;
+        private State _state;
+
+        public State State
+        {
+            get
+            {
+                return _state;
+            }
+            set
+            {
+                _state = value;
+                if( StateChanged != null )
+                {
+                    StateChanged(this, new EventArgs());
+                }
+            }
+        }
     }
 }
