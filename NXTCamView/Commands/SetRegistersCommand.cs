@@ -100,6 +100,7 @@ namespace NXTCamView.Commands
         {
             try
             {
+                SetState(State.ConnectedBusy);
                 if( _registers == null ) throw new ApplicationException("No registers to set");
                 if( _registers.Count > 8 ) throw new ApplicationException("Too many registers. 8 is the max");
                 StringBuilder sb = new StringBuilder();
@@ -119,6 +120,7 @@ namespace NXTCamView.Commands
             }
             finally
             {
+                SetState(State.Connected);
                 completeCommand();
             }
         }

@@ -105,6 +105,7 @@ namespace NXTCamView
             this.tsslConnectionStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.msMainMenu.SuspendLayout();
             this.tsToolBar.SuspendLayout();
             this.ssStatusStrip.SuspendLayout();
@@ -612,8 +613,9 @@ namespace NXTCamView
             // 
             this.tsToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbConnect,
-            this.tsbDisconnect,
             this.tsbCapture,
+            this.tsbDisconnect,
+            this.toolStripSeparator11,
             this.tsbOpenColors,
             this.tsbOpenTracking});
             this.tsToolBar.Location = new System.Drawing.Point(0, 24);
@@ -703,6 +705,11 @@ namespace NXTCamView
             this.tsslVersion.Size = new System.Drawing.Size(42, 17);
             this.tsslVersion.Text = "version";
             // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -712,7 +719,6 @@ namespace NXTCamView
             this.Controls.Add(this.tsToolBar);
             this.Controls.Add(this.msMainMenu);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.msMainMenu;
             this.Name = "MainForm";
@@ -808,6 +814,7 @@ namespace NXTCamView
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripStatusLabel tsslVersion;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
     }
 }
 

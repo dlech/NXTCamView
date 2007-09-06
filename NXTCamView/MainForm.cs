@@ -20,6 +20,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
+using System.Threading;
 using System.Windows.Forms;
 using Blue.Windows;
 using NXTCamView.Commands;
@@ -42,10 +43,13 @@ namespace NXTCamView
 
         public MainForm()
         {
+            Thread.CurrentThread.Name = "GuiThread";
+            Icon = AppImages.GetIcon(AppImages.MainForm);
             InitializeComponent();
 
             serialPort.NewLine = "\r";
             Settings.Default.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(settings_PropertyChanged);
+            
             //not 100% thread safe, but ok as the app doesn't do anything until this is up
             Instance = this;
 
@@ -53,8 +57,8 @@ namespace NXTCamView
             StickyWindow.Active = Settings.Default.SnapWindows;
             tsmSnapWindows.Checked = StickyWindow.Active;
 
-            AppState.Instance.StateChanged += AppStateChanged;
-            AppState.Instance.State = State.NotConnected;
+            AppState.Inst.StateChanged += AppStateChanged;
+            AppState.Inst.State = State.NotConnected;
         }
 
         private void settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -132,6 +136,9 @@ namespace NXTCamView
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            ColorForm.Init();
+            TrackingForm.Init();
+
             Size = new Size(1024, 800);
             Left = Screen.PrimaryScreen.WorkingArea.Width/2 - Width/2;
             Top = Screen.PrimaryScreen.WorkingArea.Height/2 - Height/2;
@@ -173,12 +180,12 @@ namespace NXTCamView
             
             //view menu
             ColorForm.Instance.VisibleChanged += form_VisibleChanged;
-            setupButtonAndMenu(tsbOpenColors, tsmOpenColors, "&Colors", "Show/hide colors window", AppImages.OpenColors, openColorCmd);
+            setupButtonAndMenu(tsbOpenColors, tsmOpenColors, "&Colors", "Show/hide colors window", AppImages.Colors, openColorCmd);
             TrackingForm.Instance.VisibleChanged += form_VisibleChanged;
-            setupButtonAndMenu(tsbOpenTracking, tsmOpenTracking, "&Tracking", "Show/hide tracking window", AppImages.OpenTracking, openTrackingCmd);
+            setupButtonAndMenu(tsbOpenTracking, tsmOpenTracking, "&Tracking", "Show/hide tracking window", AppImages.Tracking, openTrackingCmd);
 
             //option menu
-            setupMenu(tsmOpenOptions, "&Options", "Open application options", AppImages.OpenOptions, openOptionsCmd);
+            setupMenu(tsmOpenOptions, "&Options", "Open application options", AppImages.Options, openOptionsCmd);
         }
 
         void connectCmd_Completed(object sender, EventArgs e)
@@ -313,7 +320,7 @@ namespace NXTCamView
 
         private void updateConnectionState()
         {
-            switch( AppState.Instance.State )
+            switch( AppState.Inst.State )
             {
                 case State.NotConnected:
                     setStatusState("Not connected", AppImages.NotConnected);

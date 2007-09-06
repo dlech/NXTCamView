@@ -742,7 +742,7 @@ namespace Blue.Windows
             return swRect;
         }
 
-        private static MdiClient GetMdiClient(Form parent)
+        public static MdiClient GetMdiClient(Form parent)
         {
             if (mdiClient != null) return mdiClient;            
             foreach (Control control in parent.Controls)

@@ -33,7 +33,7 @@ namespace NXTCamView.StripCommands
 
         public override bool CanExecute()
         {
-            return AppState.Instance.State == State.NotConnected;            
+            return AppState.Inst.State == State.NotConnected;            
         }
 
         public override bool Execute()
@@ -41,7 +41,6 @@ namespace NXTCamView.StripCommands
             bool isOk = false;
             try
             {
-                setState(State.ConnectedBusy);
                 PingCommand pingCmd = new PingCommand(MainForm.Instance.SerialPort);
                 pingCmd.Execute();
                 isOk = pingCmd.IsSuccessful;
@@ -55,7 +54,6 @@ namespace NXTCamView.StripCommands
             }
             finally
             {
-                setState(isOk ? State.Connected : State.NotConnected);
                 OnCompeted();
                 if( !isOk )
                 {

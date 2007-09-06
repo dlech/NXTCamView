@@ -62,7 +62,7 @@ namespace NXTCamView.StripCommands
 
         protected void setState(State state)
         {
-            AppState.Instance.State = state;
+            AppState.Inst.State = state;
         }
     }
 }

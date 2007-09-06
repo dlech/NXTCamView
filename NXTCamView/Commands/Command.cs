@@ -88,7 +88,12 @@ namespace NXTCamView.Commands
 
         public virtual bool CanExecute()
         {
-            return AppState.Instance.State == State.Connected;
+            return AppState.Inst.State == State.Connected;
+        }
+
+        protected void SetState(State state)
+        {
+            AppState.Inst.State = state;
         }
     }
 

@@ -67,7 +67,7 @@ public class DumpFrameCommand : FetchFrameCommand
             setError(ex);
         }
         finally
-        {
+        {            
             completeCommand();
         }
     }

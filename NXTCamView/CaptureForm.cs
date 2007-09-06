@@ -25,6 +25,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
+using NXTCamView.Resources;
 
 namespace NXTCamView
 {
@@ -34,6 +35,7 @@ namespace NXTCamView
         private Bitmap _resizeInterpolated;
         private SerialPort _serialPort;
         private string _filename = "";
+        private bool _isHighlighting = true;
 
         public CaptureForm() : this(null)
         {            
@@ -42,10 +44,10 @@ namespace NXTCamView
         public CaptureForm(SerialPort serialPort)
         {
             InitializeComponent();
+            Icon = AppImages.GetIcon(AppImages.Capture);
             _serialPort = serialPort;
             MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
             ColorForm.Instance.HighlightColorsChanged += colorDetail_HighlightColorsChanged;
-
             StickyWindowsUtil.MakeStickyMDIChild(this);
         }
 
@@ -57,7 +59,7 @@ namespace NXTCamView
         public string Filename { get { return _filename; } set { _filename = value; } }
 
         private void CaptureForm_Load(object sender, EventArgs e)
-        {            
+        {
             pbBayer.Image = new Bitmap(FetchFrameCommand.IMAGE_WIDTH, FetchFrameCommand.IMAGE_HEIGHT);
             pbBayer.Visible = true;
             pbInterpolated.Visible = false;
@@ -84,6 +86,7 @@ namespace NXTCamView
             Text = string.Format(string.Format("NXTCapture{0:HHmmss}", DateTime.Now));
             pbBayer.Visible = true;
             pbInterpolated.Visible = false;
+            AppState.Inst.State = State.ConnectedBusy;
             pbProgress.Value = 0;
             worker.DoWork += workerCapture_DoWork;
             worker.ProgressChanged += workerCapture_ProgressChanged;
@@ -137,6 +140,7 @@ namespace NXTCamView
             worker.ProgressChanged -= workerCapture_ProgressChanged;
             worker.RunWorkerCompleted -= workerCapture_RunWorkerCompleted;
             completeFetch(e);
+            AppState.Inst.State = State.Connected;
         }
 
         private void completeFetch(RunWorkerCompletedEventArgs e)
@@ -284,19 +288,27 @@ namespace NXTCamView
             worker.ProgressChanged -= workerOpen_ProgressChanged;
             worker.RunWorkerCompleted -= workerOpen_RunWorkerCompleted;
             completeFetch(e);
+            setTransparentColor();
         }
 
-        private bool _highlightYellow = true;
         private void hightlightTimer_Tick(object sender, EventArgs e)
         {
             if( pbInterpolated.Visible )
             {
-                _highlightYellow = !_highlightYellow;
-                pbInterpolated.HighlightColor = 
-                    _highlightYellow ? 
-                    Color.Yellow : 
-                    ColorUtils.GetAverage(ColorForm.Instance.HighlightColorLow, ColorForm.Instance.HighlightColorHigh);
+                setTransparentColor();
             }
+        }
+
+        private void setTransparentColor()
+        {
+            Color color = ColorUtils.GetAverage(ColorForm.Instance.HighlightColorLow, ColorForm.Instance.HighlightColorHigh);
+            Color highlightColor = color.GetBrightness() > 0.5 ? Color.Black : Color.Yellow;
+
+            _isHighlighting = !_isHighlighting;
+            pbInterpolated.HighlightColor = 
+                _isHighlighting ?
+                highlightColor :
+                color;
         }
     }
 }

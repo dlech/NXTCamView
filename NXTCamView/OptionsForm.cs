@@ -24,6 +24,7 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
+using NXTCamView.Resources;
 
 namespace NXTCamView
 {
@@ -42,6 +43,9 @@ namespace NXTCamView
         public OptionsForm(SerialPort serialPort)
         {
             InitializeComponent();
+            
+            Icon = Icon.FromHandle(((Bitmap)AppImages.Options).GetHicon());
+
             _serialPort = serialPort;
             SuspendLayout();
 
@@ -203,7 +207,7 @@ namespace NXTCamView
             if( hasChanged || hasCommsChanged)
             {
                 //if we're connected and changing connection details we should offer to disconnect
-                if( AppState.Instance.State != State.NotConnected && hasCommsChanged)
+                if( AppState.Inst.State != State.NotConnected && hasCommsChanged)
                 {
                     DialogResult result = MessageBox.Show(
                         this,
@@ -213,7 +217,7 @@ namespace NXTCamView
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                     if( result == DialogResult.Cancel ) return false;
-                    AppState.Instance.State = State.NotConnected;
+                    AppState.Inst.State = State.NotConnected;
                     //TODO - maybe offer to reconnect?
                 }
                 Settings.Default.CopyFrom(proposed);                

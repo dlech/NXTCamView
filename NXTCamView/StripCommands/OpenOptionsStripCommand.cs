@@ -32,7 +32,7 @@ namespace NXTCamView.StripCommands
         public override bool CanExecute()
         {
             //don't all options to be changed if tracking or serial comms are outstanding
-            return AppState.Instance.State == State.Connected || AppState.Instance.State == State.NotConnected;
+            return AppState.Inst.State == State.Connected || AppState.Inst.State == State.NotConnected;
         }
 
         public override bool Execute()

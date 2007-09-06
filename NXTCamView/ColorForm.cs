@@ -24,6 +24,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
+using Blue.Windows;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
 using NXTCamView.Resources;
@@ -32,7 +33,8 @@ namespace NXTCamView
 {
     public partial class ColorForm : Form
     {
-        public static ColorForm Instance = new ColorForm();
+        private static ColorForm _instance;
+        public static ColorForm Instance { get { return _instance; } }
         private int COLOR_DETAIL_HEIGHT = 241;
         private const int COLOR_PANEL_SPACING = 30;
         private const int TRACKED_COLORS = 8;
@@ -53,12 +55,20 @@ namespace NXTCamView
         [Category("Custom")]
         public Color HighlightColorHigh { get { return _highlightColorHigh; } }
 
-        //DO NOT CALL THIS DIRECTLY - use the Instance property
+        //DO NOT CALL THIS DIRECTLY - use the Inst property
         public ColorForm()
         {
             InitializeComponent();
+            Icon = AppImages.GetIcon(AppImages.Colors);
+
             initErrorImage();
-            StickyWindowsUtil.MakeStickyMDIChild(this);
+        }
+
+        public static void Init()
+        {
+            //doing here as causing issues from static constructor
+            _instance = new ColorForm();
+            StickyWindowsUtil.MakeStickyMDIChild(_instance);
         }
 
         public void SetVisibility(bool makeVisible)
@@ -128,6 +138,18 @@ namespace NXTCamView
             llColorDetail.Focus();
 
             toggleColorDetail();
+
+            positionTopRight();
+        }
+
+        private void positionTopRight()
+        {
+            MdiClient mdiClient = StickyWindow.GetMdiClient(MainForm.Instance);
+            if( mdiClient != null )
+            {
+                Top = 0;
+                Left = mdiClient.ClientRectangle.Width - Width;
+            }
         }
 
         void panel_MouseHover(object sender, EventArgs e)
@@ -274,7 +296,7 @@ namespace NXTCamView
             _isColorDetailVisible = !_isColorDetailVisible;
             int heightChange = _isColorDetailVisible ? COLOR_DETAIL_HEIGHT : -COLOR_DETAIL_HEIGHT;
             Height += heightChange;
-            llColorDetail.Text = _isColorDetailVisible ? "Hide Details" : "Show Details";
+            llColorDetail.Text = _isColorDetailVisible ? "Hide" : "Show";
             ResumeLayout();
         }
 

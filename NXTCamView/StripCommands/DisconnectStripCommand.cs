@@ -22,13 +22,13 @@ namespace NXTCamView.StripCommands
     {
         public override bool CanExecute()
         {
-            return AppState.Instance.State != State.NotConnected;
+            return AppState.Inst.State != State.NotConnected;
         }
 
         public override bool Execute()
         {
             //maybe need to consider tracking?
-            AppState.Instance.State = State.NotConnected;
+            AppState.Inst.State = State.NotConnected;
             OnCompeted();
             return true;
         }

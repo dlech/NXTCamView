@@ -26,6 +26,7 @@ namespace NXTCamView.Resources
     {
         private static AppImageReader _imageReader = new AppImageReader();
 
+        public static readonly Image MainForm = _imageReader.GetImage("Capture.bmp");
         public static readonly Image Connect = _imageReader.GetImage("Connect.bmp");
         public static readonly Image Disconnect = _imageReader.GetImage("Disconnect.bmp");
         public static readonly Image NotConnected = _imageReader.GetImage("NotConnected.bmp");
@@ -37,9 +38,15 @@ namespace NXTCamView.Resources
         public static readonly Image OpenFile = _imageReader.GetImage("OpenFile.bmp");
         public static readonly Image SaveFile = _imageReader.GetImage("SaveFile.bmp");
         
-        public static readonly Image OpenOptions = _imageReader.GetImage("Options.bmp");
-        public static readonly Image OpenColors = _imageReader.GetImage("Colors.bmp");
-        public static readonly Image OpenTracking = _imageReader.GetImage("Tracking.bmp");
+        public static readonly Image Options = _imageReader.GetImage("Options.bmp");
+        public static readonly Image Colors = _imageReader.GetImage("Colors.bmp");
+        public static readonly Image Tracking = _imageReader.GetImage("Tracking.bmp");
+
+        public static Icon GetIcon( Image image )
+        {
+            Icon icon = Icon.FromHandle(((Bitmap)image).GetHicon());
+            return icon;
+        }
 
         private class AppImageReader
         {

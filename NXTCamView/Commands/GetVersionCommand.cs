@@ -40,6 +40,7 @@ public class GetVersionCommand : Command
     {
         try
         {
+            SetState( State.ConnectedBusy );
             _request = "GV";
             SendAndReceive();
             if( _isSuccessful )
@@ -47,24 +48,16 @@ public class GetVersionCommand : Command
                 _version = _serialPort.ReadLine();
             }
             _isCompleted = true;
-            //Ensure we are known as connected
-            if (AppState.Instance.State == State.NotConnected)
-            {
-                AppState.Instance.State = State.Connected;
-            }                
+            SetState( State.Connected );
         }
         catch( Exception ex )
         {
-            setError(ex);
-            //Ensure we are known as NOT connected
-            if (AppState.Instance.State != State.NotConnected)
-            {
-                AppState.Instance.State = State.NotConnected;
-            }
+            setError(ex);            
         }
         finally
         {
             completeCommand();
+            SetState(_isSuccessful ? State.Connected : State.NotConnected);
         }
     }
 }

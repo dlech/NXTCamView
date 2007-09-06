@@ -37,6 +37,8 @@ namespace NXTCamView.Commands
         {
             try
             {
+                SetState(State.ConnectedBusy);
+
                 if( _colorMap == null ) throw new ApplicationException("No colorMap to set");
                 if( _colorMap.Count != 16*3 ) throw new ApplicationException(string.Format("ColorMap needs to be 16*3 not {0}", _colorMap.Count));
 
@@ -57,6 +59,7 @@ namespace NXTCamView.Commands
             }
             finally
             {
+                SetState(State.Connected);
                 completeCommand();
             }
         }

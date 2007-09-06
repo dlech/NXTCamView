@@ -79,9 +79,9 @@ namespace NXTCamView
         } ;
 
         private Color _colorInner = Color.LightGreen;
-        private Color _colorRange = Color.FromKnownColor(KnownColor.Control);
-        private Color _colorShadowLight = Color.FromKnownColor(KnownColor.ControlLightLight);
-        private Color _colorShadowDark = Color.FromKnownColor(KnownColor.ControlDarkDark);
+        private Color _colorRange = SystemColors.ControlLightLight;
+        private Color _colorShadowLight = SystemColors.ControlLightLight;
+        private Color _colorShadowDark = SystemColors.ControlDarkDark;
         private int _sizeShadow = 1;
         private double _minimum = 0;
         private double _maximum = 10;
@@ -477,106 +477,6 @@ namespace NXTCamView
                                       tickyoff1 + _tickHeight, strformat);
                 e.Graphics.DrawString((_rangeMax*16).ToString(), fontMark, SystemBrushes.ControlText, _posRight,
                                       tickyoff1 + _tickHeight, strformat);
-            }
-            else // Vertical bar
-            {
-                //BROKEN PT
-
-
-                //baryoff = (w + _barHeight)/2;			
-                //markyoff = baryoff - _barHeight/2 - _markHeight/2;
-                //if( _scaleOrientation==TopBottomOrientation.Bottom )
-                //{					
-                //    tickyoff1 = tickyoff2 = baryoff + 2;
-                //}
-                //else if( _scaleOrientation==TopBottomOrientation.Top )
-                //{					
-                //    tickyoff1 = tickyoff2 = baryoff - _barHeight -2 - _tickHeight;
-                //}
-                //else
-                //{
-                //    tickyoff1 = baryoff + 2;
-                //    tickyoff2 = baryoff - _barHeight -2 - _tickHeight;
-                //}
-
-                //// total range bar frame			
-                //e.Graphics.FillRectangle(brushShadowDark,baryoff-_barHeight,0,_barHeight,_sizeShadow);	// Top
-                //e.Graphics.FillRectangle(brushShadowDark,baryoff-_barHeight,0,_sizeShadow,h-1);	// Left				
-                //e.Graphics.FillRectangle(brushShadowLight,baryoff,0,_sizeShadow,h-1);	// Right
-                //e.Graphics.FillRectangle(brushShadowLight,baryoff-_barHeight,h-_sizeShadow,_barHeight,_sizeShadow);	// Bottom
-
-                //// inner region
-                //e.Graphics.FillRectangle(brushInner,baryoff-_barHeight+_sizeShadow,_posLeft,_barHeight-2*_sizeShadow,_posRight-_posLeft);			
-
-                //// Skala
-                //if( _axisDivision>1 )
-                //{
-                //    dtick = (double)(_xPosMax-_xPosMin) / (double)_axisDivision;
-                //    for(int i=0;i<_axisDivision+1;i++)
-                //    {
-                //        tickpos = (int)Math.Round((double)i * dtick);
-                //        if( _scaleOrientation==TopBottomOrientation.Bottom 
-                //            || _scaleOrientation==TopBottomOrientation.Both )
-                //            e.Graphics.DrawLine(penShadowDark,	
-                //                tickyoff1,
-                //                _markWidth + 1 + tickpos,							
-                //                tickyoff1 + _tickHeight,
-                //                _markWidth + 1 + tickpos
-                //                ); 				
-                //        if( _scaleOrientation==TopBottomOrientation.Top 
-                //            || _scaleOrientation==TopBottomOrientation.Both )
-                //            e.Graphics.DrawLine(penShadowDark,	
-                //                tickyoff2,
-                //                _markWidth + 1 + tickpos,							
-                //                tickyoff2 + _tickHeight,
-                //                _markWidth + 1 + tickpos
-                //                ); 				
-                //    }
-                //}
-
-                //// Left(upper) mark knob				
-                //_markLeft[0].Y = _posLeft - _markWidth;	_markLeft[0].X = markyoff +  _markHeight/3 ;
-                //_markLeft[1].Y = _posLeft;				_markLeft[1].X = markyoff;
-                //_markLeft[2].Y = _posLeft;				_markLeft[2].X = markyoff + _markHeight;
-                //_markLeft[3].Y = _posLeft - _markWidth;	_markLeft[3].X = markyoff + 2*_markHeight/3;
-                //_markLeft[4].Y = _posLeft - _markWidth;	_markLeft[4].X = markyoff;
-                //e.Graphics.FillPolygon(brushRange,_markLeft);
-                //e.Graphics.DrawLine(penShadowDark,_markLeft[3].X,_markLeft[3].Y,_markLeft[2].X,_markLeft[2].Y); // Right shadow
-                //e.Graphics.DrawLine(penShadowLight,_markLeft[0].X-1,_markLeft[0].Y,_markLeft[3].X-1,_markLeft[3].Y); // Top shadow				
-                //e.Graphics.DrawLine(penShadowLight,_markLeft[0].X-1,_markLeft[0].Y,_markLeft[1].X-1,_markLeft[1].Y); // Left shadow
-                //if( _posLeft<_posRight )
-                //    e.Graphics.DrawLine(penShadowDark,_markLeft[1].X,_markLeft[1].Y,_markLeft[2].X,_markLeft[2].Y); // lower shadow
-                //if( _activeMark==ActiveMarkType.Left )
-                //{
-                //    e.Graphics.DrawLine(penShadowLight,markyoff+_markHeight/3,_posLeft-_markWidth/2,markyoff + 2*_markHeight/3,_posLeft-_markWidth/2); // active mark
-                //    e.Graphics.DrawLine(penShadowDark,markyoff+_markHeight/3,_posLeft-_markWidth/2+1,markyoff + 2*_markHeight/3,_posLeft-_markWidth/2+1); // active mark			
-                //}
-
-                //// Right mark knob
-                //_markRight[0].Y = _posRight + _markWidth;	_markRight[0].X = markyoff + _markHeight/3;
-                //_markRight[1].Y = _posRight;				_markRight[1].X = markyoff;
-                //_markRight[2].Y = _posRight;				_markRight[2].X = markyoff + _markHeight;
-                //_markRight[3].Y = _posRight + _markWidth;	_markRight[3].X = markyoff + 2*_markHeight/3;
-                //_markRight[4].Y = _posRight + _markWidth;	_markRight[4].X = markyoff;
-                //e.Graphics.FillPolygon(brushRange,_markRight);				
-                //e.Graphics.DrawLine(penShadowDark,_markRight[2].X,_markRight[2].Y,_markRight[3].X,_markRight[3].Y); // lower Right shadow
-                //e.Graphics.DrawLine(penShadowDark,_markRight[0].X,_markRight[0].Y,_markRight[1].X,_markRight[1].Y); // upper shadow
-                //e.Graphics.DrawLine(penShadowDark,_markRight[0].X,_markRight[0].Y,_markRight[3].X,_markRight[3].Y); // Right shadow
-                //if( _posLeft<_posRight )
-                //    e.Graphics.DrawLine(penShadowLight,_markRight[1].X,_markRight[1].Y,_markRight[2].X,_markRight[2].Y); // Left shadow
-                //if( _activeMark==ActiveMarkType.Right )
-                //{
-                //    e.Graphics.DrawLine(penShadowLight,markyoff+_markHeight/3,_posRight+_markWidth/2-1,markyoff + 2*_markHeight/3,_posRight+_markWidth/2-1); // active mark
-                //    e.Graphics.DrawLine(penShadowDark,markyoff+_markHeight/3,_posRight+_markWidth/2,markyoff + 2*_markHeight/3,_posRight+_markWidth/2); // active mark				
-                //}
-
-                //Font fontMark = new Font("Arial", _markWidth);
-                //SolidBrush brushMark = new SolidBrush(Color.Black);
-                //StringFormat strformat = new StringFormat();
-                //strformat.Alignment = StringAlignment.Near;
-                //strformat.LineAlignment = StringAlignment.Center;
-                //e.Graphics.DrawString(_rangeMin.ToString(),fontMark ,brushMark, tickyoff1+_tickHeight+2,_posLeft,strformat);
-                //e.Graphics.DrawString(_rangeMax.ToString(), fontMark, brushMark, tickyoff1 + _tickHeight, _posRight, strformat);
             }
         }
 

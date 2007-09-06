@@ -32,7 +32,7 @@ namespace NXTCamView
     {
         public event EventHandler<EventArgs> StateChanged;
 
-        static public readonly AppState Instance = new AppState();
+        static public readonly AppState Inst = new AppState();
         private State _state;
 
         public State State

@@ -48,16 +48,16 @@ namespace NXTCamView
             // 
             // pnlColorMain
             // 
+            this.pnlColorMain.Controls.Add(this.pnlActiveColor);
             this.pnlColorMain.Controls.Add(this.cbHighLight);
             this.pnlColorMain.Controls.Add(this.cbGotoNext);
             this.pnlColorMain.Controls.Add(this.pnlColorPanels);
             this.pnlColorMain.Controls.Add(this.llColorDetail);
-            this.pnlColorMain.Controls.Add(this.pnlActiveColor);
             this.pnlColorMain.Controls.Add(this.lbActiveColor);
             this.pnlColorMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlColorMain.Location = new System.Drawing.Point(0, 0);
             this.pnlColorMain.Name = "pnlColorMain";
-            this.pnlColorMain.Size = new System.Drawing.Size(511, 67);
+            this.pnlColorMain.Size = new System.Drawing.Size(468, 67);
             this.pnlColorMain.TabIndex = 6;
             // 
             // cbHighLight
@@ -66,7 +66,7 @@ namespace NXTCamView
             this.cbHighLight.Checked = global::NXTCamView.Properties.Settings.Default.HighlightColors;
             this.cbHighLight.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbHighLight.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::NXTCamView.Properties.Settings.Default, "HighlightColors", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cbHighLight.Location = new System.Drawing.Point(255, 13);
+            this.cbHighLight.Location = new System.Drawing.Point(255, 44);
             this.cbHighLight.Name = "cbHighLight";
             this.cbHighLight.Size = new System.Drawing.Size(75, 17);
             this.cbHighLight.TabIndex = 9;
@@ -81,11 +81,11 @@ namespace NXTCamView
             this.cbGotoNext.AutoSize = true;
             this.cbGotoNext.Checked = true;
             this.cbGotoNext.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbGotoNext.Location = new System.Drawing.Point(255, 48);
+            this.cbGotoNext.Location = new System.Drawing.Point(336, 44);
             this.cbGotoNext.Name = "cbGotoNext";
-            this.cbGotoNext.Size = new System.Drawing.Size(97, 17);
+            this.cbGotoNext.Size = new System.Drawing.Size(82, 17);
             this.cbGotoNext.TabIndex = 7;
-            this.cbGotoNext.Text = "Goto to next";
+            this.cbGotoNext.Text = "Goto next";
             this.cbGotoNext.UseVisualStyleBackColor = true;
             // 
             // pnlColorPanels
@@ -98,12 +98,12 @@ namespace NXTCamView
             this.pnlColorPanels.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlColorPanels.Location = new System.Drawing.Point(0, 0);
             this.pnlColorPanels.Name = "pnlColorPanels";
-            this.pnlColorPanels.Size = new System.Drawing.Size(267, 67);
+            this.pnlColorPanels.Size = new System.Drawing.Size(249, 67);
             this.pnlColorPanels.TabIndex = 8;
             // 
             // btnClearAll
             // 
-            this.btnClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnClearAll.Location = new System.Drawing.Point(167, 40);
             this.btnClearAll.Name = "btnClearAll";
             this.btnClearAll.Size = new System.Drawing.Size(70, 23);
@@ -114,7 +114,7 @@ namespace NXTCamView
             // 
             // btnClear
             // 
-            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnClear.Location = new System.Drawing.Point(90, 40);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(70, 23);
@@ -125,7 +125,7 @@ namespace NXTCamView
             // 
             // btnUpload
             // 
-            this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnUpload.Location = new System.Drawing.Point(13, 40);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(70, 23);
@@ -138,7 +138,7 @@ namespace NXTCamView
             // 
             this.pnlSample.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlSample.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.pnlSample.Location = new System.Drawing.Point(227, 9);
+            this.pnlSample.Location = new System.Drawing.Point(224, 9);
             this.pnlSample.Name = "pnlSample";
             this.pnlSample.Size = new System.Drawing.Size(22, 21);
             this.pnlSample.TabIndex = 3;
@@ -148,13 +148,13 @@ namespace NXTCamView
             // 
             this.llColorDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.llColorDetail.AutoSize = true;
-            this.llColorDetail.Location = new System.Drawing.Point(426, 49);
+            this.llColorDetail.Location = new System.Drawing.Point(424, 45);
             this.llColorDetail.Name = "llColorDetail";
             this.llColorDetail.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.llColorDetail.Size = new System.Drawing.Size(75, 13);
+            this.llColorDetail.Size = new System.Drawing.Size(32, 13);
             this.llColorDetail.TabIndex = 6;
             this.llColorDetail.TabStop = true;
-            this.llColorDetail.Text = "Hide Details";
+            this.llColorDetail.Text = "Hide";
             this.llColorDetail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llColorDetail_LinkClicked);
             // 
             // pnlActiveColor
@@ -162,7 +162,7 @@ namespace NXTCamView
             this.pnlActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlActiveColor.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.pnlActiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlActiveColor.Location = new System.Drawing.Point(469, 9);
+            this.pnlActiveColor.Location = new System.Drawing.Point(255, 9);
             this.pnlActiveColor.Name = "pnlActiveColor";
             this.pnlActiveColor.Size = new System.Drawing.Size(29, 27);
             this.pnlActiveColor.TabIndex = 3;
@@ -171,7 +171,7 @@ namespace NXTCamView
             // 
             this.lbActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lbActiveColor.AutoSize = true;
-            this.lbActiveColor.Location = new System.Drawing.Point(349, 14);
+            this.lbActiveColor.Location = new System.Drawing.Point(295, 17);
             this.lbActiveColor.Name = "lbActiveColor";
             this.lbActiveColor.Size = new System.Drawing.Size(35, 13);
             this.lbActiveColor.TabIndex = 5;
@@ -188,11 +188,15 @@ namespace NXTCamView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(511, 71);
+            this.ClientSize = new System.Drawing.Size(468, 71);
             this.Controls.Add(this.pnlColorMain);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ColorForm";
+            this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Colors";
             this.SizeChanged += new System.EventHandler(this.ColorForm_SizeChanged);

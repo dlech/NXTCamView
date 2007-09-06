@@ -24,12 +24,16 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
+using NXTCamView.Resources;
+using NXTCamView.StripCommands;
 
 namespace NXTCamView
 {
     public partial class TrackingForm : Form
     {
-        public static TrackingForm Instance = new TrackingForm();
+        private static TrackingForm _instance;
+        public static TrackingForm Instance { get { return _instance; } }
+
         private bool _isShowingDetail = true;
 
         private SerialPort _serialPort;
@@ -47,17 +51,37 @@ namespace NXTCamView
         private Pen _detailPen;
         private Brush _detailBrush;
 
-        //DO NOT CALL THIS DIRECTLY - use the Instance property
+        //DO NOT CALL THIS DIRECTLY - use the Inst property
         public TrackingForm()
         {
             InitializeComponent();
+
+            Icon = AppImages.GetIcon(AppImages.Tracking);
+            cbtnStart.Command = new StartTrackingCommand(this);
+            cbtnStop.Command = new StopTrackingCommand(this);
+            cbtnPause.Command = new TogglePauseTrackingCommand(this);
+            cbtnPause.ExecutionType = ExecutionType.OnDownUpToggle;
+
+            AppState.Inst.StateChanged += AppState_StateChanged;
+                        
             _serialPort = MainForm.Instance.SerialPort;
             pnlTrackedColors.MyPaint += new PaintEventHandler(pnlTracking_Paint);
             _trackingCmd = new TrackingCommand(_serialPort, objectsDetected);
             SetupColors();
             MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
+        }
 
-            StickyWindowsUtil.MakeStickyMDIChild(this);
+        void AppState_StateChanged(object sender, EventArgs e)
+        {
+            cbtnStart.UpdateEnablement();
+            cbtnStop.UpdateEnablement();
+            cbtnPause.UpdateEnablement();
+        }
+
+        public static void Init()
+        {
+            _instance = new TrackingForm();
+            StickyWindowsUtil.MakeStickyMDIChild(_instance);
         }
 
         private void mainForm_SerialPortChanged(object sender, EventArgs e)
@@ -77,8 +101,8 @@ namespace NXTCamView
                 if (ColorUtils.IsNotSet(color))
                 {
                     //skip as black == not set}
-                    _trackingData.Add(new TrackingData(Color.Black,null));
-                    continue; 
+                    _trackingData.Add(new TrackingData(Color.Black, null));
+                    continue;
                 }
                 ListViewItem item = new ListViewItem(new string[] { (i + 1).ToString(), "", "0", "0" });
                 item.UseItemStyleForSubItems = false;
@@ -96,6 +120,7 @@ namespace NXTCamView
         {
             if (!Visible && makeVisible)
             {
+                //NOTE: this may cause issues in the debugger - the cross thread issues are not real!
                 MdiParent = MainForm.Instance;
                 Show();
             }
@@ -132,15 +157,15 @@ namespace NXTCamView
 
         private void startTracking()
         {
-            if (!_trackingCmd.CanExecute() ) return;
-            AppState.Instance.State = State.ConnectedTracking;
+            if (!_trackingCmd.CanExecute()) return;
+            AppState.Inst.State = State.ConnectedTracking;
             lblMessage.Text = "Starting Tracking";
             lblMessage.ForeColor = Color.Black;
             lblMessage.Refresh();
             _trackingCmd.Execute();
             lblMessage.Text = _trackingCmd.IsSuccessful ? "Tracking Running" : _trackingCmd.ErrorDescription;
             lblMessage.ForeColor = _trackingCmd.IsSuccessful ? Color.Black : Color.Red;
-            AppState.Instance.State = _trackingCmd.IsSuccessful ? State.ConnectedTracking : State.Connected;
+            AppState.Inst.State = _trackingCmd.IsSuccessful ? State.ConnectedTracking : State.Connected;
             paintTimer.Start();
         }
 
@@ -152,7 +177,7 @@ namespace NXTCamView
             _trackingCmd.StopTracking();
             lblMessage.Text = _trackingCmd.IsSuccessful ? "Tracking Stopped" : _trackingCmd.ErrorDescription;
             lblMessage.ForeColor = _trackingCmd.IsSuccessful ? Color.Black : Color.Red;
-            if( _trackingCmd.IsSuccessful ) AppState.Instance.State = State.Connected;
+            if (_trackingCmd.IsSuccessful) AppState.Inst.State = State.Connected;
             paintTimer.Stop();
         }
 
@@ -290,8 +315,8 @@ namespace NXTCamView
                         if (line.Length >= longest.Length) longest = line;
                     }
                     //measuresize gives short results sometimes so try this method
-                    int textWidth = 10+MeasureDisplayStringWidth(e.Graphics, longest, lblDummyDetail.Font);
-                    int textHeight = lblDummyDetail.Font.Height*lines.Count;
+                    int textWidth = 10 + MeasureDisplayStringWidth(e.Graphics, longest, lblDummyDetail.Font);
+                    int textHeight = lblDummyDetail.Font.Height * lines.Count;
                     int offset = 5;
                     //assume the text will fit Bottom Right
                     Rectangle rect = new Rectangle(bounds.Right + offset, bounds.Bottom + offset, textWidth, textHeight);
@@ -300,12 +325,12 @@ namespace NXTCamView
                     Point joinEnd;
                     if (pnlTrackedColors.Bounds.Contains(rect))
                     {
-                        joinStart = new Point(bounds.X + bounds.Width/2, bounds.Bottom);
-                        joinEnd = new Point(rect.X, rect.Y + rect.Height/2);
+                        joinStart = new Point(bounds.X + bounds.Width / 2, bounds.Bottom);
+                        joinEnd = new Point(rect.X, rect.Y + rect.Height / 2);
                     }
                     else
                     {
-                        if( bounds.X + (bounds.Width/2) < pnlTrackedColors.Bounds.Width/2 )
+                        if (bounds.X + (bounds.Width / 2) < pnlTrackedColors.Bounds.Width / 2)
                         {
                             //on Bottom Left so put the text Top Right
                             rect = new Rectangle(bounds.Right + offset, bounds.Top - (offset + textHeight), textWidth, textHeight);
@@ -314,7 +339,7 @@ namespace NXTCamView
                         }
                         else
                         {
-                            if( bounds.Y + (bounds.Height/2) < pnlTrackedColors.Bounds.Height/2 )
+                            if (bounds.Y + (bounds.Height / 2) < pnlTrackedColors.Bounds.Height / 2)
                             {
                                 //on the Top Right so put the text Bottom Left
                                 rect = new Rectangle(bounds.X - (offset + textWidth), bounds.Bottom + offset, textWidth, textHeight);
@@ -332,7 +357,7 @@ namespace NXTCamView
                     }
                     e.Graphics.DrawRectangle(_detailPen, rect);
                     e.Graphics.DrawString(string.Join("\n", lines.ToArray()), lblDummyDetail.Font, _detailBrush, rect);
-                    e.Graphics.DrawLine(_detailPen, joinStart, joinEnd );
+                    e.Graphics.DrawLine(_detailPen, joinStart, joinEnd);
                 }
             }
         }
@@ -361,21 +386,11 @@ namespace NXTCamView
             ColorSolid = 0x03,
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            stopTracking();
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            startTracking();
-        }
-
         private void cb_Click(object sender, EventArgs e)
         {
             pnlTrackedColors.Refresh();
         }
-
+    
         private void TrackingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             //don't close it, just hide it
@@ -384,33 +399,23 @@ namespace NXTCamView
                 e.Cancel = true;
                 Hide();
             }
-            if (AppState.Instance.State == State.ConnectedTracking)
+            if (AppState.Inst.State == State.ConnectedTracking)
             {
-                stopTracking();
+                cbtnStop.Command.Execute();
             }
-        }
-
-        private void btnPause_MouseDown(object sender, MouseEventArgs e)
-        {
-            startPause();
         }
 
         private void startPause()
         {
-            btnPause.Text = "PAUSING";
-            btnPause.Refresh();
+            cbtnPause.Text = "PAUSING";
+            cbtnPause.Refresh();
             _isPausing = true;
-        }
-
-        private void btnPause_MouseUp(object sender, MouseEventArgs e)
-        {
-            stopPause();
         }
 
         private void stopPause()
         {
-            btnPause.Text = "Pause";
-            btnPause.Refresh();
+            cbtnPause.Text = "Pause";
+            cbtnPause.Refresh();
             _isPausing = false;
         }
 
@@ -439,18 +444,18 @@ namespace NXTCamView
 
         private void TrackingForm_KeyDown(object sender, KeyEventArgs e)
         {
-            switch( e.KeyCode )
+            switch (e.KeyCode)
             {
                 case Keys.Space:
-                    startPause();
+                    cbtnPause.Command.Execute();
                     e.Handled = true;
                     break;
                 case Keys.T:
-                    startTracking();
+                    cbtnStart.Command.Execute(); 
                     e.Handled = true;
                     break;
                 case Keys.S:
-                    stopTracking();
+                    cbtnStop.Command.Execute(); 
                     e.Handled = true;
                     break;
             }
@@ -473,6 +478,100 @@ namespace NXTCamView
             llShowHideDetail.Text = _isShowingDetail ? "Hide" : "Detail";
             Height += (_isShowingDetail ? 1 : -1) * 200;
         }
+
+
+        abstract public class TrackingStripCommand : StripCommand
+        {
+            protected TrackingForm _form;
+
+            protected TrackingStripCommand(TrackingForm form)
+            {
+                _form = form;
+            }
+        }
+
+
+        public class StartTrackingCommand : TrackingStripCommand
+        {
+            public StartTrackingCommand(TrackingForm form) : base(form)
+            {
+            }
+
+            public override bool CanExecute()
+            {
+                return AppState.Inst.State == State.Connected;
+            }
+
+            public override bool Execute()
+            {
+                _form.startTracking();
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                return false;
+            }
+        }
+
+
+        public class TogglePauseTrackingCommand : TrackingStripCommand
+        {
+            private bool _started = false;
+
+            public TogglePauseTrackingCommand(TrackingForm form)
+                : base(form)
+            {
+            }
+
+            public override bool CanExecute()
+            {
+                return AppState.Inst.State == State.ConnectedTracking;
+            }
+
+            public override bool Execute()
+            {
+                if (_started)
+                {
+                    _form.stopPause();
+                }
+                else
+                {
+                    _form.startPause();
+                }
+                _started = !_started;
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                return false;
+            }
+        }
+        
+
+        public class StopTrackingCommand : TrackingStripCommand
+        {
+            public StopTrackingCommand(TrackingForm form) : base(form)
+            {
+            }
+
+            public override bool CanExecute()
+            {
+                return AppState.Inst.State == State.ConnectedTracking;
+            }
+
+            public override bool Execute()
+            {
+                _form.stopTracking();
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                return false;
+            }
+        }
     }
 
     public class TrackingData : IDisposable
@@ -490,7 +589,7 @@ namespace NXTCamView
         public void AddFrame(int matchesFiltered, int matchesTotal)
         {
             _matchesTotal += matchesTotal;
-            _matchesFiltered += matchesFiltered;            
+            _matchesFiltered += matchesFiltered;
         }
 
         public TrackingData(Color color, ListViewItem lvItem)

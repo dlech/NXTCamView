@@ -29,7 +29,6 @@ namespace NXTCamView
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CaptureForm));
             this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.pnlProgress = new System.Windows.Forms.Panel();
             this.btnAbort = new System.Windows.Forms.Button();
@@ -188,7 +187,8 @@ namespace NXTCamView
             this.Controls.Add(this.pbBayer);
             this.Controls.Add(this.pbInterpolated);
             this.Controls.Add(this.pnlProgress);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CaptureForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
