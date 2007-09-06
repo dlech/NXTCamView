@@ -116,7 +116,7 @@ namespace NXTCamView
             this.rbRed.MarkHeight = 24;
             this.rbRed.Name = "rbRed";
             this.rbRed.Orientation = NXTCamView.RangeBar.RangeBarOrientation.Horizontal;
-            this.rbRed.RangeMaximum = 0;
+            this.rbRed.RangeMaximum = 5;
             this.rbRed.RangeMinimum = 0;
             this.rbRed.ScaleOrientation = NXTCamView.RangeBar.TopBottomOrientation.Bottom;
             this.rbRed.Size = new System.Drawing.Size(177, 65);
@@ -124,6 +124,8 @@ namespace NXTCamView
             this.rbRed.TickHeight = 6;
             this.rbRed.TotalMaximum = 15;
             this.rbRed.TotalMinimum = 0;
+            this.rbRed.Value = 0;
+            this.rbRed.ValueActive = false;
             this.rbRed.RangeChanging += new NXTCamView.RangeBar.RangeChangedEventHandler(this.RangeChanging);
             // 
             // rbGreen
@@ -136,7 +138,7 @@ namespace NXTCamView
             this.rbGreen.MarkHeight = 24;
             this.rbGreen.Name = "rbGreen";
             this.rbGreen.Orientation = NXTCamView.RangeBar.RangeBarOrientation.Horizontal;
-            this.rbGreen.RangeMaximum = 0;
+            this.rbGreen.RangeMaximum = 5;
             this.rbGreen.RangeMinimum = 0;
             this.rbGreen.ScaleOrientation = NXTCamView.RangeBar.TopBottomOrientation.Bottom;
             this.rbGreen.Size = new System.Drawing.Size(177, 65);
@@ -144,6 +146,8 @@ namespace NXTCamView
             this.rbGreen.TickHeight = 6;
             this.rbGreen.TotalMaximum = 15;
             this.rbGreen.TotalMinimum = 0;
+            this.rbGreen.Value = 0;
+            this.rbGreen.ValueActive = false;
             this.rbGreen.RangeChanging += new NXTCamView.RangeBar.RangeChangedEventHandler(this.RangeChanging);
             // 
             // rbBlue
@@ -156,7 +160,7 @@ namespace NXTCamView
             this.rbBlue.MarkHeight = 24;
             this.rbBlue.Name = "rbBlue";
             this.rbBlue.Orientation = NXTCamView.RangeBar.RangeBarOrientation.Horizontal;
-            this.rbBlue.RangeMaximum = 0;
+            this.rbBlue.RangeMaximum = 5;
             this.rbBlue.RangeMinimum = 0;
             this.rbBlue.ScaleOrientation = NXTCamView.RangeBar.TopBottomOrientation.Bottom;
             this.rbBlue.Size = new System.Drawing.Size(177, 65);
@@ -164,6 +168,8 @@ namespace NXTCamView
             this.rbBlue.TickHeight = 6;
             this.rbBlue.TotalMaximum = 15;
             this.rbBlue.TotalMinimum = 0;
+            this.rbBlue.Value = 0;
+            this.rbBlue.ValueActive = false;
             this.rbBlue.RangeChanging += new NXTCamView.RangeBar.RangeChangedEventHandler(this.RangeChanging);
             // 
             // ColorDetail

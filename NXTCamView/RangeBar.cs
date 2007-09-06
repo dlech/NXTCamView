@@ -103,6 +103,8 @@ namespace NXTCamView
         private int _xPosMin;
         private int _xPosMax;
 
+        private int _posValue = 0;
+
         private Point[] _markLeft = new Point[5];
         private Point[] _markRight = new Point[5];
 
@@ -164,15 +166,26 @@ namespace NXTCamView
             get { return _scaleOrientation; }
         }
 
+
+        public void SetRangeMinMax( double min, double max )
+        {
+            _rangeMin = min;
+            _rangeMax = max;
+            if( _rangeMin > _rangeMax )
+            {
+                double temp = _rangeMax;
+                _rangeMax = _rangeMin;
+                _rangeMin = temp;
+                Range2Pos();
+                Invalidate(true);
+            }
+
+
+        }
         public int RangeMaximum
         {
             set
             {
-                _rangeMax = value;
-                if( _rangeMax < _minimum )
-                    _rangeMax = _minimum;
-                else if( _rangeMax > _maximum )
-                    _rangeMax = _maximum;
                 //PT - fix - change the other side if my new value doesn't fit
                 if( _rangeMax < _rangeMin )
                     _rangeMin = _rangeMax;
@@ -263,6 +276,30 @@ namespace NXTCamView
             }
         }
 
+        private double _value;
+
+        public double Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = Math.Max(_minimum, Math.Min( _maximum, value ));
+                Value2Pos();
+                Invalidate();
+            }
+        }
+
+        private bool _valueActive = false;
+        public bool ValueActive 
+        { 
+            get { return _valueActive; } 
+            set
+            {
+                 _valueActive = value;
+                Invalidate();
+            } 
+        }
+
         /// <summary>
         /// set selected range
         /// </summary>
@@ -270,10 +307,7 @@ namespace NXTCamView
         /// <param name="right">Right side of range</param>
         public void SelectRange(int left, int right)
         {
-            RangeMinimum = left;
-            RangeMaximum = right;
-            Range2Pos();
-            Invalidate(true);
+            SetRangeMinMax(left,right);
         }
 
 
@@ -301,6 +335,7 @@ namespace NXTCamView
             int tickpos;
             Pen penShadowLight = new Pen(_colorShadowLight);
             Pen penShadowDark = new Pen(_colorShadowDark);
+            Pen penHighlight = new Pen( Color.DarkBlue, 3 );
             SolidBrush brushInner;
             SolidBrush brushRange = new SolidBrush(_colorRange);
             SolidBrush brushBackground = new SolidBrush(colorBackground);
@@ -324,6 +359,7 @@ namespace NXTCamView
             if( _posRight < _xPosMin ) _posRight = _xPosMin;
 
             Range2Pos();
+            Value2Pos();
 
             if( _barOrientation == RangeBarOrientation.Horizontal )
             {
@@ -477,6 +513,9 @@ namespace NXTCamView
                                       tickyoff1 + _tickHeight, strformat);
                 e.Graphics.DrawString((_rangeMax*16).ToString(), fontMark, SystemBrushes.ControlText, _posRight,
                                       tickyoff1 + _tickHeight, strformat);
+
+                //Draw the active value
+                if (_valueActive) e.Graphics.DrawLine(penHighlight, _posValue, markyoff, _posValue, markyoff + _markHeight);
             }
         }
 
@@ -641,17 +680,17 @@ namespace NXTCamView
         /// </summary>
         private void Range2Pos()
         {
-            int w;
-            int posw;
+            int width = _barOrientation == RangeBarOrientation.Horizontal ? Width : Height;
+            int totalPosWidth = width - 2*_markWidth - 2;
+            _posLeft = _xPosMin + (int) Math.Round(totalPosWidth*(_rangeMin - _minimum)/(_maximum - _minimum));
+            _posRight = _xPosMin + (int) Math.Round(totalPosWidth*(_rangeMax - _minimum)/(_maximum - _minimum));
+        }
 
-            if( _barOrientation == RangeBarOrientation.Horizontal )
-                w = Width;
-            else
-                w = Height;
-            posw = w - 2*_markWidth - 2;
-
-            _posLeft = _xPosMin + (int) Math.Round(posw*(_rangeMin - _minimum)/(_maximum - _minimum));
-            _posRight = _xPosMin + (int) Math.Round(posw*(_rangeMax - _minimum)/(_maximum - _minimum));
+        private void Value2Pos()
+        {            
+            int width = _barOrientation == RangeBarOrientation.Horizontal ? Width : Height;
+            int totalPosWidth = width - 2 * _markWidth - 2;
+            _posValue = _xPosMin + (int)Math.Round(totalPosWidth * (_value - _minimum) / (_maximum - _minimum));
         }
 
 

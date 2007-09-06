@@ -72,13 +72,15 @@ namespace NXTCamView
                 int scaledRange = (int) (16*nudRange.Value/2);
                 Color baseColor = value;
 
-                _minColor = Color.FromArgb(Math.Max(0, baseColor.R - scaledRange),
-                                   Math.Max(0, baseColor.G - scaledRange),
-                                   Math.Max(0, baseColor.B - scaledRange));
+                _minColor = Color.FromArgb(
+                    Math.Max(0, baseColor.R - scaledRange),
+                    Math.Max(0, baseColor.G - scaledRange),
+                    Math.Max(0, baseColor.B - scaledRange));
 
-                _maxColor = Color.FromArgb(Math.Min(255, baseColor.R + scaledRange),
-                                   Math.Min(255, baseColor.G + scaledRange),
-                                   Math.Min(255, baseColor.B + scaledRange));
+                _maxColor = Color.FromArgb(
+                    Math.Min(255, baseColor.R + scaledRange),
+                    Math.Min(255, baseColor.G + scaledRange),
+                    Math.Min(255, baseColor.B + scaledRange));
                 applyChanges();
                 notifyChanges();
             }
@@ -86,12 +88,9 @@ namespace NXTCamView
 
         private void applyChanges()
         {
-            rbRed.RangeMinimum = _minColor.R/16;
-            rbRed.RangeMaximum = _maxColor.R/16;
-            rbGreen.RangeMinimum = _minColor.G/16;
-            rbGreen.RangeMaximum = _maxColor.G/16;
-            rbBlue.RangeMinimum = _minColor.B/16;
-            rbBlue.RangeMaximum = _maxColor.B/16;
+            rbRed.SetRangeMinMax(_minColor.R/16, _maxColor.R/16);
+            rbGreen.SetRangeMinMax(_minColor.G/16, _maxColor.G/16);
+            rbBlue.SetRangeMinMax(_minColor.B/16, _maxColor.B/16);
 
             Debug.WriteLine(string.Format("R:{0}-{1},G:{2}-{3},B:{4}-{5}",
                                           rbRed.RangeMinimum,
@@ -183,6 +182,18 @@ namespace NXTCamView
         {
             //recreate the mix/max given the new range
             BaseColor = ColorUtils.GetAverage(_minColor, _maxColor);
+        }
+
+        public void SetActiveColor(Color color)
+        {
+            bool isActive = color != Color.Empty;
+            //0-15
+            rbRed.ValueActive = isActive;
+            rbRed.Value = color.R / 16;
+            rbGreen.ValueActive = isActive;
+            rbGreen.Value = color.G / 16;
+            rbBlue.ValueActive = isActive;
+            rbBlue.Value = color.B / 16;
         }
     }
 }

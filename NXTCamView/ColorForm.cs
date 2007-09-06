@@ -272,8 +272,10 @@ namespace NXTCamView
 
         public void SetActiveColor(Color color)
         {
+            _colorDetail.SetActiveColor(color);
+            if (color == Color.Empty) return;
             pnlActiveColor.BackColor = color;
-            lbActiveColor.Text = string.Format("r:{0} g:{1} b:{2}", color.R, color.G, color.B);
+            lbActiveColor.Text = string.Format("r:{0} g:{1} b:{2}", color.R, color.G, color.B);            
         }
 
         public void SetSelectedColor()

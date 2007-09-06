@@ -211,6 +211,7 @@ namespace NXTCamView
             Debug.WriteLine(e.X + "  " + e.Y);
             if (e.X < 0 || e.X >= _resizeInterpolated.Width || e.Y < 0 || e.Y >= _resizeInterpolated.Height)
             {
+                ColorForm.Instance.SetActiveColor(Color.Empty);
                 return;
             }
 
