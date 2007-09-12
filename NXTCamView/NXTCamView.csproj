@@ -175,6 +175,7 @@
     <Compile Include="RangeBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Resources\AppCursors.cs" />
     <Compile Include="Resources\AppImages.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StickyWindow.cs" />
@@ -271,6 +272,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\OpenFile.bmp" />
     <EmbeddedResource Include="Resources\SaveFile.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AddingColor.cur" />
+    <EmbeddedResource Include="Resources\RemovingColor.cur" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />

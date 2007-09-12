@@ -30,15 +30,14 @@ namespace NXTCamView
         {
             this.components = new System.ComponentModel.Container();
             this.pnlColorMain = new System.Windows.Forms.Panel();
+            this.pnlActiveColor = new System.Windows.Forms.Panel();
             this.cbHighLight = new System.Windows.Forms.CheckBox();
-            this.cbGotoNext = new System.Windows.Forms.CheckBox();
             this.pnlColorPanels = new System.Windows.Forms.Panel();
             this.btnClearAll = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
             this.pnlSample = new System.Windows.Forms.Panel();
             this.llColorDetail = new System.Windows.Forms.LinkLabel();
-            this.pnlActiveColor = new System.Windows.Forms.Panel();
             this.lbActiveColor = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipPanel = new System.Windows.Forms.ToolTip(this.components);
@@ -50,7 +49,6 @@ namespace NXTCamView
             // 
             this.pnlColorMain.Controls.Add(this.pnlActiveColor);
             this.pnlColorMain.Controls.Add(this.cbHighLight);
-            this.pnlColorMain.Controls.Add(this.cbGotoNext);
             this.pnlColorMain.Controls.Add(this.pnlColorPanels);
             this.pnlColorMain.Controls.Add(this.llColorDetail);
             this.pnlColorMain.Controls.Add(this.lbActiveColor);
@@ -59,6 +57,16 @@ namespace NXTCamView
             this.pnlColorMain.Name = "pnlColorMain";
             this.pnlColorMain.Size = new System.Drawing.Size(468, 67);
             this.pnlColorMain.TabIndex = 6;
+            // 
+            // pnlActiveColor
+            // 
+            this.pnlActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlActiveColor.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.pnlActiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlActiveColor.Location = new System.Drawing.Point(255, 9);
+            this.pnlActiveColor.Name = "pnlActiveColor";
+            this.pnlActiveColor.Size = new System.Drawing.Size(29, 27);
+            this.pnlActiveColor.TabIndex = 3;
             // 
             // cbHighLight
             // 
@@ -74,19 +82,6 @@ namespace NXTCamView
             this.toolTip.SetToolTip(this.cbHighLight, "Hightlight the color range in the capture when selecting a color");
             this.cbHighLight.UseVisualStyleBackColor = true;
             this.cbHighLight.CheckedChanged += new System.EventHandler(this.cbHighLight_CheckedChanged);
-            // 
-            // cbGotoNext
-            // 
-            this.cbGotoNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cbGotoNext.AutoSize = true;
-            this.cbGotoNext.Checked = true;
-            this.cbGotoNext.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbGotoNext.Location = new System.Drawing.Point(336, 44);
-            this.cbGotoNext.Name = "cbGotoNext";
-            this.cbGotoNext.Size = new System.Drawing.Size(82, 17);
-            this.cbGotoNext.TabIndex = 7;
-            this.cbGotoNext.Text = "Goto next";
-            this.cbGotoNext.UseVisualStyleBackColor = true;
             // 
             // pnlColorPanels
             // 
@@ -157,16 +152,6 @@ namespace NXTCamView
             this.llColorDetail.Text = "Hide";
             this.llColorDetail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llColorDetail_LinkClicked);
             // 
-            // pnlActiveColor
-            // 
-            this.pnlActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlActiveColor.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.pnlActiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlActiveColor.Location = new System.Drawing.Point(255, 9);
-            this.pnlActiveColor.Name = "pnlActiveColor";
-            this.pnlActiveColor.Size = new System.Drawing.Size(29, 27);
-            this.pnlActiveColor.TabIndex = 3;
-            // 
             // lbActiveColor
             // 
             this.lbActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -192,6 +177,7 @@ namespace NXTCamView
             this.Controls.Add(this.pnlColorMain);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ColorForm";
@@ -202,6 +188,8 @@ namespace NXTCamView
             this.SizeChanged += new System.EventHandler(this.ColorForm_SizeChanged);
             this.Move += new System.EventHandler(this.ColorForm_Move);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ColorForm_FormClosing);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ColorForm_KeyUpDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ColorForm_KeyUpDown);
             this.Load += new System.EventHandler(this.ColorForm_Load);
             this.pnlColorMain.ResumeLayout(false);
             this.pnlColorMain.PerformLayout();
@@ -219,7 +207,6 @@ namespace NXTCamView
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ToolTip toolTipPanel;
         private System.Windows.Forms.Panel pnlColorPanels;
-        private System.Windows.Forms.CheckBox cbGotoNext;
         private System.Windows.Forms.Button btnClearAll;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnUpload;

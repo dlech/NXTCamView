@@ -29,6 +29,7 @@ namespace NXTCamView
         private Color _minColor = Color.Blue;
         private Color _maxColor = Color.Blue;
         private bool _isNotSet;
+        private ColorFunction _colorFunction;
 
         public ColorDetail()
         {
@@ -189,11 +190,63 @@ namespace NXTCamView
             bool isActive = color != Color.Empty;
             //0-15
             rbRed.ValueActive = isActive;
-            rbRed.Value = color.R / 16;
             rbGreen.ValueActive = isActive;
-            rbGreen.Value = color.G / 16;
             rbBlue.ValueActive = isActive;
-            rbBlue.Value = color.B / 16;
+            rbRed.Value = color.R/16;
+            rbGreen.Value = color.G/16;
+            rbBlue.Value = color.B/16;
         }
+
+        public void SetColorFunction(ColorFunction function)
+        {
+            _colorFunction = function;
+            rbRed.ColorFunction = function;
+            rbGreen.ColorFunction = function;
+            rbBlue.ColorFunction = function;
+        }
+
+        public void ApplyModifiedRange()
+        {
+            if (_colorFunction == ColorFunction.Adding)
+            {
+                _minColor = Color.FromArgb(
+                    (int) Math.Max(0, Math.Min(rbRed.RangeMinimum, rbRed.Value))*17,
+                    (int)Math.Max(0, Math.Min(rbGreen.RangeMinimum, rbGreen.Value)) * 17,
+                    (int)Math.Max(0, Math.Min(rbBlue.RangeMinimum, rbBlue.Value)) * 17);
+
+                _maxColor = Color.FromArgb(
+                    (int)Math.Min(255, Math.Max(rbRed.RangeMaximum, rbRed.Value)) * 17,
+                    (int)Math.Min(255, Math.Max(rbGreen.RangeMaximum, rbGreen.Value)) * 17,
+                    (int)Math.Min(255, Math.Max(rbBlue.RangeMaximum, rbBlue.Value)) * 17);
+            } 
+            else if (_colorFunction == ColorFunction.Removing)
+            {
+                _minColor = Color.FromArgb(
+                    getRemoved(rbRed, _minColor.R/17, true)*17,
+                    getRemoved(rbGreen, _minColor.G/17, true)*17,
+                    getRemoved(rbBlue, _minColor.B/17, true)*17);
+
+                _maxColor = Color.FromArgb(
+                    getRemoved(rbRed, _maxColor.R / 17, false) * 17,
+                    getRemoved(rbGreen, _maxColor.G / 17, false) * 17,
+                    getRemoved(rbBlue, _maxColor.B / 17, false) * 17);
+            }
+            applyChanges();
+            notifyChanges();
+        }
+
+        private int getRemoved(RangeBar bar, int current, bool isMin)
+        {
+            if( bar.Value < bar.RangeMinimum || bar.Value > bar.RangeMaximum) return current;
+            if( bar.RangeMaximum - bar.Value > bar.Value - bar.RangeMinimum)
+            {
+                return (int)(isMin ? bar.Value : bar.RangeMaximum); 
+            }
+            else 
+            {
+                return (int)(isMin ? bar.RangeMinimum : bar.Value); 
+            }
+        }
+        
     }
 }

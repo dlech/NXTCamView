@@ -36,6 +36,9 @@ namespace NXTCamView
         private SerialPort _serialPort;
         private string _filename = "";
         private bool _isHighlighting = true;
+        private readonly Cursor _addingColor;
+        private readonly Cursor _removingColor;
+
 
         public CaptureForm() : this(null)
         {            
@@ -48,7 +51,11 @@ namespace NXTCamView
             _serialPort = serialPort;
             MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
             ColorForm.Instance.HighlightColorsChanged += colorDetail_HighlightColorsChanged;
+            ColorForm.Instance.ColorFunctionChanged += colorDetail_ColorFunctionChanged;
             StickyWindowsUtil.MakeStickyMDIChild(this);
+
+            _addingColor = AppCursors.AddingColor;
+            _removingColor = AppCursors.RemovingColor;
         }
 
         private void mainForm_SerialPortChanged(object sender, EventArgs e)
@@ -211,16 +218,35 @@ namespace NXTCamView
             Debug.WriteLine(e.X + "  " + e.Y);
             if (e.X < 0 || e.X >= _resizeInterpolated.Width || e.Y < 0 || e.Y >= _resizeInterpolated.Height)
             {
-                ColorForm.Instance.SetActiveColor(Color.Empty);
+                ColorForm.Instance.SetActiveColor( Color.Empty );
                 return;
             }
 
             Color color = _resizeInterpolated.GetPixel(e.X, e.Y);
-            ColorForm.Instance.SetActiveColor(color);
+            ColorForm.Instance.SetActiveColor(color );
+        }
+
+        private void colorDetail_ColorFunctionChanged(object sender, EventArgs e)
+        {
+            switch( ColorForm.Instance.ColorFunction )
+            {
+                case ColorFunction.Adding:
+                    pbInterpolated.Cursor = _addingColor;
+                    pbBayer.Cursor = _addingColor;
+                    break;
+                case ColorFunction.Removing:
+                    pbInterpolated.Cursor = _removingColor;
+                    pbBayer.Cursor = _removingColor;
+                    break;
+                default:
+                    pbInterpolated.Cursor = Cursors.Default;
+                    pbBayer.Cursor = Cursors.Default;
+                    break;
+            }
         }
 
         private void pbInterpolated_Click(object sender, EventArgs e)
-        {
+        {            
             ColorForm.Instance.SetSelectedColor();
         }
 
@@ -303,13 +329,25 @@ namespace NXTCamView
         private void setTransparentColor()
         {
             Color color = ColorUtils.GetAverage(ColorForm.Instance.HighlightColorLow, ColorForm.Instance.HighlightColorHigh);
-            Color highlightColor = color.GetBrightness() > 0.5 ? Color.Black : Color.Yellow;
+            Color highlightColor = color.GetBrightness() > 0.5 ? Color.Blue : Color.Yellow;
 
             _isHighlighting = !_isHighlighting;
-            pbInterpolated.HighlightColor = 
-                _isHighlighting ?
-                highlightColor :
-                color;
+            pbInterpolated.HighlightColor = _isHighlighting ? highlightColor : Color.Empty;
+        }
+
+        private void pb_MouseLeave(object sender, EventArgs e)
+        {
+            setColorFunction();
+        }
+
+        private void captureForm_KeyUpDown(object sender, KeyEventArgs e)
+        {
+            setColorFunction();
+        }
+
+        private static void setColorFunction()
+        {
+            ColorForm.Instance.ColorFunction = ColorUtils.GetColorFunction(ModifierKeys);
         }
     }
 }

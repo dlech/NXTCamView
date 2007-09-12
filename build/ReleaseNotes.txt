@@ -6,6 +6,7 @@ v0.1.8
 - added NXTCam version to status bar
 - added connect/disconnect to menus
 - standardised icons
+- added expanding/contracting colors by pressing <CTRL> or <SHIFT>+<CTRL> while clicking capture
 
 v0.1.7
 - added version checker to look for new versions on sourceforge

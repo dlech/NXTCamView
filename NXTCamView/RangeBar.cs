@@ -16,6 +16,10 @@ namespace NXTCamView
         public RangeBar()
         {
             InitializeComponent();
+            _fontMark = new Font("Arial", _markWidth);
+            _strformat = new StringFormat();
+            _strformat.Alignment = StringAlignment.Center;
+            _strformat.LineAlignment = StringAlignment.Near;
         }
 
         protected override void Dispose(bool disposing)
@@ -42,18 +46,18 @@ namespace NXTCamView
             // 
             // ZzzzRangeBar
             // 
-            this.Name = "ZzzzRangeBar";
-            this.Size = new System.Drawing.Size(344, 34);
-            this.Load += new System.EventHandler(this.OnLoad);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
-            this.Leave += new System.EventHandler(this.OnLeave);
-            this.Resize += new System.EventHandler(this.OnResize);
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnKeyPress);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
-            this.SizeChanged += new System.EventHandler(this.OnSizeChanged);
-            this.ResumeLayout(false);
+            Name = "ZzzzRangeBar";
+            Size = new System.Drawing.Size(344, 34);
+            Load += new System.EventHandler(OnLoad);
+            MouseDown += new System.Windows.Forms.MouseEventHandler(OnMouseDown);
+            MouseMove += new System.Windows.Forms.MouseEventHandler(OnMouseMove);
+            Leave += new System.EventHandler(OnLeave);
+            Resize += new System.EventHandler(OnResize);
+            KeyPress += new System.Windows.Forms.KeyPressEventHandler(OnKeyPress);
+            Paint += new System.Windows.Forms.PaintEventHandler(OnPaint);
+            MouseUp += new System.Windows.Forms.MouseEventHandler(OnMouseUp);
+            SizeChanged += new System.EventHandler(OnSizeChanged);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -79,9 +83,16 @@ namespace NXTCamView
         } ;
 
         private Color _colorInner = Color.LightGreen;
-        private Color _colorRange = SystemColors.ControlLightLight;
+        private SolidBrush _brushFill = new SolidBrush(SystemColors.ControlLightLight);
+        private SolidBrush _brushFillLight = new SolidBrush(Color.FromArgb(100,SystemColors.ControlLightLight));
         private Color _colorShadowLight = SystemColors.ControlLightLight;
         private Color _colorShadowDark = SystemColors.ControlDarkDark;
+        private SolidBrush _brushInner;
+        private SolidBrush _brushYellow;
+        private SolidBrush _brushInnerLight;
+        private Font _fontMark; 
+        private StringFormat _strformat;
+
         private int _sizeShadow = 1;
         private double _minimum = 0;
         private double _maximum = 10;
@@ -105,8 +116,10 @@ namespace NXTCamView
 
         private int _posValue = 0;
 
-        private Point[] _markLeft = new Point[5];
-        private Point[] _markRight = new Point[5];
+        private Point[] _pointsLeft = new Point[5];
+        private Point[] _pointsRight = new Point[5];
+        private Point[] _pointValue = new Point[5];
+
 
         private bool _moveLMark = false;
         private bool _moveRMark = false;
@@ -186,6 +199,7 @@ namespace NXTCamView
         {
             set
             {
+                _rangeMax = value;
                 //PT - fix - change the other side if my new value doesn't fit
                 if( _rangeMax < _rangeMin )
                     _rangeMin = _rangeMax;
@@ -219,7 +233,7 @@ namespace NXTCamView
         {
             set
             {
-                _maximum = (double) value;
+                _maximum = value;
                 if( _rangeMax > _maximum )
                     _rangeMax = _maximum;
                 Range2Pos();
@@ -233,7 +247,7 @@ namespace NXTCamView
         {
             set
             {
-                _minimum = (double) value;
+                _minimum = value;
                 if( _rangeMin < _minimum )
                     _rangeMin = _minimum;
                 Range2Pos();
@@ -264,14 +278,14 @@ namespace NXTCamView
             get { return _colorInner; }
         }
 
-        private Color colorBackground = SystemColors.ControlLight;
+        private Color _colorBackground = SystemColors.ControlLight;
 
         public Color ColorBackground
         {
-            get { return colorBackground; }
+            get { return _colorBackground; }
             set
             {
-                colorBackground = value;
+                _colorBackground = value;
                 Refresh();
             }
         }
@@ -330,20 +344,14 @@ namespace NXTCamView
         {
             int h = Height;
             int w = Width;
-            int baryoff, markyoff, tickyoff1, tickyoff2;
-            double dtick;
-            int tickpos;
             Pen penShadowLight = new Pen(_colorShadowLight);
             Pen penShadowDark = new Pen(_colorShadowDark);
             Pen penHighlight = new Pen( Color.DarkBlue, 3 );
-            SolidBrush brushInner;
-            SolidBrush brushRange = new SolidBrush(_colorRange);
-            SolidBrush brushBackground = new SolidBrush(colorBackground);
+            SolidBrush brushBackground = new SolidBrush(_colorBackground);
 
-            if( Enabled )
-                brushInner = new SolidBrush(_colorInner);
-            else
-                brushInner = new SolidBrush(Color.FromKnownColor(KnownColor.InactiveCaption));
+            _brushInner = Enabled ? new SolidBrush(_colorInner) : new SolidBrush(Color.FromKnownColor(KnownColor.InactiveCaption));
+            _brushInnerLight = Enabled ? new SolidBrush(Color.FromArgb(100,_colorInner)) : new SolidBrush(Color.FromKnownColor(KnownColor.InactiveCaption));
+            _brushYellow = new SolidBrush(Color.FromArgb(255, 255,192));
 
             // range
             _xPosMin = _markWidth + 1;
@@ -363,23 +371,19 @@ namespace NXTCamView
 
             if( _barOrientation == RangeBarOrientation.Horizontal )
             {
-                baryoff = (h - _barHeight)/2;
+                int baryoff = (h - _barHeight)/2;
+                int markyoff;
                 markyoff = baryoff + (_barHeight - _markHeight)/2 - 1;
 
-                // draw frame of slider
-                //e.Graphics.FillRectangle(brushShadowDark,0,baryoff,w-1,_sizeShadow);	// Top
-                //e.Graphics.FillRectangle(brushShadowDark,0,baryoff,_sizeShadow,_barHeight-1);	// Left
-                //e.Graphics.FillRectangle(brushShadowLight,0,baryoff + _barHeight - 1 - _sizeShadow,w-1,_sizeShadow);	// Bottom
-                //e.Graphics.FillRectangle(brushShadowLight,w-1-_sizeShadow,baryoff,_sizeShadow,_barHeight-1);	// Right
-
                 //draw background
-                e.Graphics.FillRectangle(brushBackground, 0, baryoff, w - 1, _barHeight - 1);
+                e.Graphics.FillRectangle(brushBackground, 0, baryoff-1, w - 1, _barHeight+1);
 
-                // fill colored region
-                e.Graphics.FillRectangle(brushInner, _posLeft, baryoff + _sizeShadow, _posRight - _posLeft,
-                                         _barHeight - 1 - 2*_sizeShadow);
+                drawColoredRegion(baryoff, e.Graphics);
 
-                // Skala
+
+                // Scale
+                int tickyoff1;
+                int tickyoff2;
                 if( _scaleOrientation == TopBottomOrientation.Bottom )
                 {
                     tickyoff1 = tickyoff2 = baryoff + _barHeight + 2;
@@ -394,12 +398,15 @@ namespace NXTCamView
                     tickyoff2 = baryoff - _tickHeight - 4;
                 }
 
+                //draw ticks
                 if( _axisDivision > 1 )
                 {
+                    double dtick;
                     dtick = (double) (_xPosMax - _xPosMin)/(double) _axisDivision;
                     for( int i = 0; i < _axisDivision + 1; i++ )
                     {
-                        tickpos = (int) Math.Round((double) i*dtick);
+                        int tickpos;
+                        tickpos = (int) Math.Round(i*dtick);
                         if( _scaleOrientation == TopBottomOrientation.Bottom
                             || _scaleOrientation == TopBottomOrientation.Both )
                         {
@@ -419,128 +426,193 @@ namespace NXTCamView
                     }
                 }
 
-                // Left mark knob				
-                _markLeft[0].X = _posLeft - _markWidth;
-                _markLeft[0].Y = markyoff + _markHeight/3;
-                _markLeft[1].X = _posLeft;
-                _markLeft[1].Y = markyoff;
-                _markLeft[2].X = _posLeft;
-                _markLeft[2].Y = markyoff + _markHeight;
-                _markLeft[3].X = _posLeft - _markWidth;
-                _markLeft[3].Y = markyoff + 2*_markHeight/3;
-                _markLeft[4].X = _posLeft - _markWidth;
-                _markLeft[4].Y = markyoff;
-                e.Graphics.FillPolygon(brushRange, _markLeft);
-                e.Graphics.DrawLine(penShadowDark, _markLeft[3].X - 1, _markLeft[3].Y, _markLeft[1].X - 1,
-                                    _markLeft[2].Y);
-                // lower Left shadow
-                e.Graphics.DrawLine(penShadowLight, _markLeft[0].X - 1, _markLeft[0].Y, _markLeft[0].X - 1,
-                                    _markLeft[3].Y);
-                // Left shadow				
-                e.Graphics.DrawLine(penShadowLight, _markLeft[0].X - 1, _markLeft[0].Y, _markLeft[1].X - 1,
-                                    _markLeft[1].Y);
-                // upper shadow
-                if( _posLeft < _posRight )
-                    e.Graphics.DrawLine(penShadowDark, _markLeft[1].X, _markLeft[1].Y + 1, _markLeft[1].X,
-                                        _markLeft[2].Y);
-                // Right shadow
-                //if( _activeMark == ActiveMarkType.Left )
-                //{
-                //    e.Graphics.DrawLine(penShadowLight, _posLeft - _markWidth/2 - 1, markyoff + _markHeight/3, _posLeft - _markWidth/2 - 1,
-                //                        markyoff + 2*_markHeight/3); // active mark
-                //    e.Graphics.DrawLine(penShadowDark, _posLeft - _markWidth/2, markyoff + _markHeight/3, _posLeft - _markWidth/2,
-                //                        markyoff + 2*_markHeight/3); // active mark			
-                //}
+                drawRangeText(e, tickyoff1);
 
-
-                // Right mark knob
-                _markRight[0].X = _posRight + _markWidth;
-                _markRight[0].Y = markyoff + _markHeight/3;
-                _markRight[1].X = _posRight;
-                _markRight[1].Y = markyoff;
-                _markRight[2].X = _posRight;
-                _markRight[2].Y = markyoff + _markHeight;
-                _markRight[3].X = _posRight + _markWidth;
-                _markRight[3].Y = markyoff + 2*_markHeight/3;
-                _markRight[4].X = _posRight + _markWidth;
-                _markRight[4].Y = markyoff;
-                e.Graphics.FillPolygon(brushRange, _markRight);
-                if( _posLeft < _posRight )
-                    e.Graphics.DrawLine(penShadowLight, _markRight[1].X - 1, _markRight[1].Y + 1, _markRight[2].X - 1,
-                                        _markRight[2].Y);
-                // Left shadow
-                e.Graphics.DrawLine(penShadowDark, _markRight[2].X, _markRight[2].Y, _markRight[3].X, _markRight[3].Y);
-                // lower Right shadow
-                e.Graphics.DrawLine(penShadowDark, _markRight[0].X, _markRight[0].Y, _markRight[1].X, _markRight[1].Y);
-                    // upper shadow
-                e.Graphics.DrawLine(penShadowDark, _markRight[0].X, _markRight[0].Y + 1, _markRight[3].X,
-                                    _markRight[3].Y);
-                // Right shadow
-                //if( _activeMark == ActiveMarkType.Right )
-                //{
-                //    e.Graphics.DrawLine(penShadowLight, _posRight + _markWidth/2 - 1, markyoff + _markHeight/3, _posRight + _markWidth/2 - 1,
-                //                        markyoff + 2*_markHeight/3); // active mark
-                //    e.Graphics.DrawLine(penShadowDark, _posRight + _markWidth/2, markyoff + _markHeight/3, _posRight + _markWidth/2,
-                //                        markyoff + 2*_markHeight/3); // active mark				
-                //}
-
-                //if (_moveLMark)
-                //{
-                //    Font fontMark = new Font("Arial", _markWidth);
-                //    SolidBrush brushMark = new SolidBrush(_colorShadowDark);
-                //    StringFormat strformat = new StringFormat();
-                //    strformat.Alignment = StringAlignment.Center;
-                //    strformat.LineAlignment = StringAlignment.Near;
-                //    e.Graphics.DrawString(_rangeMin.ToString(), fontMark, brushMark, _posLeft, tickyoff1 + _tickHeight, strformat);
-                //}
-
-                //if (_moveRMark)
-                //{
-                //    Font fontMark = new Font("Arial", _markWidth);
-                //    SolidBrush brushMark = new SolidBrush(_colorShadowDark);
-                //    StringFormat strformat = new StringFormat();
-                //    strformat.Alignment = StringAlignment.Center;
-                //    strformat.LineAlignment = StringAlignment.Near;
-                //    e.Graphics.DrawString(_rangeMax.ToString(), fontMark, brushMark, _posRight, tickyoff1 + _tickHeight, strformat);
-                //}
-                Font fontMark = new Font("Arial", _markWidth);
-                //SolidBrush brushMark = new SolidBrush(_colorShadowDark);
-                StringFormat strformat = new StringFormat();
-                strformat.Alignment = StringAlignment.Center;
-                strformat.LineAlignment = StringAlignment.Near;
-                //BIG HACK  - * 16 as we can't step
-                e.Graphics.DrawString((_rangeMin*16).ToString(), fontMark, SystemBrushes.ControlText, _posLeft,
-                                      tickyoff1 + _tickHeight, strformat);
-                e.Graphics.DrawString((_rangeMax*16).ToString(), fontMark, SystemBrushes.ControlText, _posRight,
-                                      tickyoff1 + _tickHeight, strformat);
-
-                //Draw the active value
-                if (_valueActive) e.Graphics.DrawLine(penHighlight, _posValue, markyoff, _posValue, markyoff + _markHeight);
+                drawKnobs(e.Graphics, markyoff, penHighlight, penShadowDark, penShadowLight);
             }
         }
 
+        private void drawColoredRegion(int baryoff, Graphics g)
+        {
+            int left = _posLeft;
+            int right = _posRight;
+            int leftLight = _posLeft;
+            int rightLight = _posLeft;
+            switch (_colorFunction)
+            {
+                case ColorFunction.Setting:
+                    break;
+                case ColorFunction.Adding:
+                    if( _posValue < _posLeft )
+                    {
+                        leftLight = _posValue;
+                        rightLight = _posLeft;
+                    }
+                    else if( _posValue > _posRight )
+                    {
+                        leftLight = _posRight;
+                        rightLight = _posValue;
+                    }
+                    break;
+                case ColorFunction.Removing:
+                    if (!(_posValue < _posLeft || _posValue > _posRight))
+                    {
+                        if (_posRight - _posValue > _posValue - _posLeft)
+                        {
+                            left = _posValue;
+                        }
+                        else
+                        {
+                            right = _posValue;
+                        }
+                    }
+                    break;
+            }
+            // fill colored region
+            g.FillRectangle(_brushInner, left, baryoff + _sizeShadow, right - left,
+                                     _barHeight - 1 - 2 * _sizeShadow);
+            if (leftLight != rightLight)
+            {
+                g.FillRectangle(_brushInnerLight, leftLight, baryoff + _sizeShadow, rightLight - leftLight,
+                                _barHeight - 1 - 2*_sizeShadow);
+            }
+        }
+
+        private void drawKnobs(Graphics g, int markyoff, Pen penHighlight, Pen penShadowDark, Pen penShadowLight )
+        {
+            bool isLeftEnabled = true;
+            bool isRightEnabled = true;
+            switch( _colorFunction )
+            {
+                case ColorFunction.Setting:
+                    drawValue(g, penHighlight);
+                    break;
+                case ColorFunction.Adding:
+                    if( _posValue < _posLeft )
+                    {
+                        drawLeftKnob(g, _posValue, false, _pointValue, markyoff, penShadowDark, penShadowLight);
+                    }
+                    else if( _posValue > _posRight )
+                    {
+                        drawRightKnob(g, _posValue, false, _pointValue, markyoff, penShadowDark );    
+                    }
+                    else
+                    {
+                        drawValue(g, penHighlight);
+                    }
+                    break;
+                case ColorFunction.Removing:
+                    if (_posValue < _posLeft || _posValue > _posRight)
+                    {
+                        g.DrawLine(penHighlight, _posValue, markyoff, _posValue, markyoff + _markHeight);
+                    }
+                    else
+                    {
+                        if( _posRight - _posValue > _posValue - _posLeft )
+                        {
+                            drawLeftKnob(g, _posValue, false, _pointValue, markyoff, penShadowDark, penShadowLight);
+                        }
+                        else
+                        {
+                            drawRightKnob(g, _posValue, false, _pointValue, markyoff, penShadowDark);
+                        }
+                    }
+                    break;
+            }
+            drawLeftKnob(g, _posLeft, isLeftEnabled, _pointsLeft, markyoff, penShadowDark, penShadowLight);
+            drawRightKnob(g, _posRight, isRightEnabled, _pointsRight, markyoff, penShadowDark);
+        }
+
+        private void drawValue(Graphics g, Pen penHighlight)
+        {
+            int baryoff = (Height - _barHeight) / 2;
+            g.DrawLine(penHighlight, _posValue, baryoff-1, _posValue, baryoff + _barHeight+1);
+        }
+
+        private void drawRightKnob(Graphics g, int position, bool isSolid, Point[] points, int markyoff, Pen penShadowDark )
+        {
+            points[0].X = position + _markWidth;
+            points[0].Y = markyoff + _markHeight / 3;
+            points[1].X = position;
+            points[1].Y = markyoff;
+            points[2].X = position;
+            points[2].Y = markyoff + _markHeight;
+            points[3].X = position + _markWidth;
+            points[3].Y = markyoff + 2 * _markHeight / 3;
+            points[4].X = position + _markWidth;
+            points[4].Y = markyoff;
+            g.FillPolygon(isSolid ? _brushFill : _brushFillLight, points);
+
+            // Left shadow
+            g.DrawLine(penShadowDark, points[2].X, points[2].Y, points[3].X, points[3].Y); 
+            // lower Right shadow
+            g.DrawLine(penShadowDark, points[0].X, points[0].Y, points[1].X, points[1].Y);
+            // upper shadow
+            g.DrawLine(penShadowDark, points[0].X, points[0].Y + 1, points[3].X, points[3].Y);
+
+            if (!isSolid) addText(g, markyoff, _markWidth/2);
+        }
+
+        private void drawLeftKnob(Graphics g, int position, bool isSolid, Point[] points, int markyoff, Pen penShadowDark, Pen penShadowLight)
+        {
+            points[0].X = position - _markWidth;
+            points[0].Y = markyoff + _markHeight/3;
+            points[1].X = position;
+            points[1].Y = markyoff;
+            points[2].X = position;
+            points[2].Y = markyoff + _markHeight;
+            points[3].X = position - _markWidth;
+            points[3].Y = markyoff + 2*_markHeight/3;
+            points[4].X = position - _markWidth;
+            points[4].Y = markyoff;
+            g.FillPolygon(isSolid ? _brushFill : _brushFillLight, points);
+
+            g.DrawLine(penShadowDark, points[3].X - 1, points[3].Y, points[1].X - 1, points[2].Y);
+            // lower Left shadow
+            g.DrawLine(penShadowLight, points[0].X - 1, points[0].Y, points[0].X - 1, points[3].Y);
+            // Left shadow				
+            g.DrawLine(penShadowLight, points[0].X - 1, points[0].Y, points[1].X - 1, points[1].Y);
+
+            if( !isSolid ) addText(g, markyoff, -_markWidth/2);
+        }
+
+        private void addText(Graphics g, int markyoff, int offset)
+        {
+            g.FillPie( _brushYellow, _posValue + offset - 6, markyoff-3, 10, 10, 0, 360 );
+            string plusMinus = _colorFunction == ColorFunction.Adding ? "+" : "-";
+            g.DrawString(plusMinus, _fontMark, SystemBrushes.ControlText, _posValue + offset, markyoff-6, _strformat);
+        }
+
+        private void drawRangeText(PaintEventArgs e, int tickyoff1)
+        {
+            //BIG HACK  - * 16 as we can't step
+            e.Graphics.DrawString((_rangeMin * 16).ToString(), _fontMark, SystemBrushes.ControlText, _posLeft,
+                                  tickyoff1 + _tickHeight, _strformat);
+            e.Graphics.DrawString((_rangeMax * 16).ToString(), _fontMark, SystemBrushes.ControlText, _posRight,
+                                  tickyoff1 + _tickHeight, _strformat);
+        }
 
         // mouse down event
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            if( this.Enabled )
+            if( Enabled )
             {
                 Rectangle LMarkRect = new Rectangle(
-                    Math.Min(_markLeft[0].X, _markLeft[1].X), // X
-                    Math.Min(_markLeft[0].Y, _markLeft[3].Y), // Y
-                    Math.Abs(_markLeft[2].X - _markLeft[0].X), // width
-                    Math.Max(Math.Abs(_markLeft[0].Y - _markLeft[3].Y), Math.Abs(_markLeft[0].Y - _markLeft[1].Y)));
+                    Math.Min(_pointsLeft[0].X, _pointsLeft[1].X), // X
+                    Math.Min(_pointsLeft[0].Y, _pointsLeft[3].Y), // Y
+                    Math.Abs(_pointsLeft[2].X - _pointsLeft[0].X), // width
+                    Math.Max(Math.Abs(_pointsLeft[0].Y - _pointsLeft[3].Y), Math.Abs(_pointsLeft[0].Y - _pointsLeft[1].Y)));
                     // height
                 Rectangle RMarkRect = new Rectangle(
-                    Math.Min(_markRight[0].X, _markRight[2].X), // X
-                    Math.Min(_markRight[0].Y, _markRight[1].Y), // Y
-                    Math.Abs(_markRight[0].X - _markRight[2].X), // width
-                    Math.Max(Math.Abs(_markRight[2].Y - _markRight[0].Y), Math.Abs(_markRight[1].Y - _markRight[0].Y)));
+                    Math.Min(_pointsRight[0].X, _pointsRight[2].X), // X
+                    Math.Min(_pointsRight[0].Y, _pointsRight[1].Y), // Y
+                    Math.Abs(_pointsRight[0].X - _pointsRight[2].X), // width
+                    Math.Max(Math.Abs(_pointsRight[2].Y - _pointsRight[0].Y), Math.Abs(_pointsRight[1].Y - _pointsRight[0].Y)));
                     // height
 
                 if( LMarkRect.Contains(e.X, e.Y) )
                 {
-                    this.Capture = true;
+                    Capture = true;
                     _moveLMark = true;
                     //_activeMark = ActiveMarkType.Left;							
                     _activeMark = ActiveMarkType.None;
@@ -549,7 +621,7 @@ namespace NXTCamView
 
                 if( RMarkRect.Contains(e.X, e.Y) )
                 {
-                    this.Capture = true;
+                    Capture = true;
                     _moveRMark = true;
                     //_activeMark = ActiveMarkType.Right;							
                     _activeMark = ActiveMarkType.None;
@@ -562,9 +634,9 @@ namespace NXTCamView
         // mouse up event
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
-            if( this.Enabled )
+            if( Enabled )
             {
-                this.Capture = false;
+                Capture = false;
 
                 _moveLMark = false;
                 _moveRMark = false;
@@ -582,16 +654,16 @@ namespace NXTCamView
             if( Enabled )
             {
                 Rectangle LMarkRect = new Rectangle(
-                    Math.Min(_markLeft[0].X, _markLeft[1].X), // X
-                    Math.Min(_markLeft[0].Y, _markLeft[3].Y), // Y
-                    Math.Abs(_markLeft[2].X - _markLeft[0].X), // width
-                    Math.Max(Math.Abs(_markLeft[0].Y - _markLeft[3].Y), Math.Abs(_markLeft[0].Y - _markLeft[1].Y)));
+                    Math.Min(_pointsLeft[0].X, _pointsLeft[1].X), // X
+                    Math.Min(_pointsLeft[0].Y, _pointsLeft[3].Y), // Y
+                    Math.Abs(_pointsLeft[2].X - _pointsLeft[0].X), // width
+                    Math.Max(Math.Abs(_pointsLeft[0].Y - _pointsLeft[3].Y), Math.Abs(_pointsLeft[0].Y - _pointsLeft[1].Y)));
                     // height
                 Rectangle RMarkRect = new Rectangle(
-                    Math.Min(_markRight[0].X, _markRight[2].X), // X
-                    Math.Min(_markRight[0].Y, _markRight[1].Y), // Y
-                    Math.Abs(_markRight[0].X - _markRight[2].X), // width
-                    Math.Max(Math.Abs(_markRight[2].Y - _markRight[0].Y), Math.Abs(_markRight[1].Y - _markRight[0].Y)));
+                    Math.Min(_pointsRight[0].X, _pointsRight[2].X), // X
+                    Math.Min(_pointsRight[0].Y, _pointsRight[1].Y), // Y
+                    Math.Abs(_pointsRight[0].X - _pointsRight[2].X), // width
+                    Math.Max(Math.Abs(_pointsRight[2].Y - _pointsRight[0].Y), Math.Abs(_pointsRight[1].Y - _pointsRight[0].Y)));
                     // height
 
                 if( LMarkRect.Contains(e.X, e.Y) || RMarkRect.Contains(e.X, e.Y) )
@@ -628,11 +700,11 @@ namespace NXTCamView
                 }
                 else if( _moveRMark )
                 {
-                    if( this._barOrientation == RangeBarOrientation.Horizontal )
-                        this.Cursor = Cursors.SizeWE;
+                    if( _barOrientation == RangeBarOrientation.Horizontal )
+                        Cursor = Cursors.SizeWE;
                     else
-                        this.Cursor = Cursors.SizeNS;
-                    if( this._barOrientation == RangeBarOrientation.Horizontal )
+                        Cursor = Cursors.SizeNS;
+                    if( _barOrientation == RangeBarOrientation.Horizontal )
                         _posRight = e.X;
                     else
                         _posRight = e.Y;
@@ -713,7 +785,7 @@ namespace NXTCamView
         /// <param name="e">event parameter</param>
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            if( this.Enabled )
+            if( Enabled )
             {
                 if( _activeMark == ActiveMarkType.Left )
                 {
@@ -791,6 +863,17 @@ namespace NXTCamView
         {
             if( RangeChanging != null )
                 RangeChanging(this, e);
+        }
+
+        private ColorFunction _colorFunction;
+        public ColorFunction ColorFunction
+        {
+            get { return _colorFunction; }
+            set
+            {
+                _colorFunction = value;
+                Invalidate();
+            }
         }
     }
 }

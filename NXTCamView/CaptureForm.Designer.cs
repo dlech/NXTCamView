@@ -174,6 +174,7 @@ namespace NXTCamView
             this.pbInterpolated.TabStop = false;
             this.pbInterpolated.TransarentColorHigh = System.Drawing.Color.Empty;
             this.pbInterpolated.TransarentColorLow = System.Drawing.Color.Empty;
+            this.pbInterpolated.MouseLeave += new System.EventHandler(this.pb_MouseLeave);
             this.pbInterpolated.Click += new System.EventHandler(this.pbInterpolated_Click);
             this.pbInterpolated.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_MouseMove);
             // 
@@ -187,6 +188,7 @@ namespace NXTCamView
             this.Controls.Add(this.pbBayer);
             this.Controls.Add(this.pbInterpolated);
             this.Controls.Add(this.pnlProgress);
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CaptureForm";
@@ -194,6 +196,8 @@ namespace NXTCamView
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CaptureForm";
             this.Resize += new System.EventHandler(this.captureForm_Resize);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.captureForm_KeyUpDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.captureForm_KeyUpDown);
             this.Load += new System.EventHandler(this.CaptureForm_Load);
             this.pnlProgress.ResumeLayout(false);
             this.pnlBottom.ResumeLayout(false);

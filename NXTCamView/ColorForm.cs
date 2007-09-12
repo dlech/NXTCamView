@@ -41,12 +41,12 @@ namespace NXTCamView
         private ColorDetail _colorDetail = new ColorDetail();
         private Panel[] _colorPanels = new Panel[TRACKED_COLORS];
         private OverlapInfo[] _overlapInfos = new OverlapInfo[TRACKED_COLORS];
-        private bool _wasJustSet = false;
         private Image _errorImage;
         private int _selectedColorIndex;
         private bool _isColorDetailVisible = false;
         private Color _highlightColorLow;
         private Color _highlightColorHigh;
+        private ColorFunction _colorFunction;
 
         [Category("Custom")]
         public event EventHandler HighlightColorsChanged;
@@ -55,11 +55,16 @@ namespace NXTCamView
         [Category("Custom")]
         public Color HighlightColorHigh { get { return _highlightColorHigh; } }
 
+        [Category("Custom")]
+        public event EventHandler ColorFunctionChanged;
+
         //DO NOT CALL THIS DIRECTLY - use the Inst property
         public ColorForm()
         {
             InitializeComponent();
             Icon = AppImages.GetIcon(AppImages.Colors);
+
+            setColorFunction(NXTCamView.ColorFunction.Setting);
 
             initErrorImage();
         }
@@ -95,6 +100,21 @@ namespace NXTCamView
 
         public int SelectedColorIndex { get { return _selectedColorIndex; } set { _selectedColorIndex = value; } }
 
+        private void setColorFunction(ColorFunction newFunction)
+        {
+            if (_colorFunction != newFunction)
+            {
+                _colorFunction = newFunction;
+                _colorDetail.SetColorFunction(_colorFunction);
+                if (ColorFunctionChanged != null)
+                {
+                    ColorFunctionChanged(this, new EventArgs());
+                }
+            }
+        }
+
+        public ColorFunction ColorFunction { get { return _colorFunction; } set { setColorFunction(value);} }
+
         private void ColorForm_Load(object sender, EventArgs e)
         {
             Controls.Add(_colorDetail);
@@ -126,7 +146,6 @@ namespace NXTCamView
             }
             pnlColorPanels.Paint += pnlColorPanels_Paint;
             _colorDetail.SetColorMinMax(settings.MinColors[_selectedColorIndex], settings.MaxColors[_selectedColorIndex]);
-            _wasJustSet = true;
 
             //ensure the tooltip is ok
             toolTipPanel.Show("", this);
@@ -223,7 +242,6 @@ namespace NXTCamView
         {
             if (toolTipPanel.Active) toolTipPanel.Hide(this);
             setSelectedColor((int)((Panel)sender).Tag);
-            _wasJustSet = true;
             if (cbHighLight.Checked)
             {
                 setHighlightColors();
@@ -235,7 +253,7 @@ namespace NXTCamView
             Settings.Default.MinColors[_selectedColorIndex] = _colorDetail.MinColor;
             Settings.Default.MaxColors[_selectedColorIndex] = _colorDetail.MaxColor;
             _colorPanels[_selectedColorIndex].BackColor = Settings.Default.GetAverageColor(_selectedColorIndex);
-            SetActiveColor(Settings.Default.GetAverageColor(_selectedColorIndex));
+            SetActiveColor( Settings.Default.GetAverageColor(_selectedColorIndex) );
             updateOverlapStatusAndMessage(_selectedColorIndex);
             updateUploadButton();
             setHighlightColors();
@@ -270,20 +288,26 @@ namespace NXTCamView
             _colorDetail.SetColorMinMax(Settings.Default.MinColors[_selectedColorIndex], Settings.Default.MaxColors[_selectedColorIndex]);
         }
 
-        public void SetActiveColor(Color color)
+        public void SetActiveColor(Color color )
         {
             _colorDetail.SetActiveColor(color);
-            if (color == Color.Empty) return;
+            if( color == Color.Empty ) return;
             pnlActiveColor.BackColor = color;
-            lbActiveColor.Text = string.Format("r:{0} g:{1} b:{2}", color.R, color.G, color.B);            
+            lbActiveColor.Text = string.Format("r:{0} g:{1} b:{2}", color.R, color.G, color.B);
         }
 
         public void SetSelectedColor()
         {
             if (toolTipPanel.Active) toolTipPanel.Hide(this);
-            if (cbGotoNext.Checked && !_wasJustSet) _selectedColorIndex = (_selectedColorIndex + 1) % 8;
-            _wasJustSet = false;
-            _colorDetail.BaseColor = pnlActiveColor.BackColor;
+            if (_colorFunction == ColorFunction.Setting)
+            {
+                _colorDetail.BaseColor = pnlActiveColor.BackColor;
+            }
+            else
+            {
+                _colorDetail.ApplyModifiedRange();
+            }
+            //is this needed?
             pnlColorPanels.Refresh();
         }
 
@@ -531,5 +555,17 @@ namespace NXTCamView
         {
             Debug.WriteLine(Bounds);
         }
+
+        private void ColorForm_KeyUpDown(object sender, KeyEventArgs e)
+        {
+            ColorFunction = ColorUtils.GetColorFunction(ModifierKeys);
+        }
+    }
+
+    public enum ColorFunction
+    {
+        Setting,
+        Adding,
+        Removing
     }
 }

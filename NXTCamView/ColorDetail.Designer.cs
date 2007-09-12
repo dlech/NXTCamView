@@ -109,7 +109,8 @@ namespace NXTCamView
             // rbRed
             // 
             this.rbRed.BarHeight = 16;
-            this.rbRed.ColorBackground = System.Drawing.Color.LightSalmon;
+            this.rbRed.ColorBackground = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.rbRed.ColorFunction = NXTCamView.ColorFunction.Setting;
             this.rbRed.DivisionCount = 15;
             this.rbRed.InnerColor = System.Drawing.Color.Red;
             this.rbRed.Location = new System.Drawing.Point(6, -14);
@@ -131,7 +132,8 @@ namespace NXTCamView
             // rbGreen
             // 
             this.rbGreen.BarHeight = 16;
-            this.rbGreen.ColorBackground = System.Drawing.Color.LightGreen;
+            this.rbGreen.ColorBackground = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.rbGreen.ColorFunction = NXTCamView.ColorFunction.Setting;
             this.rbGreen.DivisionCount = 15;
             this.rbGreen.InnerColor = System.Drawing.Color.Green;
             this.rbGreen.Location = new System.Drawing.Point(6, 33);
@@ -153,7 +155,8 @@ namespace NXTCamView
             // rbBlue
             // 
             this.rbBlue.BarHeight = 16;
-            this.rbBlue.ColorBackground = System.Drawing.Color.LightBlue;
+            this.rbBlue.ColorBackground = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.rbBlue.ColorFunction = NXTCamView.ColorFunction.Setting;
             this.rbBlue.DivisionCount = 15;
             this.rbBlue.InnerColor = System.Drawing.Color.Blue;
             this.rbBlue.Location = new System.Drawing.Point(6, 79);

@@ -17,6 +17,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace NXTCamView
 {
@@ -38,6 +39,20 @@ namespace NXTCamView
             return Color.FromArgb((min.R + max.R) / 2,
                 (min.G + max.G) / 2,
                 (min.B + max.B) / 2);
+        }
+
+        public static ColorFunction GetColorFunction(Keys keys)
+        {
+            ColorFunction function = ColorFunction.Setting;            
+            if (keys == Keys.Control)
+            {
+                function = ColorFunction.Adding;
+            }
+            else if (keys == (Keys.Shift | Keys.Control))
+            {
+                function = ColorFunction.Removing;
+            }
+            return function;
         }
     }
 }

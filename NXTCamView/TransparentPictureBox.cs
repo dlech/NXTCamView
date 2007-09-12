@@ -66,9 +66,9 @@ namespace NXTCamView
             set
             {
                 _highlightColor = value;
-                if (_highlightBrush != null) _highlightBrush.Dispose();
-                _highlightBrush = new SolidBrush(_highlightColor);
-                Invalidate();
+                if( _highlightBrush != null ) _highlightBrush.Dispose();
+                _highlightBrush = _highlightColor == Color.Empty ? null : new SolidBrush(_highlightColor);
+                Refresh();
             }
         }
 
@@ -92,7 +92,7 @@ namespace NXTCamView
             if (image != null)
             {
                 Rectangle rect = ImageRectangleFromSizeMode();
-                if (_transarentColorLow == Color.Empty || _transarentColorHigh == Color.Empty)
+                if ( _highlightBrush == null || _transarentColorLow == Color.Empty || _transarentColorHigh == Color.Empty)
                 {
                     pe.Graphics.DrawImage(image, rect);                    
                 }
