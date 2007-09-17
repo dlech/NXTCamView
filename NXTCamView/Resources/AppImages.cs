@@ -42,6 +42,15 @@ namespace NXTCamView.Resources
         public static readonly Image Colors = _imageReader.GetImage("Colors.bmp");
         public static readonly Image Tracking = _imageReader.GetImage("Tracking.bmp");
 
+        public static readonly Image UploadColors = _imageReader.GetImage("UploadColors.bmp");
+        public static readonly Image ClearColor = _imageReader.GetImage("ClearColor.bmp");
+        public static readonly Image ClearAllColors = _imageReader.GetImage("ClearAllColors.bmp");
+        public static readonly Image HighlightColor = _imageReader.GetImage("HighlightColor.bmp");
+
+        public static readonly Image SetColor = _imageReader.GetImage("SetColor.bmp");
+        public static readonly Image AddToColor = _imageReader.GetImage("AddToColor.bmp");
+        public static readonly Image RemoveFromColor = _imageReader.GetImage("RemoveFromColor.bmp");
+
         public static Icon GetIcon( Image image )
         {
             Icon icon = Icon.FromHandle(((Bitmap)image).GetHicon());

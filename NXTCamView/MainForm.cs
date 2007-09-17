@@ -166,7 +166,8 @@ namespace NXTCamView
             //file menu
             StripCommand connectCmd = new ConnectStripCommand();
             connectCmd.Completed += connectCmd_Completed;
-            setupButtonAndMenu(tsbConnect, tsmConnect, "Connect", "Connect to the NXTCam", AppImages.Connect, connectCmd);
+
+            setupButtonAndMenu(tsbConnect, tsmConnect, "Connect", "Connect to the NXTCam", AppImages.Connect, connectCmd);            
 
             StripCommand disconnectCmd = new DisconnectStripCommand();
             disconnectCmd.Completed += disconnectCmd_Completed;
@@ -188,40 +189,34 @@ namespace NXTCamView
             setupMenu(tsmOpenOptions, "&Options", "Open application options", AppImages.Options, openOptionsCmd);
         }
 
+
+        private bool _isConnected = false;
+        public bool IsConnected { get { return _isConnected; } }
+        public event EventHandler< EventArgs > ConnectionStateChanged;
+
+        private void connectionStateChanged(bool isConnected)
+        {            
+            if (_isConnected != isConnected)
+            {
+                _isConnected = isConnected;
+                if( ConnectionStateChanged != null )
+                {
+                    ConnectionStateChanged(this, new EventArgs());
+                }
+            }
+        }
+
         void connectCmd_Completed(object sender, EventArgs e)
         {
+            connectionStateChanged(true);
             ConnectStripCommand connectCmd = (ConnectStripCommand) sender;
             tsslVersion.Text = connectCmd.GetVersion();
         }
 
         private void disconnectCmd_Completed(object sender, EventArgs e)        
         {
+            connectionStateChanged(false);
             tsslVersion.Text = "";
-
-        }
-
-        private void setupButtonAndMenu(ToolStripButton tsButton, ToolStripMenuItem tsMenu, string caption, string tip, Image image, StripCommand command)
-        {
-            setupButton( tsButton, caption, tip, image, command );
-            setupMenu( tsMenu, caption, tip, image, command);
-        }
-
-        private void setupButton( ToolStripButton tsButton, string caption, string tip, Image image, StripCommand command )
-        {
-            tsButton.Text = caption;
-            tsButton.Image = image;
-            tsButton.Tag = command;
-            tsButton.ToolTipText = tip;
-            tsButton.Click += ToolItem_Click;
-        }
-
-        private void setupMenu( ToolStripMenuItem tsMenu, string caption, string tip, Image image, StripCommand command )
-        {
-            tsMenu.Text = caption;
-            tsMenu.Image = image;
-            tsMenu.Tag = command;
-            tsMenu.ToolTipText = tip;
-            tsMenu.Click += ToolItem_Click;
         }
 
         private void setupSerialPort()
@@ -344,6 +339,30 @@ namespace NXTCamView
         }
 
         #region StripCommand Handling
+
+        private void setupButtonAndMenu(ToolStripButton tsButton, ToolStripMenuItem tsMenu, string caption, string tip, Image image, StripCommand command)
+        {
+            setupItem(tsButton, caption, tip, image, command);
+            setupMenu(tsMenu, caption, tip, image, command);
+        }
+
+        private void setupItem(ToolStripItem tsItem, string caption, string tip, Image image, StripCommand command)
+        {
+            tsItem.Text = caption;
+            tsItem.Image = image;
+            tsItem.Tag = command;
+            tsItem.ToolTipText = tip;
+            tsItem.Click += ToolItem_Click;
+        }
+
+        private void setupMenu(ToolStripMenuItem tsMenu, string caption, string tip, Image image, StripCommand command)
+        {
+            tsMenu.Text = caption;
+            tsMenu.Image = image;
+            tsMenu.Tag = command;
+            tsMenu.ToolTipText = tip;
+            tsMenu.Click += ToolItem_Click;
+        }
 
         void form_VisibleChanged(object sender, EventArgs e)
         {

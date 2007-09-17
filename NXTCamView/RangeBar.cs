@@ -351,7 +351,7 @@ namespace NXTCamView
 
             _brushInner = Enabled ? new SolidBrush(_colorInner) : new SolidBrush(Color.FromKnownColor(KnownColor.InactiveCaption));
             _brushInnerLight = Enabled ? new SolidBrush(Color.FromArgb(100,_colorInner)) : new SolidBrush(Color.FromKnownColor(KnownColor.InactiveCaption));
-            _brushYellow = new SolidBrush(Color.FromArgb(255, 255,192));
+            _brushYellow = new SolidBrush(Color.FromArgb(255, 255, 192));
 
             // range
             _xPosMin = _markWidth + 1;
@@ -440,9 +440,9 @@ namespace NXTCamView
             int rightLight = _posLeft;
             switch (_colorFunction)
             {
-                case ColorFunction.Setting:
+                case ColorFunction.SetColor:
                     break;
-                case ColorFunction.Adding:
+                case ColorFunction.AddToColor:
                     if( _posValue < _posLeft )
                     {
                         leftLight = _posValue;
@@ -454,7 +454,7 @@ namespace NXTCamView
                         rightLight = _posValue;
                     }
                     break;
-                case ColorFunction.Removing:
+                case ColorFunction.RemoveFromColor:
                     if (!(_posValue < _posLeft || _posValue > _posRight))
                     {
                         if (_posRight - _posValue > _posValue - _posLeft)
@@ -480,14 +480,14 @@ namespace NXTCamView
 
         private void drawKnobs(Graphics g, int markyoff, Pen penHighlight, Pen penShadowDark, Pen penShadowLight )
         {
-            bool isLeftEnabled = true;
-            bool isRightEnabled = true;
-            switch( _colorFunction )
+            drawLeftKnob(g, _posLeft, true, _pointsLeft, markyoff, penShadowDark, penShadowLight);
+            drawRightKnob(g, _posRight, true, _pointsRight, markyoff, penShadowDark);
+            switch (_colorFunction)
             {
-                case ColorFunction.Setting:
+                case ColorFunction.SetColor:
                     drawValue(g, penHighlight);
                     break;
-                case ColorFunction.Adding:
+                case ColorFunction.AddToColor:
                     if( _posValue < _posLeft )
                     {
                         drawLeftKnob(g, _posValue, false, _pointValue, markyoff, penShadowDark, penShadowLight);
@@ -501,7 +501,7 @@ namespace NXTCamView
                         drawValue(g, penHighlight);
                     }
                     break;
-                case ColorFunction.Removing:
+                case ColorFunction.RemoveFromColor:
                     if (_posValue < _posLeft || _posValue > _posRight)
                     {
                         g.DrawLine(penHighlight, _posValue, markyoff, _posValue, markyoff + _markHeight);
@@ -519,8 +519,6 @@ namespace NXTCamView
                     }
                     break;
             }
-            drawLeftKnob(g, _posLeft, isLeftEnabled, _pointsLeft, markyoff, penShadowDark, penShadowLight);
-            drawRightKnob(g, _posRight, isRightEnabled, _pointsRight, markyoff, penShadowDark);
         }
 
         private void drawValue(Graphics g, Pen penHighlight)
@@ -578,9 +576,10 @@ namespace NXTCamView
 
         private void addText(Graphics g, int markyoff, int offset)
         {
-            g.FillPie( _brushYellow, _posValue + offset - 6, markyoff-3, 10, 10, 0, 360 );
-            string plusMinus = _colorFunction == ColorFunction.Adding ? "+" : "-";
-            g.DrawString(plusMinus, _fontMark, SystemBrushes.ControlText, _posValue + offset, markyoff-6, _strformat);
+            g.FillEllipse( _brushYellow, _posValue + offset - 6, markyoff-3, 10, 10);
+            g.DrawEllipse( Pens.DarkGray, _posValue + offset - 6, markyoff - 3, 10, 10);
+            string plusMinus = _colorFunction == ColorFunction.AddToColor ? "+" : "-";
+            g.DrawString(plusMinus, _fontMark, SystemBrushes.ControlText, _posValue + offset, markyoff-5, _strformat);
         }
 
         private void drawRangeText(PaintEventArgs e, int tickyoff1)

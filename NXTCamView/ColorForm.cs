@@ -25,9 +25,9 @@ using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 using Blue.Windows;
-using NXTCamView.Commands;
 using NXTCamView.Properties;
 using NXTCamView.Resources;
+using NXTCamView.StripCommands;
 
 namespace NXTCamView
 {
@@ -37,7 +37,7 @@ namespace NXTCamView
         public static ColorForm Instance { get { return _instance; } }
         private int COLOR_DETAIL_HEIGHT = 241;
         private const int COLOR_PANEL_SPACING = 30;
-        private const int TRACKED_COLORS = 8;
+        public const int TRACKED_COLORS = 8;
         private ColorDetail _colorDetail = new ColorDetail();
         private Panel[] _colorPanels = new Panel[TRACKED_COLORS];
         private OverlapInfo[] _overlapInfos = new OverlapInfo[TRACKED_COLORS];
@@ -46,7 +46,9 @@ namespace NXTCamView
         private bool _isColorDetailVisible = false;
         private Color _highlightColorLow;
         private Color _highlightColorHigh;
-        private ColorFunction _colorFunction;
+        private ColorFunction _colorFunctionTemp;
+        private ColorFunction _colorFunctionMode;
+        private HighlightColorStripCommand highlightColorCmd;
 
         [Category("Custom")]
         public event EventHandler HighlightColorsChanged;
@@ -63,10 +65,22 @@ namespace NXTCamView
         {
             InitializeComponent();
             Icon = AppImages.GetIcon(AppImages.Colors);
-
-            setColorFunction(NXTCamView.ColorFunction.Setting);
-
+            setupColorFunction();
+            setupToolbar();
             initErrorImage();
+            MainForm.Instance.ConnectionStateChanged += mainForm_ConnectionStateChanged;
+        }
+
+        private void mainForm_ConnectionStateChanged(object sender, EventArgs e)
+        {
+            updateAllEnablement();
+        }
+
+        private void setupColorFunction()
+        {
+            _colorFunctionTemp = ColorFunction.NotSet;
+            _colorFunctionMode = ColorFunction.SetColor;
+            updateColorFunction();
         }
 
         public static void Init()
@@ -100,20 +114,41 @@ namespace NXTCamView
 
         public int SelectedColorIndex { get { return _selectedColorIndex; } set { _selectedColorIndex = value; } }
 
-        private void setColorFunction(ColorFunction newFunction)
+        private void setTempColorFunction(ColorFunction newFunction)
         {
-            if (_colorFunction != newFunction)
+            if (_colorFunctionTemp != newFunction)
             {
-                _colorFunction = newFunction;
-                _colorDetail.SetColorFunction(_colorFunction);
-                if (ColorFunctionChanged != null)
-                {
-                    ColorFunctionChanged(this, new EventArgs());
-                }
+                _colorFunctionTemp = newFunction;
+                updateColorFunction();
             }
         }
 
-        public ColorFunction ColorFunction { get { return _colorFunction; } set { setColorFunction(value);} }
+        private void setColorFunctionMode(ColorFunction newFunction)
+        {
+            if (_colorFunctionMode != newFunction)
+            {
+                _colorFunctionMode = newFunction;
+                updateColorFunction();
+            }
+        }
+
+        private void updateColorFunction()
+        {
+            _colorDetail.SetColorFunction(GetColorFunction());
+            if (ColorFunctionChanged != null)
+            {
+                ColorFunctionChanged(this, new EventArgs());
+            }
+            updateAllEnablement();
+        }
+
+        public ColorFunction GetColorFunction()
+        {
+            return _colorFunctionTemp == ColorFunction.NotSet ? _colorFunctionMode : _colorFunctionTemp;
+        }
+
+        public ColorFunction ColorFunctionTemp { get { return _colorFunctionTemp; } set { setTempColorFunction(value); } }
+        public ColorFunction ColorFunctionMode { get { return _colorFunctionMode; } set { setColorFunctionMode(value); } }
 
         private void ColorForm_Load(object sender, EventArgs e)
         {
@@ -153,18 +188,29 @@ namespace NXTCamView
 
             pnlSample.Visible = false;
 
-            //hack to try and get the tooltip appearing the Right way around
-            llColorDetail.Focus();
-
-            toggleColorDetail();
+            toggleDetailVisible();
 
             positionTopRight();
+        }
+
+        private void setupToolbar()
+        {
+            setupItem(tsbSetColor, "Set color", "Use color setting mode", AppImages.SetColor, new SetColorFunctionModeStripCommand(this, ColorFunction.SetColor));
+            setupItem(tsbAddToColor, "Add to color", "Use color adding mode (or press CTRL while clicking)", AppImages.AddToColor, new SetColorFunctionModeStripCommand(this, ColorFunction.AddToColor));
+            setupItem(tsbRemoveFromColor, "Remove from color", "Use color removing mode (or press CTRL+SHIFT while clicking)", AppImages.RemoveFromColor, new SetColorFunctionModeStripCommand(this, ColorFunction.RemoveFromColor));
+
+            setupItem(tsbUpload, "Upload", "Upload tracking colors to NXTCam", AppImages.UploadColors, new UploadColorsStripCommand(this));
+            setupItem(tsbClear, "Clear", "Clear color", AppImages.ClearColor, new ClearColorsStripCommand(false, this));
+            setupItem(tsbClearAll, "Clear All", "Clear all colors", AppImages.ClearAllColors, new ClearColorsStripCommand(true, this));
+            highlightColorCmd = new HighlightColorStripCommand(true, this);
+            setupItem(tsbHighlight, "Highlight", "Highlight the color in the capture", AppImages.HighlightColor, highlightColorCmd);
+            setupItem(tslShowHide, "Hide", "Show/Hide colors", null, new ToggleShowHideStripCommand(this));
         }
 
         private void positionTopRight()
         {
             MdiClient mdiClient = StickyWindow.GetMdiClient(MainForm.Instance);
-            if( mdiClient != null )
+            if (mdiClient != null)
             {
                 Top = 0;
                 Left = mdiClient.ClientRectangle.Width - Width;
@@ -242,7 +288,7 @@ namespace NXTCamView
         {
             if (toolTipPanel.Active) toolTipPanel.Hide(this);
             setSelectedColor((int)((Panel)sender).Tag);
-            if (cbHighLight.Checked)
+            if (highlightColorCmd.CanExecute())
             {
                 setHighlightColors();
             }
@@ -253,23 +299,49 @@ namespace NXTCamView
             Settings.Default.MinColors[_selectedColorIndex] = _colorDetail.MinColor;
             Settings.Default.MaxColors[_selectedColorIndex] = _colorDetail.MaxColor;
             _colorPanels[_selectedColorIndex].BackColor = Settings.Default.GetAverageColor(_selectedColorIndex);
-            SetActiveColor( Settings.Default.GetAverageColor(_selectedColorIndex) );
+            SetActiveColor(Settings.Default.GetAverageColor(_selectedColorIndex));
             updateOverlapStatusAndMessage(_selectedColorIndex);
-            updateUploadButton();
+            updateAllEnablement();
             setHighlightColors();
         }
 
-        private void updateUploadButton()
+        private void updateAllEnablement()
         {
-            foreach( OverlapInfo info in _overlapInfos )
+            updateEnablement(tsToolBar.Items);
+        }
+
+        private void updateEnablement(ToolStripItemCollection items)
+        {
+            foreach (ToolStripItem item in items)
             {
-                if( info.IsOverlapped)
+                if (item != null)
                 {
-                    btnUpload.Enabled = false;
-                    return;
+                    StripCommand cmd = item.Tag as StripCommand;
+                    if (cmd != null)
+                    {
+                        item.Enabled = cmd.CanExecute();
+
+                        ToolStripButton button = item as ToolStripButton;
+                        if (button != null) button.Checked = cmd.HasExecuted();
+
+                        ToolStripMenuItem menu = item as ToolStripMenuItem;
+                        if (menu != null) menu.Checked = cmd.HasExecuted();
+                    }
                 }
             }
-            btnUpload.Enabled = true;
+        }
+
+        public bool IsAnyOverlapped()
+        {
+            bool isOverlapped = false;
+            foreach (OverlapInfo info in _overlapInfos)
+            {
+                if (info.IsOverlapped)
+                {
+                    isOverlapped = true;
+                }
+            }
+            return isOverlapped;
         }
 
         private void updateOverlapStatusAndMessage(int index)
@@ -288,10 +360,10 @@ namespace NXTCamView
             _colorDetail.SetColorMinMax(Settings.Default.MinColors[_selectedColorIndex], Settings.Default.MaxColors[_selectedColorIndex]);
         }
 
-        public void SetActiveColor(Color color )
+        public void SetActiveColor(Color color)
         {
             _colorDetail.SetActiveColor(color);
-            if( color == Color.Empty ) return;
+            if (color == Color.Empty) return;
             pnlActiveColor.BackColor = color;
             lbActiveColor.Text = string.Format("r:{0} g:{1} b:{2}", color.R, color.G, color.B);
         }
@@ -299,7 +371,7 @@ namespace NXTCamView
         public void SetSelectedColor()
         {
             if (toolTipPanel.Active) toolTipPanel.Hide(this);
-            if (_colorFunction == ColorFunction.Setting)
+            if ( GetColorFunction() == ColorFunction.SetColor )
             {
                 _colorDetail.BaseColor = pnlActiveColor.BackColor;
             }
@@ -311,18 +383,13 @@ namespace NXTCamView
             pnlColorPanels.Refresh();
         }
 
-        private void llColorDetail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            toggleColorDetail();
-        }
-
-        private void toggleColorDetail()
+        private void toggleDetailVisible()
         {
             SuspendLayout();
             _isColorDetailVisible = !_isColorDetailVisible;
             int heightChange = _isColorDetailVisible ? COLOR_DETAIL_HEIGHT : -COLOR_DETAIL_HEIGHT;
+            tslShowHide.Text = _isColorDetailVisible ? "Hide" : "Show";
             Height += heightChange;
-            llColorDetail.Text = _isColorDetailVisible ? "Hide" : "Show";
             ResumeLayout();
         }
 
@@ -337,77 +404,7 @@ namespace NXTCamView
             Settings.Default.SelectedColorIndex = _selectedColorIndex;
         }
 
-        private void btnUpload_Click(object sender, EventArgs e)
-        {
-            int red = 0;
-            int green = 16;
-            int blue = 32;
-            try
-            {
-                //prepare the color map
-                byte[] colorMap = new byte[3*16];
-                for( int objectNum = 0; objectNum < TRACKED_COLORS; objectNum++ )
-                {
-                    Color minColor = Settings.Default.MinColors[objectNum];
-                    Color maxColor = Settings.Default.MaxColors[objectNum];
-                    if( ColorUtils.IsNotSet(minColor, maxColor) ) continue; //skip as black == not set
-                    for( int offset = 0; offset < 16; offset++ )
-                    {
-                        //this is weird, but the gets us to the layout we need
-                        //div by 17 to get it back to 0-15
-                        byte redMask =
-                            (byte) ((offset >= minColor.R/17 && offset <= maxColor.R/17) ? (1 << objectNum) : 0);
-                        colorMap[red + offset] |= redMask;
-
-                        byte greenMask =
-                            (byte) ((offset >= minColor.G/17 && offset <= maxColor.G/17) ? (1 << objectNum) : 0);
-                        colorMap[green + offset] |= greenMask;
-
-                        byte blueMask =
-                            (byte) ((offset >= minColor.B/17 && offset <= maxColor.B/17) ? (1 << objectNum) : 0);
-                        colorMap[blue + offset] |= blueMask;
-                    }
-                }
-
-                Debug.Write("colorMap: ");
-                for( int i = 0; i < 16*3; i++ )
-                {
-                    if( i%16 == 0 ) Debug.Write("- ");
-                    Debug.Write(String.Format("{0:x} ", colorMap[i]));
-                }
-                Debug.WriteLine("");
-                SetColorMapCommand cmd = new SetColorMapCommand(MainForm.Instance.SerialPort);
-                cmd.ColorMap = new List< byte >(colorMap);
-                cmd.Execute();
-                if( cmd.IsSuccessful )
-                {
-                    Settings.Default.UploadedMinColors = (Color[]) Settings.Default.MinColors.Clone();
-                    Settings.Default.UploadedMaxColors = (Color[]) Settings.Default.MaxColors.Clone();
-                    Settings.Default.LastColorUpload = DateTime.Now;
-                    TrackingForm.Instance.SetupColors();
-
-                    MessageBox.Show(this, "Color upload was successful!", Application.ProductName,
-                                    MessageBoxButtons.OK, MessageBoxIcon.None);
-                }
-                else
-                {
-                    MessageBox.Show(this, cmd.ErrorDescription, Application.ProductName, MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                }
-            }
-            catch( Exception ex )
-            {
-                Debug.WriteLine(string.Format("Error uploading colors {0}", ex));
-            }
-        }
-
-        private void btnClearAll_Click(object sender, EventArgs e)
-        {
-            clearAll();
-            pnlColorPanels.Refresh();
-        }
-
-        private void btnClear_Click(object sender, EventArgs e)
+        private void clearColor()
         {
             clearColor(_selectedColorIndex);
             //refresh the sliders
@@ -415,12 +412,13 @@ namespace NXTCamView
             pnlColorPanels.Refresh();
         }
 
-        private void clearAll()
+        private void clearAllColors()
         {
             for (int i = 0; i < _colorPanels.Length; i++) clearColor(i);
             pnlColorPanels.Refresh();
             //refresh the sliders
             setSelectedColor(0);
+            pnlColorPanels.Refresh();
         }
 
         private void clearColor(int index)
@@ -447,14 +445,14 @@ namespace NXTCamView
                 if (isNotSet)
                 {
                     //ensure its clear on color2
-                    _overlapInfos[i].SetOverlapStatus(index,false);
+                    _overlapInfos[i].SetOverlapStatus(index, false);
                 }
                 else
                 {
                     Color minColor2 = Settings.Default.MinColors[i];
                     Color maxColor2 = Settings.Default.MaxColors[i];
 
-                    if( ColorUtils.IsNotSet(minColor2, maxColor2) )
+                    if (ColorUtils.IsNotSet(minColor2, maxColor2))
                     {
                         //tidy up
                         _overlapInfos[i].ClearOverlaps();
@@ -472,7 +470,7 @@ namespace NXTCamView
                     //set/clear the new overlap status on color2
                     _overlapInfos[i].SetOverlapStatus(index, isOverlapped);
                     //only set the new overlap staus on color1 is set
-                    if( isOverlapped ) _overlapInfos[index].SetOverlapStatus(i, true);
+                    if (isOverlapped) _overlapInfos[index].SetOverlapStatus(i, true);
                 }
             }
         }
@@ -482,7 +480,7 @@ namespace NXTCamView
             return min < max ? (val >= min) && (val <= max) : (val <= min) && (val >= max);
         }
 
-        class OverlapInfo
+        private class OverlapInfo
         {
             private List<Int32> _overlappedIndices = new List<Int32>();
             public bool IsOverlapped { get { return _overlappedIndices.Count > 0; } }
@@ -519,27 +517,23 @@ namespace NXTCamView
 
         private void raiseHighlightColorChanged()
         {
-            if( HighlightColorsChanged != null )
+            if (HighlightColorsChanged != null)
             {
-                HighlightColorsChanged(this,new EventArgs());
+                HighlightColorsChanged(this, new EventArgs());
             }
-        }
-
-        private void cbHighLight_CheckedChanged(object sender, EventArgs e)
-        {
-            setHighlightColors();
         }
 
         private void setHighlightColors()
         {
-            _highlightColorLow = cbHighLight.Checked ? getHightlightColor(Settings.Default.MinColors[_selectedColorIndex]) : Color.Empty;
-            _highlightColorHigh = cbHighLight.Checked ? getHightlightColor(Settings.Default.MaxColors[_selectedColorIndex]) : Color.Empty;
+            bool isOn = highlightColorCmd.HasExecuted();
+            _highlightColorLow = isOn ? getHightlightColor(Settings.Default.MinColors[_selectedColorIndex]) : Color.Empty;
+            _highlightColorHigh = isOn ? getHightlightColor(Settings.Default.MaxColors[_selectedColorIndex]) : Color.Empty;
             raiseHighlightColorChanged();
         }
 
         private Color getHightlightColor(Color color)
         {
-            if( ColorUtils.IsNotSet(color) )
+            if (ColorUtils.IsNotSet(color))
             {
                 return Color.Empty;
             }
@@ -556,16 +550,169 @@ namespace NXTCamView
             Debug.WriteLine(Bounds);
         }
 
+        private void ColorForm_MouseLeave(object sender, EventArgs e)
+        {
+            ColorFunctionTemp = ColorFunction.NotSet;
+        }
+
         private void ColorForm_KeyUpDown(object sender, KeyEventArgs e)
         {
-            ColorFunction = ColorUtils.GetColorFunction(ModifierKeys);
+            ColorFunctionTemp = ColorUtils.GetColorFunction(ModifierKeys);            
         }
+
+        #region StripCommand Handling
+
+        //TODO: refactor out as this is the same as for mainform
+        private void setupItem(ToolStripItem tsItem, string caption, string tip, Image image, StripCommand command)
+        {
+            tsItem.Text = caption;
+            tsItem.Image = image;
+            tsItem.Tag = command;
+            tsItem.ToolTipText = tip;
+            tsItem.Click += ToolItem_Click;
+        }
+
+        private void ToolItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = sender as ToolStripItem;
+            if (item == null) throw new ApplicationException(string.Format("sender is not a toolstrip: {0}", sender));
+
+            StripCommand cmd = item.Tag as StripCommand;
+            if (cmd == null) throw new ApplicationException(string.Format("toolstrip has not command: {0}", item.Text));
+
+            if (cmd.CanExecute()) cmd.Execute();
+
+            updateAllEnablement();
+        }
+        #endregion
+
+        public class ClearColorsStripCommand : StripCommand
+        {
+            private ColorForm _form;
+            private bool _isAll;
+
+
+            public ClearColorsStripCommand(bool isAll, ColorForm form)
+            {
+                _form = form;
+                _isAll = isAll;
+            }
+
+            public override bool CanExecute()
+            {
+                return true;
+            }
+
+            public override bool Execute()
+            {
+                if (_isAll)
+                {
+                    _form.clearAllColors();
+                }
+                else
+                {
+                    _form.clearColor();
+                }
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                return false;
+            }
+        }
+
+        public class HighlightColorStripCommand : StripCommand
+        {
+            private ColorForm _form;
+            private bool _isHighlighting;
+
+            public HighlightColorStripCommand(bool isHightlighting, ColorForm form)
+            {
+                _form = form;
+                _isHighlighting = isHightlighting;
+            }
+
+            public override bool CanExecute()
+            {
+                return true;
+            }
+
+            public override bool Execute()
+            {
+                _isHighlighting = !_isHighlighting;
+                _form.setHighlightColors();
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                return _isHighlighting;
+            }
+        }
+
+        public class ToggleShowHideStripCommand : StripCommand
+        {
+            private ColorForm _form;
+
+            public ToggleShowHideStripCommand( ColorForm form )
+            {
+                _form = form;
+            }
+
+            public override bool CanExecute()
+            {
+                return true;
+            }
+
+            public override bool Execute()
+            {
+                _form.toggleDetailVisible();
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                return false;
+            }
+        }
+
+        public class SetColorFunctionModeStripCommand : StripCommand
+        {
+            private ColorForm _form;
+            private ColorFunction _colorFunction;
+
+            public SetColorFunctionModeStripCommand( ColorForm form, ColorFunction colorFunction )
+            {
+                _form = form;
+                _colorFunction = colorFunction;
+            }
+
+            public override bool CanExecute()
+            {
+                return true;
+            }
+
+            public override bool Execute()
+            {
+                _form.ColorFunctionMode = _colorFunction;
+                return true;
+            }
+
+            public override bool HasExecuted()
+            {
+                //we want to show the combined colorfunction temp & mode
+                return _form.GetColorFunction() == _colorFunction;
+            }
+        }       
     }
 
     public enum ColorFunction
     {
-        Setting,
-        Adding,
-        Removing
+        SetColor,
+        AddToColor,
+        RemoveFromColor,
+
+        NotSet
     }
 }

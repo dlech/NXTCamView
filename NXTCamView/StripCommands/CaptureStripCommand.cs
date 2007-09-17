@@ -22,7 +22,7 @@ namespace NXTCamView.StripCommands
     {
         public override bool CanExecute()
         {
-            return AppState.Inst.State == State.Connected;            
+            return AppState.Inst.State == State.Connected;
         }
 
         public override bool Execute()

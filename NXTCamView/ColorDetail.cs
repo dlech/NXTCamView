@@ -207,7 +207,7 @@ namespace NXTCamView
 
         public void ApplyModifiedRange()
         {
-            if (_colorFunction == ColorFunction.Adding)
+            if (_colorFunction == ColorFunction.AddToColor)
             {
                 _minColor = Color.FromArgb(
                     (int) Math.Max(0, Math.Min(rbRed.RangeMinimum, rbRed.Value))*17,
@@ -219,7 +219,7 @@ namespace NXTCamView
                     (int)Math.Min(255, Math.Max(rbGreen.RangeMaximum, rbGreen.Value)) * 17,
                     (int)Math.Min(255, Math.Max(rbBlue.RangeMaximum, rbBlue.Value)) * 17);
             } 
-            else if (_colorFunction == ColorFunction.Removing)
+            else if (_colorFunction == ColorFunction.RemoveFromColor)
             {
                 _minColor = Color.FromArgb(
                     getRemoved(rbRed, _minColor.R/17, true)*17,

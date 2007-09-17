@@ -228,13 +228,13 @@ namespace NXTCamView
 
         private void colorDetail_ColorFunctionChanged(object sender, EventArgs e)
         {
-            switch( ColorForm.Instance.ColorFunction )
+            switch( ColorForm.Instance.GetColorFunction() )
             {
-                case ColorFunction.Adding:
+                case ColorFunction.AddToColor:
                     pbInterpolated.Cursor = _addingColor;
                     pbBayer.Cursor = _addingColor;
                     break;
-                case ColorFunction.Removing:
+                case ColorFunction.RemoveFromColor:
                     pbInterpolated.Cursor = _removingColor;
                     pbBayer.Cursor = _removingColor;
                     break;
@@ -337,17 +337,12 @@ namespace NXTCamView
 
         private void pb_MouseLeave(object sender, EventArgs e)
         {
-            setColorFunction();
+            ColorForm.Instance.ColorFunctionTemp = ColorFunction.NotSet;
         }
 
         private void captureForm_KeyUpDown(object sender, KeyEventArgs e)
         {
-            setColorFunction();
-        }
-
-        private static void setColorFunction()
-        {
-            ColorForm.Instance.ColorFunction = ColorUtils.GetColorFunction(ModifierKeys);
+            ColorForm.Instance.ColorFunctionTemp = ColorUtils.GetColorFunction(ModifierKeys);
         }
     }
 }

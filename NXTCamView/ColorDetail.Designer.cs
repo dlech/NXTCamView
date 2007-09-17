@@ -76,7 +76,7 @@ namespace NXTCamView
             // nudRange
             // 
             this.nudRange.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::NXTCamView.Properties.Settings.Default, "ColorTolerance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.nudRange.Location = new System.Drawing.Point(90, 144);
+            this.nudRange.Location = new System.Drawing.Point(90, 155);
             this.nudRange.Maximum = new decimal(new int[] {
             16,
             0,
@@ -91,7 +91,7 @@ namespace NXTCamView
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 146);
+            this.label1.Location = new System.Drawing.Point(3, 157);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 4;
@@ -100,9 +100,9 @@ namespace NXTCamView
             // lblWarning
             // 
             this.lblWarning.ForeColor = System.Drawing.Color.Red;
-            this.lblWarning.Location = new System.Drawing.Point(3, 172);
+            this.lblWarning.Location = new System.Drawing.Point(3, 179);
             this.lblWarning.Name = "lblWarning";
-            this.lblWarning.Size = new System.Drawing.Size(180, 39);
+            this.lblWarning.Size = new System.Drawing.Size(180, 32);
             this.lblWarning.TabIndex = 6;
             this.lblWarning.Text = "warning";
             // 
@@ -110,7 +110,7 @@ namespace NXTCamView
             // 
             this.rbRed.BarHeight = 16;
             this.rbRed.ColorBackground = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.rbRed.ColorFunction = NXTCamView.ColorFunction.Setting;
+            this.rbRed.ColorFunction = NXTCamView.ColorFunction.SetColor;
             this.rbRed.DivisionCount = 15;
             this.rbRed.InnerColor = System.Drawing.Color.Red;
             this.rbRed.Location = new System.Drawing.Point(6, -14);
@@ -133,10 +133,10 @@ namespace NXTCamView
             // 
             this.rbGreen.BarHeight = 16;
             this.rbGreen.ColorBackground = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.rbGreen.ColorFunction = NXTCamView.ColorFunction.Setting;
+            this.rbGreen.ColorFunction = NXTCamView.ColorFunction.SetColor;
             this.rbGreen.DivisionCount = 15;
             this.rbGreen.InnerColor = System.Drawing.Color.Green;
-            this.rbGreen.Location = new System.Drawing.Point(6, 33);
+            this.rbGreen.Location = new System.Drawing.Point(6, 39);
             this.rbGreen.MarkHeight = 24;
             this.rbGreen.Name = "rbGreen";
             this.rbGreen.Orientation = NXTCamView.RangeBar.RangeBarOrientation.Horizontal;
@@ -156,10 +156,10 @@ namespace NXTCamView
             // 
             this.rbBlue.BarHeight = 16;
             this.rbBlue.ColorBackground = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.rbBlue.ColorFunction = NXTCamView.ColorFunction.Setting;
+            this.rbBlue.ColorFunction = NXTCamView.ColorFunction.SetColor;
             this.rbBlue.DivisionCount = 15;
             this.rbBlue.InnerColor = System.Drawing.Color.Blue;
-            this.rbBlue.Location = new System.Drawing.Point(6, 79);
+            this.rbBlue.Location = new System.Drawing.Point(6, 89);
             this.rbBlue.MarkHeight = 24;
             this.rbBlue.Name = "rbBlue";
             this.rbBlue.Orientation = NXTCamView.RangeBar.RangeBarOrientation.Horizontal;

@@ -43,14 +43,14 @@ namespace NXTCamView
 
         public static ColorFunction GetColorFunction(Keys keys)
         {
-            ColorFunction function = ColorFunction.Setting;            
+            ColorFunction function = ColorFunction.NotSet;            
             if (keys == Keys.Control)
             {
-                function = ColorFunction.Adding;
+                function = ColorFunction.AddToColor;
             }
             else if (keys == (Keys.Shift | Keys.Control))
             {
-                function = ColorFunction.Removing;
+                function = ColorFunction.RemoveFromColor;
             }
             return function;
         }
