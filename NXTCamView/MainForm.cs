@@ -173,7 +173,7 @@ namespace NXTCamView
             disconnectCmd.Completed += disconnectCmd_Completed;
             setupButtonAndMenu(tsbDisconnect, tsmDisconnect, "Disconnect", "Disconnect from the NXTCam", AppImages.Disconnect, disconnectCmd);
 
-            setupButtonAndMenu(tsbCapture, tsmCapture, "New Capture", "Captures an image", AppImages.Capture, new CaptureStripCommand() );
+            setupButtonAndMenu(tsbCapture, tsmCapture, "Capture", "Capture an image from the NXTCam", AppImages.Capture, new CaptureStripCommand() );
 
             setupMenu(tsmOpenFile, "&Open", "Open a capture", AppImages.OpenFile, new OpenFileStripCommand( openFileDialog ));
             setupMenu(tsmSaveFile, "&Save", "Save a capture", AppImages.SaveFile, new SaveFileStripCommand(saveFileDialog, false));
@@ -310,6 +310,7 @@ namespace NXTCamView
                 BeginInvoke(new EventHandler(AppStateChanged), new object[] {sender, args});
                 return;
             }
+            updateAllEnablement();
             updateConnectionState();
         }
 

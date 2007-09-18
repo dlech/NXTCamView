@@ -20,7 +20,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
-using NXTCamView;
 using NXTCamView.Commands;
 
 public class DumpFrameCommand : FetchFrameCommand

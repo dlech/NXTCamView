@@ -38,8 +38,8 @@ namespace NXTCamView
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipPanel = new System.Windows.Forms.ToolTip(this.components);
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
-            this.tsbAddToColor = new System.Windows.Forms.ToolStripButton();
             this.tsbSetColor = new System.Windows.Forms.ToolStripButton();
+            this.tsbAddToColor = new System.Windows.Forms.ToolStripButton();
             this.tsbRemoveFromColor = new System.Windows.Forms.ToolStripButton();
             this.tsbHighlight = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -61,12 +61,12 @@ namespace NXTCamView
             this.pnlColorMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlColorMain.Location = new System.Drawing.Point(0, 25);
             this.pnlColorMain.Name = "pnlColorMain";
-            this.pnlColorMain.Size = new System.Drawing.Size(468, 67);
+            this.pnlColorMain.Size = new System.Drawing.Size(468, 44);
             this.pnlColorMain.TabIndex = 6;
             // 
             // pnlActiveColor
             // 
-            this.pnlActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlActiveColor.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.pnlActiveColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlActiveColor.Location = new System.Drawing.Point(255, 9);
@@ -81,12 +81,12 @@ namespace NXTCamView
             this.pnlColorPanels.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlColorPanels.Location = new System.Drawing.Point(0, 0);
             this.pnlColorPanels.Name = "pnlColorPanels";
-            this.pnlColorPanels.Size = new System.Drawing.Size(249, 67);
+            this.pnlColorPanels.Size = new System.Drawing.Size(249, 44);
             this.pnlColorPanels.TabIndex = 8;
             // 
             // pnlSample
             // 
-            this.pnlSample.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlSample.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlSample.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.pnlSample.Location = new System.Drawing.Point(224, 9);
             this.pnlSample.Name = "pnlSample";
@@ -96,7 +96,7 @@ namespace NXTCamView
             // 
             // lbActiveColor
             // 
-            this.lbActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbActiveColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbActiveColor.AutoSize = true;
             this.lbActiveColor.Location = new System.Drawing.Point(295, 17);
             this.lbActiveColor.Name = "lbActiveColor";
@@ -130,15 +130,6 @@ namespace NXTCamView
             this.tsToolBar.TabIndex = 7;
             this.tsToolBar.Text = "Show";
             // 
-            // tsbAddToColor
-            // 
-            this.tsbAddToColor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAddToColor.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddToColor.Image")));
-            this.tsbAddToColor.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddToColor.Name = "tsbAddToColor";
-            this.tsbAddToColor.Size = new System.Drawing.Size(23, 22);
-            this.tsbAddToColor.Text = "tsbAddColor";
-            // 
             // tsbSetColor
             // 
             this.tsbSetColor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -147,6 +138,15 @@ namespace NXTCamView
             this.tsbSetColor.Name = "tsbSetColor";
             this.tsbSetColor.Size = new System.Drawing.Size(23, 22);
             this.tsbSetColor.Text = "tsbSetColor";
+            // 
+            // tsbAddToColor
+            // 
+            this.tsbAddToColor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbAddToColor.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddToColor.Image")));
+            this.tsbAddToColor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddToColor.Name = "tsbAddToColor";
+            this.tsbAddToColor.Size = new System.Drawing.Size(23, 22);
+            this.tsbAddToColor.Text = "tsbAddColor";
             // 
             // tsbRemoveFromColor
             // 
@@ -217,7 +217,7 @@ namespace NXTCamView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 96);
+            this.ClientSize = new System.Drawing.Size(468, 67);
             this.Controls.Add(this.pnlColorMain);
             this.Controls.Add(this.tsToolBar);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
