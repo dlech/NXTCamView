@@ -296,6 +296,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\ClearAllColors.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\UploadColors.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
