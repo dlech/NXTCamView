@@ -44,6 +44,7 @@
                 <include name="**\*.csproj" />
                 <include name="**\*.vdproj" />
                 <include name="**\*.cs" />
+                <include name="**\*.cur" />
                 <include name="**\*.resx" />
                 <include name="**\*.xml" />
                 <include name="**\*.testrunconfig" />
