@@ -157,7 +157,7 @@ namespace NXTCamView.Properties
             foreach (SettingsProperty property in settings.Properties )
             {
                 object newValue = settings.PropertyValues[property.Name].PropertyValue;
-                if( !this[property.Name].Equals(newValue))
+                if( this[property.Name]==null || !this[property.Name].Equals(newValue) )
                 {
                     this[property.Name] = newValue;
                 }                

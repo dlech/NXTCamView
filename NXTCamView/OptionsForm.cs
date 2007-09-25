@@ -22,6 +22,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
+using DevInfo;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
 using NXTCamView.Resources;
@@ -39,6 +40,7 @@ namespace NXTCamView
         private bool _hasDoneTest;
         private bool _hasSavedSettings;
         private const int MAX_UPLOAD_REGISTERS = 8;
+        static private Dictionary< string, string > _friendlyNameByPort;
 
         public OptionsForm(SerialPort serialPort)
         {
@@ -121,8 +123,14 @@ namespace NXTCamView
         {
             Settings settings = Settings.Default;
             lbResult.Text = "";
-            cobCOMPorts.Items.AddRange(SerialPort.GetPortNames());
-            cobCOMPorts.SelectedItem = settings.COMPort;
+
+            if( _friendlyNameByPort == null )
+            {
+                //repopulate the comports first time through
+                _friendlyNameByPort = SerialHelper.GetPorts();
+            }
+
+            setupComportDropdown();
 
             cobBaudRate.SelectedIndex = getIndex(cobBaudRate,Settings.Default.BaudRate);
             cobDataBits.SelectedIndex = getIndex(cobDataBits, Settings.Default.DataBits);
@@ -166,10 +174,12 @@ namespace NXTCamView
             //check whats changed and save if necessary
             Settings proposed = Settings.From(Settings.Default);
             
+            if( proposed == null ) return false;
+
             //if we did a test then ensure we save to force the COMPort to reopen
             bool hasChanged = false;
             bool hasCommsChanged = false;
-            if (!proposed.COMPort.Equals(cobCOMPorts.SelectedItem) || _hasDoneTest)
+            if ( proposed.COMPort == null || !proposed.COMPort.Equals(cobCOMPorts.SelectedItem) || _hasDoneTest )
             {
                 hasCommsChanged = true;
                 proposed.COMPort = (string)cobCOMPorts.SelectedItem;
@@ -493,6 +503,32 @@ namespace NXTCamView
             {
                 Close();
             }
+        }
+
+        private void setupComportDropdown()
+        {
+            string old = (string) cobCOMPorts.SelectedItem;
+            if (old == null) old = Settings.Default.COMPort;
+            cobCOMPorts.Items.Clear();
+            cobCOMPorts.Items.AddRange(SerialPort.GetPortNames());
+            cobCOMPorts.SelectedItem = old;
+            setComPortName(old);
+        }
+
+        private void setComPortName(string old)
+        {
+            lbFriendlyName.Text = old != null && _friendlyNameByPort.ContainsKey(old) ? _friendlyNameByPort[old] : "";
+        }
+
+        private void cobCOMPorts_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            setComPortName((string) cobCOMPorts.SelectedItem);
+        }
+
+        private void btnRefreshList_Click(object sender, System.EventArgs e)
+        {
+            _friendlyNameByPort = SerialHelper.GetPorts();
+            setupComportDropdown();
         }
     }
 }

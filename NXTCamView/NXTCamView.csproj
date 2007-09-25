@@ -177,6 +177,7 @@
     </Compile>
     <Compile Include="Resources\AppCursors.cs" />
     <Compile Include="Resources\AppImages.cs" />
+    <Compile Include="SerialHelper.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StickyWindow.cs" />
     <Compile Include="StickyWindowsUtil.cs" />

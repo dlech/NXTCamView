@@ -1,6 +1,10 @@
 NXTCamView Release Notes
 ------------------------
 
+v0.1.9
+- added refresh to comport list
+- added friendly names to comports
+
 v0.1.8
 - added status bar with connection state
 - added NXTCam version to status bar

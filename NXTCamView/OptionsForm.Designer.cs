@@ -64,6 +64,8 @@ namespace NXTCamView
             this.btnOk = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lbFriendlyName = new System.Windows.Forms.Label();
+            this.btnRefreshList = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabConnection.SuspendLayout();
             this.tabNXTCamSettings.SuspendLayout();
@@ -98,9 +100,11 @@ namespace NXTCamView
             this.tabConnection.Controls.Add(this.label7);
             this.tabConnection.Controls.Add(this.label6);
             this.tabConnection.Controls.Add(this.label4);
+            this.tabConnection.Controls.Add(this.lbFriendlyName);
             this.tabConnection.Controls.Add(this.label8);
             this.tabConnection.Controls.Add(this.label3);
             this.tabConnection.Controls.Add(this.lbResult);
+            this.tabConnection.Controls.Add(this.btnRefreshList);
             this.tabConnection.Controls.Add(this.btnRestoreDefaults);
             this.tabConnection.Controls.Add(this.btnTest);
             this.tabConnection.Controls.Add(this.label1);
@@ -116,7 +120,7 @@ namespace NXTCamView
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel1.Location = new System.Drawing.Point(78, 48);
+            this.panel1.Location = new System.Drawing.Point(78, 76);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(261, 1);
             this.panel1.TabIndex = 8;
@@ -125,7 +129,7 @@ namespace NXTCamView
             // 
             this.cobHandshake.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cobHandshake.FormattingEnabled = true;
-            this.cobHandshake.Location = new System.Drawing.Point(113, 91);
+            this.cobHandshake.Location = new System.Drawing.Point(113, 119);
             this.cobHandshake.Name = "cobHandshake";
             this.cobHandshake.Size = new System.Drawing.Size(89, 21);
             this.cobHandshake.TabIndex = 7;
@@ -134,7 +138,7 @@ namespace NXTCamView
             // 
             this.cobStopBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cobStopBits.FormattingEnabled = true;
-            this.cobStopBits.Location = new System.Drawing.Point(113, 174);
+            this.cobStopBits.Location = new System.Drawing.Point(113, 202);
             this.cobStopBits.Name = "cobStopBits";
             this.cobStopBits.Size = new System.Drawing.Size(89, 21);
             this.cobStopBits.TabIndex = 7;
@@ -143,7 +147,7 @@ namespace NXTCamView
             // 
             this.cobDataBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cobDataBits.FormattingEnabled = true;
-            this.cobDataBits.Location = new System.Drawing.Point(113, 147);
+            this.cobDataBits.Location = new System.Drawing.Point(113, 175);
             this.cobDataBits.Name = "cobDataBits";
             this.cobDataBits.Size = new System.Drawing.Size(89, 21);
             this.cobDataBits.TabIndex = 7;
@@ -152,7 +156,7 @@ namespace NXTCamView
             // 
             this.cobParity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cobParity.FormattingEnabled = true;
-            this.cobParity.Location = new System.Drawing.Point(113, 118);
+            this.cobParity.Location = new System.Drawing.Point(113, 146);
             this.cobParity.Name = "cobParity";
             this.cobParity.Size = new System.Drawing.Size(89, 21);
             this.cobParity.TabIndex = 7;
@@ -161,7 +165,7 @@ namespace NXTCamView
             // 
             this.cobBaudRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cobBaudRate.FormattingEnabled = true;
-            this.cobBaudRate.Location = new System.Drawing.Point(113, 64);
+            this.cobBaudRate.Location = new System.Drawing.Point(113, 92);
             this.cobBaudRate.Name = "cobBaudRate";
             this.cobBaudRate.Size = new System.Drawing.Size(89, 21);
             this.cobBaudRate.TabIndex = 6;
@@ -169,7 +173,7 @@ namespace NXTCamView
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 177);
+            this.label2.Location = new System.Drawing.Point(31, 205);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 13);
             this.label2.TabIndex = 5;
@@ -178,7 +182,7 @@ namespace NXTCamView
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(30, 94);
+            this.label7.Location = new System.Drawing.Point(30, 122);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(75, 13);
             this.label7.TabIndex = 5;
@@ -187,7 +191,7 @@ namespace NXTCamView
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(30, 150);
+            this.label6.Location = new System.Drawing.Point(30, 178);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(63, 13);
             this.label6.TabIndex = 5;
@@ -196,7 +200,7 @@ namespace NXTCamView
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(30, 121);
+            this.label4.Location = new System.Drawing.Point(30, 149);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(45, 13);
             this.label4.TabIndex = 5;
@@ -205,7 +209,7 @@ namespace NXTCamView
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 42);
+            this.label8.Location = new System.Drawing.Point(15, 70);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(58, 13);
             this.label8.TabIndex = 5;
@@ -214,7 +218,7 @@ namespace NXTCamView
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(30, 67);
+            this.label3.Location = new System.Drawing.Point(30, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 13);
             this.label3.TabIndex = 5;
@@ -230,7 +234,7 @@ namespace NXTCamView
             // 
             // btnRestoreDefaults
             // 
-            this.btnRestoreDefaults.Location = new System.Drawing.Point(18, 208);
+            this.btnRestoreDefaults.Location = new System.Drawing.Point(18, 236);
             this.btnRestoreDefaults.Name = "btnRestoreDefaults";
             this.btnRestoreDefaults.Size = new System.Drawing.Size(89, 23);
             this.btnRestoreDefaults.TabIndex = 3;
@@ -267,6 +271,7 @@ namespace NXTCamView
             this.cobCOMPorts.Name = "cobCOMPorts";
             this.cobCOMPorts.Size = new System.Drawing.Size(89, 21);
             this.cobCOMPorts.TabIndex = 1;
+            this.cobCOMPorts.SelectedIndexChanged += new System.EventHandler(this.cobCOMPorts_SelectedIndexChanged);
             // 
             // tabNXTCamSettings
             // 
@@ -423,6 +428,24 @@ namespace NXTCamView
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
+            // lbFriendlyName
+            // 
+            this.lbFriendlyName.Location = new System.Drawing.Point(208, 17);
+            this.lbFriendlyName.Name = "lbFriendlyName";
+            this.lbFriendlyName.Size = new System.Drawing.Size(131, 34);
+            this.lbFriendlyName.TabIndex = 5;
+            // 
+            // btnRefreshList
+            // 
+            this.btnRefreshList.Location = new System.Drawing.Point(113, 41);
+            this.btnRefreshList.Name = "btnRefreshList";
+            this.btnRefreshList.Size = new System.Drawing.Size(89, 26);
+            this.btnRefreshList.TabIndex = 3;
+            this.btnRefreshList.Text = "Refresh";
+            this.toolTip.SetToolTip(this.btnRefreshList, "Refresh list of ComPorts");
+            this.btnRefreshList.UseVisualStyleBackColor = true;
+            this.btnRefreshList.Click += new System.EventHandler(this.btnRefreshList_Click);
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -488,5 +511,7 @@ namespace NXTCamView
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.CheckBox cbCheckForUpdates;
+        private System.Windows.Forms.Label lbFriendlyName;
+        private System.Windows.Forms.Button btnRefreshList;
     }
 }
