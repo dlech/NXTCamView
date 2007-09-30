@@ -41,6 +41,7 @@ namespace NXTCamView.StripCommands
             bool isOk = false;
             try
             {
+                if( !MainForm.Instance.SerialPort.IsOpen ) MainForm.Instance.SerialPort.Open();
                 PingCommand pingCmd = new PingCommand(MainForm.Instance.SerialPort);
                 pingCmd.Execute();
                 isOk = pingCmd.IsSuccessful;
@@ -65,7 +66,7 @@ namespace NXTCamView.StripCommands
                         MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         //show options
-                        OpenOptionsStripCommand cmd = new OpenOptionsStripCommand(MainForm.Instance.SerialPort);
+                        OpenOptionsStripCommand cmd = new OpenOptionsStripCommand();
                         cmd.Execute();
                     }
                 }

@@ -22,13 +22,6 @@ namespace NXTCamView.StripCommands
 {
     public class OpenOptionsStripCommand : StripCommand
     {
-        private SerialPort _serialPort;
-
-        public OpenOptionsStripCommand(SerialPort serialPort)
-        {
-            _serialPort = serialPort;
-        }
-
         public override bool CanExecute()
         {
             //don't all options to be changed if tracking or serial comms are outstanding
@@ -37,7 +30,7 @@ namespace NXTCamView.StripCommands
 
         public override bool Execute()
         {
-            OptionsForm form = new OptionsForm(_serialPort);
+            OptionsForm form = new OptionsForm();
             form.ShowDialog();
             return true;
         }

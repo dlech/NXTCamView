@@ -24,7 +24,7 @@ namespace NXTCamView.Commands
     public class PingCommand : Command
     {
         public PingCommand(SerialPort _serialPort)
-            : base("Ping", _serialPort)
+            : base("Search", _serialPort)
         {
         }
 

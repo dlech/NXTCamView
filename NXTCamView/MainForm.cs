@@ -156,7 +156,7 @@ namespace NXTCamView
 
         private void setupStripCommands()
         {
-            openOptionsCmd = new OpenOptionsStripCommand(serialPort);
+            openOptionsCmd = new OpenOptionsStripCommand();
             openColorCmd = new OpenColorStripCommand();
             openTrackingCmd = new OpenTrackingStripCommand();
         }

@@ -44,6 +44,7 @@ namespace NXTCamView
             this.label8 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lbResult = new System.Windows.Forms.Label();
+            this.btnRefreshList = new System.Windows.Forms.Button();
             this.btnRestoreDefaults = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -64,8 +65,6 @@ namespace NXTCamView
             this.btnOk = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.lbFriendlyName = new System.Windows.Forms.Label();
-            this.btnRefreshList = new System.Windows.Forms.Button();
             this.tcOptions.SuspendLayout();
             this.tabConnection.SuspendLayout();
             this.tabNXTCamSettings.SuspendLayout();
@@ -100,7 +99,6 @@ namespace NXTCamView
             this.tabConnection.Controls.Add(this.label7);
             this.tabConnection.Controls.Add(this.label6);
             this.tabConnection.Controls.Add(this.label4);
-            this.tabConnection.Controls.Add(this.lbFriendlyName);
             this.tabConnection.Controls.Add(this.label8);
             this.tabConnection.Controls.Add(this.label3);
             this.tabConnection.Controls.Add(this.lbResult);
@@ -232,6 +230,17 @@ namespace NXTCamView
             this.lbResult.TabIndex = 4;
             this.lbResult.Text = "test";
             // 
+            // btnRefreshList
+            // 
+            this.btnRefreshList.Location = new System.Drawing.Point(250, 41);
+            this.btnRefreshList.Name = "btnRefreshList";
+            this.btnRefreshList.Size = new System.Drawing.Size(89, 26);
+            this.btnRefreshList.TabIndex = 3;
+            this.btnRefreshList.Text = "Refresh";
+            this.toolTip.SetToolTip(this.btnRefreshList, "Refresh list of ComPorts");
+            this.btnRefreshList.UseVisualStyleBackColor = true;
+            this.btnRefreshList.Click += new System.EventHandler(this.btnRefreshList_Click);
+            // 
             // btnRestoreDefaults
             // 
             this.btnRestoreDefaults.Location = new System.Drawing.Point(18, 236);
@@ -269,9 +278,8 @@ namespace NXTCamView
             this.cobCOMPorts.FormattingEnabled = true;
             this.cobCOMPorts.Location = new System.Drawing.Point(113, 14);
             this.cobCOMPorts.Name = "cobCOMPorts";
-            this.cobCOMPorts.Size = new System.Drawing.Size(89, 21);
+            this.cobCOMPorts.Size = new System.Drawing.Size(225, 21);
             this.cobCOMPorts.TabIndex = 1;
-            this.cobCOMPorts.SelectedIndexChanged += new System.EventHandler(this.cobCOMPorts_SelectedIndexChanged);
             // 
             // tabNXTCamSettings
             // 
@@ -428,24 +436,6 @@ namespace NXTCamView
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
-            // lbFriendlyName
-            // 
-            this.lbFriendlyName.Location = new System.Drawing.Point(208, 17);
-            this.lbFriendlyName.Name = "lbFriendlyName";
-            this.lbFriendlyName.Size = new System.Drawing.Size(131, 34);
-            this.lbFriendlyName.TabIndex = 5;
-            // 
-            // btnRefreshList
-            // 
-            this.btnRefreshList.Location = new System.Drawing.Point(113, 41);
-            this.btnRefreshList.Name = "btnRefreshList";
-            this.btnRefreshList.Size = new System.Drawing.Size(89, 26);
-            this.btnRefreshList.TabIndex = 3;
-            this.btnRefreshList.Text = "Refresh";
-            this.toolTip.SetToolTip(this.btnRefreshList, "Refresh list of ComPorts");
-            this.btnRefreshList.UseVisualStyleBackColor = true;
-            this.btnRefreshList.Click += new System.EventHandler(this.btnRefreshList_Click);
-            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -511,7 +501,6 @@ namespace NXTCamView
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.CheckBox cbCheckForUpdates;
-        private System.Windows.Forms.Label lbFriendlyName;
         private System.Windows.Forms.Button btnRefreshList;
     }
 }

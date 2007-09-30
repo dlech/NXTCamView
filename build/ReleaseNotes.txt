@@ -1,6 +1,11 @@
 NXTCamView Release Notes
 ------------------------
 
+v0.1.10
+- fixed tidyed comport code in option screen
+- fixed bug in comport test
+- replaced "ping" with "test"
+
 v0.1.9
 - added refresh to comport list
 - added friendly names to comports

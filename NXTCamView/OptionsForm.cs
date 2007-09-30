@@ -16,10 +16,10 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
 using DevInfo;
@@ -42,48 +42,48 @@ namespace NXTCamView
         private const int MAX_UPLOAD_REGISTERS = 8;
         static private Dictionary< string, string > _friendlyNameByPort;
 
-        public OptionsForm(SerialPort serialPort)
+        public OptionsForm()
         {
             InitializeComponent();
             
             Icon = Icon.FromHandle(((Bitmap)AppImages.Options).GetHicon());
 
-            _serialPort = serialPort;
+            _serialPort = MainForm.Instance.SerialPort;
             SuspendLayout();
 
-            List<StrIntBinder> items = new List< StrIntBinder >();
-            items.Add(new StrIntBinder("19.2k", 19200));
-            items.Add(new StrIntBinder("38.4k", 38400));
-            items.Add(new StrIntBinder("115.2k", 115200));
-            items.Add(new StrIntBinder("230.4k", 230400));
-            items.Add(new StrIntBinder("460.8k", 460800));
+            List<ComboBinder<Int32>> items = new List< ComboBinder<Int32> >();
+            items.Add(new ComboBinder<Int32>("19.2k", 19200));
+            items.Add(new ComboBinder<Int32>("38.4k", 38400));
+            items.Add(new ComboBinder<Int32>("115.2k", 115200));
+            items.Add(new ComboBinder<Int32>("230.4k", 230400));
+            items.Add(new ComboBinder<Int32>("460.8k", 460800));
             cobBaudRate.Items.AddRange(items.ToArray());
 
             items.Clear();
-            items.Add(new StrIntBinder("8", 8));
-            items.Add(new StrIntBinder("7", 7));
+            items.Add(new ComboBinder<Int32>("8", 8));
+            items.Add(new ComboBinder<Int32>("7", 7));
             cobDataBits.Items.AddRange(items.ToArray());
 
             items.Clear();
-            items.Add(new StrIntBinder("Even", (int)Parity.Even));
-            items.Add(new StrIntBinder("Mark", (int)Parity.Mark));
-            items.Add(new StrIntBinder("None", (int)Parity.None));
-            items.Add(new StrIntBinder("Odd", (int)Parity.Odd));
-            items.Add(new StrIntBinder("Space", (int)Parity.Space));
+            items.Add(new ComboBinder<Int32>("Even", (int)Parity.Even));
+            items.Add(new ComboBinder<Int32>("Mark", (int)Parity.Mark));
+            items.Add(new ComboBinder<Int32>("None", (int)Parity.None));
+            items.Add(new ComboBinder<Int32>("Odd", (int)Parity.Odd));
+            items.Add(new ComboBinder<Int32>("Space", (int)Parity.Space));
             cobParity.Items.AddRange(items.ToArray());
 
             items.Clear();
-            //items.Add(new StrIntBinder("None", (int)StopBits.None));
-            items.Add(new StrIntBinder("1", (int)StopBits.One));
-            items.Add(new StrIntBinder("1.5", (int)StopBits.OnePointFive));
-            items.Add(new StrIntBinder("2", (int)StopBits.Two));
+            //items.Add(new ComboBinder<Int32>("None", (int)StopBits.None));
+            items.Add(new ComboBinder<Int32>("1", (int)StopBits.One));
+            items.Add(new ComboBinder<Int32>("1.5", (int)StopBits.OnePointFive));
+            items.Add(new ComboBinder<Int32>("2", (int)StopBits.Two));
             cobStopBits.Items.AddRange(items.ToArray());
 
             items.Clear();
-            items.Add(new StrIntBinder("None", (int)Handshake.None));
-            items.Add(new StrIntBinder("RequestToSend", (int)Handshake.RequestToSend));
-            items.Add(new StrIntBinder("RequestToSendXOnXOff", (int)Handshake.RequestToSendXOnXOff));
-            items.Add(new StrIntBinder("XOnXOff", (int)Handshake.XOnXOff));
+            items.Add(new ComboBinder<Int32>("None", (int)Handshake.None));
+            items.Add(new ComboBinder<Int32>("RequestToSend", (int)Handshake.RequestToSend));
+            items.Add(new ComboBinder<Int32>("RequestToSendXOnXOff", (int)Handshake.RequestToSendXOnXOff));
+            items.Add(new ComboBinder<Int32>("XOnXOff", (int)Handshake.XOnXOff));
             cobHandshake.Items.AddRange(items.ToArray());
 
             string settings = Settings.Default.CustomRegisters;
@@ -102,15 +102,15 @@ namespace NXTCamView
             ResumeLayout();
         }
 
-        public class StrIntBinder
+        public class ComboBinder<ValueType>
         {
             public readonly string Text;
-            public readonly int IntValue;
+            public readonly ValueType Value;
 
-            public StrIntBinder(string text, int intValue)
+            public ComboBinder(string text, ValueType intValue)
             {
                 Text = text;
-                IntValue = intValue;
+                Value = intValue;
             }
 
             public override string ToString()
@@ -119,7 +119,7 @@ namespace NXTCamView
             }
         }
 
-        private void OptionsForm_Load(object sender, System.EventArgs e)
+        private void OptionsForm_Load(object sender, EventArgs e)
         {
             Settings settings = Settings.Default;
             lbResult.Text = "";
@@ -158,13 +158,13 @@ namespace NXTCamView
         {
             for (int index = 0; index < comboBox.Items.Count; index++)
             {
-                StrIntBinder binder = (StrIntBinder)comboBox.Items[index];
-                if (binder.IntValue == intValue) return index;
+                ComboBinder<Int32> binder = (ComboBinder<Int32>)comboBox.Items[index];
+                if (binder.Value == intValue) return index;
             }
             return -1;
         }
 
-        private void btnCancel_Click(object sender, System.EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
@@ -179,35 +179,35 @@ namespace NXTCamView
             //if we did a test then ensure we save to force the COMPort to reopen
             bool hasChanged = false;
             bool hasCommsChanged = false;
-            if ( proposed.COMPort == null || !proposed.COMPort.Equals(cobCOMPorts.SelectedItem) || _hasDoneTest )
+            if ( proposed.COMPort == null || !proposed.COMPort.Equals(((ComboBinder<string>)cobCOMPorts.SelectedItem).Value) || _hasDoneTest )
             {
                 hasCommsChanged = true;
-                proposed.COMPort = (string)cobCOMPorts.SelectedItem;
+                proposed.COMPort = ((ComboBinder<string>)cobCOMPorts.SelectedItem).Value;
             }
-            if (proposed.BaudRate != ((StrIntBinder)cobBaudRate.SelectedItem).IntValue)
+            if (proposed.BaudRate != ((ComboBinder<Int32>)cobBaudRate.SelectedItem).Value)
             {
                 hasCommsChanged = true;
-                proposed.BaudRate = ((StrIntBinder)cobBaudRate.SelectedItem).IntValue;
+                proposed.BaudRate = ((ComboBinder<Int32>)cobBaudRate.SelectedItem).Value;
             }
-            if (proposed.Handshake != (Handshake)((StrIntBinder)cobHandshake.SelectedItem).IntValue)
+            if (proposed.Handshake != (Handshake)((ComboBinder<Int32>)cobHandshake.SelectedItem).Value)
             {
                 hasCommsChanged = true;
-                proposed.Handshake = (Handshake)((StrIntBinder)cobHandshake.SelectedItem).IntValue;
+                proposed.Handshake = (Handshake)((ComboBinder<Int32>)cobHandshake.SelectedItem).Value;
             }
-            if (proposed.Parity != (Parity)((StrIntBinder)cobParity.SelectedItem).IntValue)
+            if (proposed.Parity != (Parity)((ComboBinder<Int32>)cobParity.SelectedItem).Value)
             {
                 hasCommsChanged = true;
-                proposed.Parity = (Parity)((StrIntBinder)cobParity.SelectedItem).IntValue;
+                proposed.Parity = (Parity)((ComboBinder<Int32>)cobParity.SelectedItem).Value;
             }
-            if (proposed.DataBits != ((StrIntBinder)cobDataBits.SelectedItem).IntValue)
+            if (proposed.DataBits != ((ComboBinder<Int32>)cobDataBits.SelectedItem).Value)
             {
                 hasCommsChanged = true;
-                proposed.DataBits = ((StrIntBinder)cobDataBits.SelectedItem).IntValue;
+                proposed.DataBits = ((ComboBinder<Int32>)cobDataBits.SelectedItem).Value;
             }
-            if (proposed.StopBits != (StopBits)((StrIntBinder)cobStopBits.SelectedItem).IntValue)
+            if (proposed.StopBits != (StopBits)((ComboBinder<Int32>)cobStopBits.SelectedItem).Value)
             {
                 hasCommsChanged = true;
-                proposed.StopBits = (StopBits)((StrIntBinder)cobStopBits.SelectedItem).IntValue;
+                proposed.StopBits = (StopBits)((ComboBinder<Int32>)cobStopBits.SelectedItem).Value;
             }
             if (proposed.CheckForUpdates != cbCheckForUpdates.Checked)
             {
@@ -236,7 +236,7 @@ namespace NXTCamView
             return true;
         }
 
-        private void btnTest_Click(object sender, System.EventArgs e)
+        private void btnTest_Click(object sender, EventArgs e)
         {
             if( backgroundWorker.IsBusy )
             {
@@ -249,22 +249,30 @@ namespace NXTCamView
             }
             else
             {
+                string port = ((ComboBinder< string >) cobCOMPorts.SelectedItem).Value;
+                
+                //if we are testing the currently selected port & its open, then close it
+                if( port.Equals(Settings.Default.COMPort) && _serialPort.IsOpen ) 
+                {
+                    _serialPort.Close();
+                }
+
                 btnTest.Enabled = true;
                 btnTest.Text = "Abort";
 
                 lbResult.ForeColor = Color.Black;
-                lbResult.Text = "Sending ping...";
+                lbResult.Text = "Searching for NXTCam...";
                 lbResult.Refresh();
 
                 _hasDoneTest = true;
 
                 //setup a new port to test
-                _testSerialPort = new SerialPort((string)cobCOMPorts.SelectedItem, 
-                    ((StrIntBinder)cobBaudRate.SelectedItem).IntValue,
-                    (Parity) ((StrIntBinder)cobParity.SelectedItem).IntValue,
-                    ((StrIntBinder)cobDataBits.SelectedItem).IntValue,
-                    (StopBits) ((StrIntBinder)cobStopBits.SelectedItem).IntValue);
-                _testSerialPort.Handshake = (Handshake) ((StrIntBinder)cobHandshake.SelectedItem).IntValue;
+                _testSerialPort = new SerialPort(port,
+                    ((ComboBinder<Int32>)cobBaudRate.SelectedItem).Value,
+                    (Parity) ((ComboBinder<Int32>)cobParity.SelectedItem).Value,
+                    ((ComboBinder<Int32>)cobDataBits.SelectedItem).Value,
+                    (StopBits) ((ComboBinder<Int32>)cobStopBits.SelectedItem).Value);
+                _testSerialPort.Handshake = (Handshake) ((ComboBinder<Int32>)cobHandshake.SelectedItem).Value;
                 _testSerialPort.NewLine = "\r";
                 _testSerialPort.WriteTimeout = _serialPort.WriteTimeout;
                 _testSerialPort.ReadTimeout = _serialPort.ReadTimeout;                    
@@ -302,7 +310,7 @@ namespace NXTCamView
                     setErrorMessage(e, cmd.ErrorDescription);
                 }
             }
-            catch( IOException ex )
+            catch( Exception ex )
             {
                 setErrorMessage(e, ex.Message);
             }
@@ -364,7 +372,7 @@ namespace NXTCamView
             }
         }
 
-        private void btnUpdate_Click(object sender, System.EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
             uploadSettings();
         }
@@ -403,21 +411,21 @@ namespace NXTCamView
             return isOk;
         }
 
-        private void cb_CheckedChanged(object sender, System.EventArgs e)
+        private void cb_CheckedChanged(object sender, EventArgs e)
         {
             lbMessage.ForeColor = Color.Black;
             lbMessage.Text = "Changes not yet uploaded";
             _isChangeUploaded = false;
         }
 
-        private void nudReg_ValueChanged(object sender, System.EventArgs e)
+        private void nudReg_ValueChanged(object sender, EventArgs e)
         {
             lbMessageAdv.ForeColor = Color.Black;
             lbMessageAdv.Text = "Changes not yet uploaded";
             _isChangeUploadedAdv = false;
         }
 
-        private void btnUploadAdvanced_Click(object sender, System.EventArgs e)
+        private void btnUploadAdvanced_Click(object sender, EventArgs e)
         {
             uploadSettingsAdv();
         }
@@ -478,7 +486,7 @@ namespace NXTCamView
             }
         }
 
-        private void btnRestoreDefaults_Click(object sender, System.EventArgs e)
+        private void btnRestoreDefaults_Click(object sender, EventArgs e)
         {
             cobBaudRate.SelectedIndex = getIndex(cobBaudRate, 115200);
             cobDataBits.SelectedIndex = getIndex(cobDataBits, 8);
@@ -497,7 +505,7 @@ namespace NXTCamView
             }
         }
 
-        private void btnOk_Click(object sender, System.EventArgs e)
+        private void btnOk_Click(object sender, EventArgs e)
         {
             if( saveSettings() )
             {
@@ -507,25 +515,32 @@ namespace NXTCamView
 
         private void setupComportDropdown()
         {
-            string old = (string) cobCOMPorts.SelectedItem;
-            if (old == null) old = Settings.Default.COMPort;
+            List<ComboBinder<string>> ports = new List< ComboBinder< string > >();
+            foreach( string port in SerialPort.GetPortNames())
+            {
+                ports.Add(createComboBinder(port));
+            }
+
+            ComboBinder<string> old = (ComboBinder<string>)cobCOMPorts.SelectedItem;
+            if (old == null) old = createComboBinder(Settings.Default.COMPort);
             cobCOMPorts.Items.Clear();
-            cobCOMPorts.Items.AddRange(SerialPort.GetPortNames());
-            cobCOMPorts.SelectedItem = old;
-            setComPortName(old);
+            cobCOMPorts.Items.AddRange(ports.ToArray());
+
+            int i = cobCOMPorts.FindString(old.Text);
+            if (i < 0) i = 0;
+
+            cobCOMPorts.SelectedIndex = i;
         }
 
-        private void setComPortName(string old)
+        private ComboBinder<string> createComboBinder(string port)
         {
-            lbFriendlyName.Text = old != null && _friendlyNameByPort.ContainsKey(old) ? _friendlyNameByPort[old] : "";
+            string display = _friendlyNameByPort.ContainsKey(port) ?
+                             string.Format("{0}: {1}", port, _friendlyNameByPort[port]) :
+                             string.Format("{0}: Communications port", port);
+            return new ComboBinder< string >(display,port);
         }
 
-        private void cobCOMPorts_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            setComPortName((string) cobCOMPorts.SelectedItem);
-        }
-
-        private void btnRefreshList_Click(object sender, System.EventArgs e)
+        private void btnRefreshList_Click(object sender, EventArgs e)
         {
             _friendlyNameByPort = SerialHelper.GetPorts();
             setupComportDropdown();
