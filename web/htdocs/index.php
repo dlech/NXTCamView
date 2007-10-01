@@ -14,11 +14,10 @@
 A manager for your NXTCam camera sensor<br>
 <a href="index.php">home</a></font></p>
 <hr noshade color="#0000FF" size="9">
-<table border="0" width="944" height="337">
+<table border="0" width="929" height="337">
 	<!-- MSTableType="layout" -->
 	<tr>
-		<td>&nbsp;</td>
-		<td height="311">
+		<td>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
 			<!-- MSCellFormattingTableID="1" -->
 			<tr>
@@ -30,30 +29,27 @@ A manager for your NXTCam camera sensor<br>
 				<img alt="" src="MsoPnl_Cnr_tr_173.gif" width="20" height="20"></span></td>
 			</tr>
 			<tr>
-				<td bgcolor="#0000FF" colspan="2" height="100%">
+				<td bgcolor="#0000FF" colspan="2" height="100%" valign="top">
 				<!-- MSCellFormattingType="content" -->
-				<table border="0" width="100%" height="100%" cellpadding="3" cellspacing="0">
-					<tr>
-						<td width="100%" height="100%" valign="top">
-						<font face="Verdana" size="2" color="#FFFFFF">
+				<font face="Verdana" size="2" color="#FFFFFF">
 						<a href="http://sourceforge.net/project/screenshots.php?group_id=203058">
 						<font color="#FFFFFF">Screenshots</font></a></font><p>
 						<font face="Verdana" size="2">
 						<a href="http://nxtcamview.wiki.sourceforge.net/FAQ">
 						<font color="#FFFFFF">FAQ</font></a></font></p>
-						<p><a href="http://nxtcamview.wiki.sourceforge.net/FAQ">
-						<font face="Verdana" size="2" color="#FFFFFF">Wiki</font></a></p>
 						<p><font face="Verdana" size="2" color="#FFFFFF">
 						<a href="http://sourceforge.net/project/showfiles.php?group_id=203058">
 						<font color="#FFFFFF">Download</font></a></font></p>
-						<p><font face="Verdana" size="2" color="#FFFFFF">
-						<a title="Send any queries or requests here" href="mailto:NXTCamView@tingeys.com?subject=NXTCamView">
-						<font color="#FFFFFF">Contact</font></a></font><p>
+						<p>
 						<font face="Verdana" size="2" color="#FFFFFF">
-						<a href="DemoScreenCam.htm"><font color="#FFFFFF">Demo</font></a></font></td>
-					</tr>
-				</table>
-				</td>
+						<a href="DemoScreenCam.htm"><font color="#FFFFFF">Demo 
+						Screencam</font></a></font><p>
+						<font face="Verdana" size="2" color="#FFFFFF">
+						<a title="Send any queries or requests here" href="http://sourceforge.net/projects/nxtcamview/">
+						<font color="#FFFFFF">SF Home</font></a></font><p>
+						<font face="Verdana" size="2" color="#FFFFFF">
+						<a title="Send any queries or requests here" href="mailto:NXTCamView@tingeys.com?subject=NXTCamView">
+						<font color="#FFFFFF">Contact</font></a></font></td>
 			</tr>
 			<tr>
 				<td nowrap bgcolor="#0000FF" width="100%">
@@ -65,7 +61,8 @@ A manager for your NXTCam camera sensor<br>
 			</tr>
 		</table>
 		</td>
-		<td height="313" valign="top">
+		<td></td>
+		<td valign="top">
 <p><b><font color="#3333CC" size="4" face="Verdana">home page</font></b></p>
 <p><font face="Verdana" size="2">NXTCamView configures and controls the NXTCam 
 produced by
@@ -73,12 +70,42 @@ produced by
 mindsensors</a>. NXTCam is a camera sensor that provides real-time vision 
 recognition to NXT Lego robots. NXTCam uses simple colour recognition to detect 
 objects in its view.</font></p>
+<p><b><font face="Verdana" size="4" color="#3333CC">setting up the colors to 
+track</font></b></p>
+<ol>
+	<li><font face="Verdana" size="2">Plug the NXTCam into the NXT to give it 
+	some power -&nbsp; important -only use one of the input ports!</font></li>
+	<li><font face="Verdana" size="2">Setup<b> </b>the communication details in 
+	NXTCamView<b> options</b>. Normally it's only the COMPort that needs to be 
+	set. </font></li>
+	<li><font face="Verdana" size="2"><b>Connect</b> to the NXTCam.</font></li>
+	<li><font face="Verdana" size="2"><b>Capture</b> an image (or two) in 
+	NXTCamView to check the focus and lighting conditions are good.</font></li>
+	<li><font face="Verdana" size="2"><b>Select</b> the colors to track by 
+	clicking on the capture. The colors are shown as ranges (minimum-maximum) of 
+	red, green and blue. You add or remove colors from each range by holding 
+	down the &quot;CTRL&quot; key or &quot;SHIFT-CTRL&quot; keys while clicking.</font></li>
+	<li><font face="Verdana" size="2"><b>Upload</b> the color ranges into the 
+	NXTCam.</font></li>
+	<li><font face="Verdana" size="2">Test the <b>tracking </b>to see what image 
+	blobs are returned.</font></li>
+	<li><font face="Verdana" size="2"><b>Disconnect</b> NXTCamView from your 
+	NXTCam.&nbsp; </font></li>
+</ol>
+<blockquote>
+	<p><font face="Verdana" size="2">You are now ready for tracking with your 
+	NXT program! </font></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 &nbsp;</td>
-	</tr>
+		<td height="313"></td>
+		</tr>
 	<tr>
-		<td width="6"></td>
-		<td width="95"></td>
-		<td height="18" width="829"></td>
+		<td width="106"></td>
+		<td width="0"></td>
+		<td width="804"></td>
+		<td height="18" width="1"></td>
 	</tr>
 </table>
 <div style="position: absolute; width: 210px; height: 61px; z-index: 1; left: 734px; top: 9px" id="layer1">
