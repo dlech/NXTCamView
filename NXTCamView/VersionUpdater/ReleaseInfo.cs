@@ -47,7 +47,7 @@ namespace NXTCamView.VersionUpdater
         {
             get 
             {
-                Regex regex = new Regex(@"NXTCamView\sinstall\s(\d\.\d\.\d)\sreleased", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                Regex regex = new Regex(@"NXTCamView\sinstall\s(\d+\.\d+\.\d+)\sreleased", RegexOptions.Singleline | RegexOptions.IgnoreCase);
                 Match match = regex.Match( Title );
                 //capture[0] is in the form "1.2.3"
                 if (match.Groups.Count == 2) return new Version(match.Groups[1].Value);

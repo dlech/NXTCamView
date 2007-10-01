@@ -43,11 +43,17 @@ namespace NXTCamView.VersionUpdater
                 Version current = new Version(Application.ProductVersion);
                 if( latest > current )             
                 {
-                    MessageBox.Show(
-                        string.Format("A newer version of {0} is available at sourceforge.net.\nYour version:\t{1}\nLatest version:\t{2}", Application.ProductName, current, latest),
+                    if (MessageBox.Show(
+                        string.Format("A newer version of {0} is available at sourceforge.net.\n\nYour version:\t{1}\nLatest version:\t{2}\n\nShow release notes in a browser now?", Application.ProductName, current, latest),
                         string.Format("{0} - Check Updates", Application.ProductName),
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                    {
+                        string link = releases[0].Link;
+                        if (string.IsNullOrEmpty(link) ) link = "http://sourceforge.net/project/showfiles.php?group_id=203058";
+                        Process.Start(link); 
+                    }
                 }
                 else
                 {
@@ -146,6 +152,10 @@ namespace NXTCamView.VersionUpdater
                 if (matches(tag, "pubDate"))
                 {
                     pubDate = iterNews.Current.Value;
+                }
+                if (matches(tag, "link"))
+                {
+                    link = iterNews.Current.Value;
                 }
             }
             return new ReleaseInfo(title, link, description, author, comment, pubDate);
