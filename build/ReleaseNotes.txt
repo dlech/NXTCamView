@@ -3,6 +3,7 @@ NXTCamView Release Notes
 
 v0.2.0
 - fix bug in release version parsing
+- added link to view release notes
 
 v0.1.10
 - fixed tidyed comport code in option screen
