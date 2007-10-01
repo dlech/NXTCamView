@@ -60,7 +60,7 @@ namespace NXTCamView.VersionUpdater
                     if( isAlwaysShowingResult )
                     {
                         MessageBox.Show(
-                            string.Format("This is the lastest version of {0}.\nVersion: {1}", Application.ProductName, current),
+                            string.Format("This is the latest version of {0}.\nVersion: {1}", Application.ProductName, current),
                             string.Format("{0} - Check Updates", Application.ProductName),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
