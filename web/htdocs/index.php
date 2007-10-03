@@ -70,37 +70,41 @@ A manager for your NXTCam camera sensor<br>
 produced by
 <a class="wiki_link_ext" rel="nofollow" href="http://mindsensors.com/">
 mindsensors</a>. NXTCam is a camera sensor that provides real-time vision 
-recognition to NXT Lego robots. NXTCam uses simple colour recognition to detect 
+recognition to NXT robots. NXTCam uses simple colour recognition to detect 
 objects in its view.</font></p>
 <p><b><font face="Verdana" size="4" color="#3333CC">setting up colors to 
 track</font></b></p>
+<p><font face="Verdana" size="2">The main purpose of NXTCamView is to setup 
+colors for tracking.&nbsp; Think of this as teaching the NXTCam the colors of 
+the objects you want to track.&nbsp; Colors are setup in ranges that are 
+uploaded and stored in the NXTCam.</font></p>
+<p><font face="Verdana" size="2">To setup colors -</font></p>
 <ol>
-	<li><font face="Verdana" size="2">Plug the NXTCam into the NXT to give it 
-	some power -&nbsp; important -only use one of the input ports!</font></li>
-	<li><font face="Verdana" size="2">Setup<b> </b>the communication details in 
-	NXTCamView<b> options</b>. Normally it's only the COMPort that needs to be 
-	set. </font></li>
-	<li><font face="Verdana" size="2"><b>Connect</b> to the NXTCam.</font></li>
-	<li><font face="Verdana" size="2"><b>Capture</b> an image (or two) in 
-	NXTCamView to check the focus and lighting conditions are good.</font></li>
-	<li><font face="Verdana" size="2"><b>Select</b> the colors to track by 
-	clicking on the capture. The colors are shown as ranges (minimum-maximum) of 
-	red, green and blue. You add or remove colors from each range by holding 
+	<li><font face="Verdana" size="2">Download, install and start NXTCamView on 
+	your PC </font></li>
+	<li><font face="Verdana" size="2">Setup<b> </b>communication to the NXTCam<b>
+	</b>via<b> Tools\Options</b>.&nbsp; Often only the COMPort needs to be set.
+	</font></li>
+	<li><font face="Verdana" size="2">Make sure the NXTCam is plugged into one 
+	of your PCs USB port.<b>&nbsp; Connect</b> to your NXTCam. </font></li>
+	<li><font face="Verdana" size="2"><b>Capture</b> an image (or two) to check the focus and lighting conditions.</font></li>
+	<li><font face="Verdana" size="2"><b>Select</b> some colors to track by 
+	clicking on the image you captured. Colors are shown as ranges of 
+	red, green and blue (min/max values of each). You can add or remove colors from 
+	a range by holding 
 	down the &quot;CTRL&quot; key or &quot;SHIFT-CTRL&quot; keys while clicking.</font></li>
 	<li><font face="Verdana" size="2"><b>Upload</b> the color ranges into the 
 	NXTCam.</font></li>
-	<li><font face="Verdana" size="2">Test the <b>tracking </b>to see what image 
+	<li><font face="Verdana" size="2">Test your colors in the <b>Tracking </b>
+	window to see what image 
 	blobs are returned.</font></li>
 	<li><font face="Verdana" size="2"><b>Disconnect</b> NXTCamView from your 
-	NXTCam.&nbsp; </font></li>
+	NXTCam.</font></li>
 </ol>
-<blockquote>
-	<p><font face="Verdana" size="2">You are now ready for tracking with your 
-	NXT program! </font></p>
-</blockquote>
-<p><b><font face="Verdana" size="4" color="#3333CC">screencams</font></b></p>
-<p><font face="Verdana" size="2">There are mini-tutorials for NXTCamView on the
-<a href="DemoScreenCam.htm">Demo Screencams</a> page</font></p>
+<p><font face="Verdana" size="2">That's all its takes to get setup!</font></p>
+<p><b><font face="Verdana" size="4" color="#3333CC">demo screencams</font></b></p>
+<p><font face="Verdana" size="2">We have some
+<a href="DemoScreenCam.htm">Demo Screencams</a> which can help you get started</font></p>
 &nbsp;</td>
 		<td height="461"></td>
 		</tr>
