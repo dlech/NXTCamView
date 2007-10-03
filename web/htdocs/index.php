@@ -14,7 +14,7 @@
 A manager for your NXTCam camera sensor<br>
 <a href="index.php">home</a></font></p>
 <hr noshade color="#0000FF" size="9">
-<table border="0" width="929" height="337">
+<table border="0" width="929" height="485">
 	<!-- MSTableType="layout" -->
 	<tr>
 		<td>
@@ -32,24 +32,25 @@ A manager for your NXTCam camera sensor<br>
 				<td bgcolor="#0000FF" colspan="2" height="100%" valign="top">
 				<!-- MSCellFormattingType="content" -->
 				<font face="Verdana" size="2" color="#FFFFFF">
-						<a href="http://sourceforge.net/project/screenshots.php?group_id=203058">
-						<font color="#FFFFFF">Screenshots</font></a></font><p>
+						&nbsp;<a href="http://sourceforge.net/project/screenshots.php?group_id=203058"><font color="#FFFFFF">Screenshots</font></a></font><p>
 						<font face="Verdana" size="2">
-						<a href="http://nxtcamview.wiki.sourceforge.net/FAQ">
-						<font color="#FFFFFF">FAQ</font></a></font></p>
+						<font color="#FFFFFF">&nbsp;</font><a href="http://nxtcamview.wiki.sourceforge.net/FAQ"><font color="#FFFFFF">FAQ</font></a></font></p>
 						<p><font face="Verdana" size="2" color="#FFFFFF">
-						<a href="http://sourceforge.net/project/showfiles.php?group_id=203058">
-						<font color="#FFFFFF">Download</font></a></font></p>
+						&nbsp;<a href="http://sourceforge.net/project/showfiles.php?group_id=203058"><font color="#FFFFFF">Download</font></a></font></p>
 						<p>
 						<font face="Verdana" size="2" color="#FFFFFF">
-						<a href="DemoScreenCam.htm"><font color="#FFFFFF">Demo 
-						Screencam</font></a></font><p>
+						&nbsp;<a href="DemoScreenCam.htm"><font color="#FFFFFF">Demo 
+						Screencams</font></a></font><p>
 						<font face="Verdana" size="2" color="#FFFFFF">
-						<a title="Send any queries or requests here" href="http://sourceforge.net/projects/nxtcamview/">
-						<font color="#FFFFFF">SF Home</font></a></font><p>
+						&nbsp;<a title="Send any queries or requests here" href="http://sourceforge.net/projects/nxtcamview/"><font color="#FFFFFF">SF Home</font></a></font><p>
 						<font face="Verdana" size="2" color="#FFFFFF">
-						<a title="Send any queries or requests here" href="mailto:NXTCamView@tingeys.com?subject=NXTCamView">
-						<font color="#FFFFFF">Contact</font></a></font></td>
+						&nbsp;<a title="Send any queries or requests here" href="mailto:NXTCamView@tingeys.com?subject=NXTCamView"><font color="#FFFFFF">Contact</font></a></font><p>
+						&nbsp;<p>
+						&nbsp;<p>
+						&nbsp;<p>
+						<b><font face="Verdana" size="2" color="#FFFFFF">&nbsp;
+						</font><font color="#3333CC" size="4" face="Verdana">
+						<img border="0" src="NXTCamSmall.jpg" width="100" height="114"></font></b></td>
 			</tr>
 			<tr>
 				<td nowrap bgcolor="#0000FF" width="100%">
@@ -61,16 +62,17 @@ A manager for your NXTCam camera sensor<br>
 			</tr>
 		</table>
 		</td>
-		<td></td>
+		<td>&nbsp;</td>
 		<td valign="top">
 <p><b><font color="#3333CC" size="4" face="Verdana">home page</font></b></p>
-<p><font face="Verdana" size="2">NXTCamView configures and controls the NXTCam 
+<p><font face="Verdana" size="2">NXTCamView configures and controls the 
+<a href="http://www.mindsensors.com/index.php?module=pagemaster&PAGE_user_op=view_page&PAGE_id=78">NXTCam</a> 
 produced by
 <a class="wiki_link_ext" rel="nofollow" href="http://mindsensors.com/">
 mindsensors</a>. NXTCam is a camera sensor that provides real-time vision 
 recognition to NXT Lego robots. NXTCam uses simple colour recognition to detect 
 objects in its view.</font></p>
-<p><b><font face="Verdana" size="4" color="#3333CC">setting up the colors to 
+<p><b><font face="Verdana" size="4" color="#3333CC">setting up colors to 
 track</font></b></p>
 <ol>
 	<li><font face="Verdana" size="2">Plug the NXTCam into the NXT to give it 
@@ -96,15 +98,16 @@ track</font></b></p>
 	<p><font face="Verdana" size="2">You are now ready for tracking with your 
 	NXT program! </font></p>
 </blockquote>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p><b><font face="Verdana" size="4" color="#3333CC">screencams</font></b></p>
+<p><font face="Verdana" size="2">There are mini-tutorials for NXTCamView on the
+<a href="DemoScreenCam.htm">Demo Screencams</a> page</font></p>
 &nbsp;</td>
-		<td height="313"></td>
+		<td height="461"></td>
 		</tr>
 	<tr>
-		<td width="106"></td>
-		<td width="0"></td>
-		<td width="804"></td>
+		<td width="138"></td>
+		<td width="8"></td>
+		<td width="764"></td>
 		<td height="18" width="1"></td>
 	</tr>
 </table>
@@ -112,7 +115,8 @@ track</font></b></p>
 	<font face="Verdana"><a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=203058&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo" /></a></font></div>
 <p>
 <font face="Verdana">
-<a href="http://sourceforge.net/donate/index.php?group_id=203058"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /></a> </font><font face="Verdana" size="2">Any donations towards Lego hardware are much appreciated!</font></p>
+<a href="http://sourceforge.net/donate/index.php?group_id=203058"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /></a> </font><font face="Verdana" size="2">Any donations towards Lego hardware are much appreciated! 
+- P Tingey</font></p>
 </body>
 
 </html>
