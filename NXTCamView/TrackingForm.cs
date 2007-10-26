@@ -152,7 +152,12 @@ namespace NXTCamView
         private int areaCompare(TrackedColor x, TrackedColor y)
         {
             //compare areas
-            return (y.Bounds.Width * y.Bounds.Height).CompareTo(x.Bounds.Width * x.Bounds.Height);
+            return ( getArea(y) ).CompareTo( getArea(y) );
+        }
+
+        private static int getArea(TrackedColor trackedColor)
+        {
+            return trackedColor.Bounds.Width * trackedColor.Bounds.Height;
         }
 
         private void startTracking()
@@ -303,7 +308,7 @@ namespace NXTCamView
                 }
                 if (cbArea.Checked)
                 {
-                    lines.Add(string.Format("A={0}", trackedColor.Bounds.X * trackedColor.Bounds.Y));
+                    lines.Add(string.Format("A={0}", getArea( trackedColor )) );
                 }
 
                 if (lines.Count > 0)
