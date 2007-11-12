@@ -19,41 +19,43 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO.Ports;
 using NXTCamView.Commands;
 
-public class InterpolateFrameCommand : FetchFrameCommand
+namespace NXTCamView.Commands
 {
-    public InterpolateFrameCommand(BackgroundWorker worker, SerialPort serialPort, Image image)
-        : base("Interpolate",serialPort, worker)
+    public class InterpolateFrameCommand : FetchFrameCommand
     {
-        _bmBayer = (Bitmap)image;
-    }
-
-    public override void Execute()
-    {
-        ////DEBUG
-        //_isSuccessful = true;
-        //_isCompleted = true;
-        //return;
-
-        try
+        public InterpolateFrameCommand(BackgroundWorker worker, ISerialProvider serialProvider, Image image)
+            : base("Interpolate", serialProvider, worker)
         {
-            updateInterpolateImage();
-            _isSuccessful = true;
+            _bmBayer = (Bitmap)image;
         }
-        catch (Exception ex)
-        {
-            setError(ex);
-        }
-        finally
-        {
-            completeCommand();
-        }
-    }
 
-    public override bool CanExecute()
-    {
-        return true;
+        public override void Execute()
+        {
+            ////DEBUG
+            //_isSuccessful = true;
+            //_isCompleted = true;
+            //return;
+
+            try
+            {
+                updateInterpolateImage();
+                _isSuccessful = true;
+            }
+            catch (Exception ex)
+            {
+                setError(ex);
+            }
+            finally
+            {
+                completeCommand();
+            }
+        }
+
+        public override bool CanExecute()
+        {
+            return true;
+        }
     }
 }

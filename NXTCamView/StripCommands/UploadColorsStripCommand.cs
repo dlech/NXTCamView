@@ -29,9 +29,11 @@ namespace NXTCamView.StripCommands
     public class UploadColorsStripCommand : StripCommand
     {
         private ColorForm _form;
+        private ISerialProvider _serialProvider;
 
-        public UploadColorsStripCommand( ColorForm form )
+        public UploadColorsStripCommand(ColorForm form, ISerialProvider serialProvider)
         {
+            _serialProvider = serialProvider;
             _form = form;
         }
 
@@ -47,6 +49,7 @@ namespace NXTCamView.StripCommands
             int blue = 32;
             try
             {
+                int TOTAL_COLORS = ColorForm.TRACKED_COLORS - 1;
                 //prepare the color map
                 byte[] colorMap = new byte[3*16];
                 for( int objectNum = 0; objectNum < ColorForm.TRACKED_COLORS; objectNum++ )
@@ -59,27 +62,22 @@ namespace NXTCamView.StripCommands
                         //this is weird, but the gets us to the layout we need
                         //div by 17 to get it back to 0-15
                         byte redMask =
-                            (byte) ((offset >= minColor.R/17 && offset <= maxColor.R/17) ? (1 << objectNum) : 0);
+                            (byte)((offset >= minColor.R / 17 && offset <= maxColor.R / 17) ? (1 << (TOTAL_COLORS-objectNum)) : 0);
                         colorMap[red + offset] |= redMask;
 
                         byte greenMask =
-                            (byte) ((offset >= minColor.G/17 && offset <= maxColor.G/17) ? (1 << objectNum) : 0);
+                            (byte)((offset >= minColor.G / 17 && offset <= maxColor.G / 17) ? (1 << (TOTAL_COLORS - objectNum)) : 0);
                         colorMap[green + offset] |= greenMask;
 
                         byte blueMask =
-                            (byte) ((offset >= minColor.B/17 && offset <= maxColor.B/17) ? (1 << objectNum) : 0);
+                            (byte)((offset >= minColor.B / 17 && offset <= maxColor.B / 17) ? (1 << (TOTAL_COLORS - objectNum)) : 0);
                         colorMap[blue + offset] |= blueMask;
                     }
                 }
 
-                Debug.Write("colorMap: ");
-                for( int i = 0; i < 16*3; i++ )
-                {
-                    if( i%16 == 0 ) Debug.Write("- ");
-                    Debug.Write(String.Format("{0:x} ", colorMap[i]));
-                }
-                Debug.WriteLine("");
-                SetColorMapCommand cmd = new SetColorMapCommand(MainForm.Instance.SerialPort);
+                dumpColorMap( colorMap );
+
+                SetColorMapCommand cmd = new SetColorMapCommand( _serialProvider );
                 cmd.ColorMap = new List< byte >(colorMap);
                 cmd.Execute();
                 if( cmd.IsSuccessful )
@@ -104,6 +102,17 @@ namespace NXTCamView.StripCommands
                 return false;
             }
             return true;
+        }
+
+        private static void dumpColorMap( byte[] colorMap )
+        {
+            Debug.Write("colorMap: ");
+            for( int i = 0; i < 16*3; i++ )
+            {
+                if( i%16 == 0 ) Debug.Write("- ");
+                Debug.Write(String.Format("{0:x} ", colorMap[i]));
+            }
+            Debug.WriteLine("");
         }
 
         public override bool HasExecuted()

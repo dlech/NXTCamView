@@ -17,47 +17,49 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
-using System.IO.Ports;
 using NXTCamView;
 using NXTCamView.Commands;
 
-public class GetVersionCommand : Command
+namespace NXTCamView.Commands
 {
-    private string _version = "";
-
-    public string Version { get { return _version; } }
-
-    public GetVersionCommand(SerialPort _serialPort)
-        : base("Version", _serialPort)
+    public class GetVersionCommand : Command
     {
-    }
+        private string _version = "";
 
-    /// <summary>
-    /// This get the version of the NXTCam
-    /// It is also used to text if we are  "connected" or "disconnected" and sets the state accordingly    
-    /// </summary>
-    public override void Execute()
-    {
-        try
+        public string Version { get { return _version; } }
+
+        public GetVersionCommand(ISerialProvider serialProvider)
+            : base("Version", serialProvider)
         {
-            SetState( State.ConnectedBusy );
-            _request = "GV";
-            SendAndReceive();
-            if( _isSuccessful )
+        }
+
+        /// <summary>
+        /// This get the version of the NXTCam
+        /// It is also used to text if we are  "connected" or "disconnected" and sets the state accordingly    
+        /// </summary>
+        public override void Execute()
+        {
+            try
             {
-                _version = _serialPort.ReadLine();
+                SetState(State.ConnectedBusy);
+                _request = "GV";
+                SendAndReceive();
+                if (_isSuccessful)
+                {
+                    _version = _serialProvider.ReadLine();
+                }
+                _isCompleted = true;
+                SetState(State.Connected);
             }
-            _isCompleted = true;
-            SetState( State.Connected );
-        }
-        catch( Exception ex )
-        {
-            setError(ex);            
-        }
-        finally
-        {
-            completeCommand();
-            SetState(_isSuccessful ? State.Connected : State.NotConnected);
+            catch (Exception ex)
+            {
+                setError(ex);
+            }
+            finally
+            {
+                completeCommand();
+                SetState(_isSuccessful ? State.Connected : State.NotConnected);
+            }
         }
     }
 }

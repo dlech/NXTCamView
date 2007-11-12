@@ -18,7 +18,6 @@
 //
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
@@ -99,12 +98,10 @@ namespace NXTCamView
                 else
                 {
                     //draw a rectange with transperancy
-                    Debug.WriteLine("Painting with highlighting");
                     pe.Graphics.FillRectangle(_highlightBrush,rect);                    
                     pe.Graphics.DrawImage(image, rect, 0,0, image.Width, image.Height, GraphicsUnit.Pixel, _imageAttributes);                    
                 }
             }
-            //Control.OnPaint(pe);
         }
 
         public Rectangle ImageRectangleFromSizeMode()

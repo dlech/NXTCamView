@@ -17,21 +17,33 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
+using NXTCamView.Properties;
 
 namespace NXTCamView.Commands
 {
-    public class PingCommand : Command
+    public enum TrackingMode
     {
-        public PingCommand( ISerialProvider serialProvider )
-            : base("Search", serialProvider)
+        Object,
+        Line
+    }
+
+    public class SetTrackingModeCommand : Command
+    {
+        public SetTrackingModeCommand(ISerialProvider serialProvider, TrackingMode mode )
+            : base("Set Tracking Mode", serialProvider )
         {
+            _mode = mode;
         }
+
+        private TrackingMode _mode;
 
         public override void Execute()
         {
             try
             {
-                _request = "PG";
+                SetState(State.ConnectedBusy);
+
+                _request = _mode == TrackingMode.Line ? "TL" :"TO";
                 SendAndReceive();
                 _isCompleted = true;
             }
@@ -41,13 +53,28 @@ namespace NXTCamView.Commands
             }
             finally
             {
+                SetState(State.Connected);
                 completeCommand();
             }
         }
 
-        public override bool CanExecute()
+        internal static void SetModeInConfig( Settings settings, TrackingMode mode )
         {
-            return true;
+            settings.TrackingMode = mode.ToString();
+        }
+
+        internal static TrackingMode GetModeFromConfig( Settings settings )
+        {
+            try
+            {
+                return (TrackingMode)Enum.Parse(typeof(TrackingMode), settings.TrackingMode );    
+            }
+            catch
+            {
+                //default to Object
+                return TrackingMode.Object;
+            }
+            
         }
     }
 }

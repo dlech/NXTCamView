@@ -28,7 +28,7 @@ namespace NXTCamView.StripCommands
         public override bool Execute()
         {
             setState(State.ConnectedBusy);
-            CaptureForm form = new CaptureForm(MainForm.Instance.SerialPort);
+            CaptureForm form = new CaptureForm( SerialProvider.Instance );
             form.MdiParent = MainForm.Instance;
             form.Visible = true;
             form.StartCapture();

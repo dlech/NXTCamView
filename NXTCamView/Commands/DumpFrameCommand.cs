@@ -19,55 +19,57 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO.Ports;
-using NXTCamView.Commands;
 
-public class DumpFrameCommand : FetchFrameCommand
+namespace NXTCamView.Commands
 {
-    public DumpFrameCommand( BackgroundWorker worker, SerialPort serialPort )
-        : base("Capture", serialPort, worker)
+
+    public class DumpFrameCommand : FetchFrameCommand
     {
-    }
-
-    public override void Execute()
-    {
-        ////DEBUG
-        //_isSuccessful = true;
-        //_isCompleted = true;
-        //return;
-
-        try
-        {            
-            _request = "DF";
-            SendAndReceive();
-            if( _isLogging ) Debug.WriteLine("Capture start:");
-            for( int count = 0; count < PACKETS_IN_DUMP; count++ )
-            {
-                byte[] buffer = new byte[BYTES_PER_PACKET];
-                int totalRead = 0;
-                while( totalRead < BYTES_PER_PACKET )
-                {
-                    totalRead += _serialPort.Read(buffer, totalRead, BYTES_PER_PACKET - totalRead);
-                }
-
-                if( _isLogging ) Debug.WriteLine(string.Format("Pkt:{0} :{1}", count, DumpBytes(buffer)));
-                LinePair linePair = getLinePair(buffer);
-                _worker.ReportProgress(100*count/PACKETS_IN_DUMP, linePair);
-                if (_worker.CancellationPending)
-                {
-                    setAborted();
-                    return;
-                }
-            }
-            updateInterpolateImage();
-        }
-        catch (Exception ex)
+        public DumpFrameCommand(BackgroundWorker worker, ISerialProvider serialProvider)
+            : base("Capture", serialProvider, worker)
         {
-            setError(ex);
         }
-        finally
-        {            
-            completeCommand();
+
+        public override void Execute()
+        {
+            ////DEBUG
+            //_isSuccessful = true;
+            //_isCompleted = true;
+            //return;
+
+            try
+            {
+                _request = "DF";
+                SendAndReceive();
+                if (_isLogging) Debug.WriteLine("Capture start:");
+                for (int count = 0; count < PACKETS_IN_DUMP; count++)
+                {
+                    byte[] buffer = new byte[BYTES_PER_PACKET];
+                    int totalRead = 0;
+                    while (totalRead < BYTES_PER_PACKET)
+                    {
+                        totalRead += _serialProvider.Read(buffer, totalRead, BYTES_PER_PACKET - totalRead);
+                    }
+
+                    if (_isLogging) Debug.WriteLine(string.Format("Pkt:{0} :{1}", count, DumpBytes(buffer)));
+                    LinePair linePair = getLinePair(buffer);
+                    _worker.ReportProgress(100 * count / PACKETS_IN_DUMP, linePair);
+                    if (_worker.CancellationPending)
+                    {
+                        setAborted();
+                        return;
+                    }
+                }
+                updateInterpolateImage();
+            }
+            catch (Exception ex)
+            {
+                setError(ex);
+            }
+            finally
+            {
+                completeCommand();
+            }
         }
     }
 }

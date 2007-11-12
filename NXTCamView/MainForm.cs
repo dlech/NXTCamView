@@ -17,9 +17,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
 using Blue.Windows;
@@ -34,21 +32,18 @@ namespace NXTCamView
     public partial class MainForm : Form
     {
         public static MainForm Instance;
-        
-        public SerialPort SerialPort { get { return serialPort; } }
-        public event EventHandler SerialPortChanged;
+
+        private ISerialProvider _serialProvider;
         private OpenOptionsStripCommand openOptionsCmd;
         private OpenColorStripCommand openColorCmd;
         private OpenTrackingStripCommand openTrackingCmd;
 
         public MainForm()
         {
+            _serialProvider = SerialProvider.Instance;
             Thread.CurrentThread.Name = "GuiThread";
             Icon = AppImages.GetIcon(AppImages.MainForm);
             InitializeComponent();
-
-            serialPort.NewLine = "\r";
-            Settings.Default.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(settings_PropertyChanged);
             
             //not 100% thread safe, but ok as the app doesn't do anything until this is up
             Instance = this;
@@ -61,48 +56,6 @@ namespace NXTCamView
             AppState.Inst.State = State.NotConnected;
         }
 
-        private void settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            Settings settings = (Settings)sender;
-            if( settings != Settings.Default ) throw new ApplicationException("Only allow changing of Settings.Default");
-            try
-            {
-                switch( e.PropertyName )
-                {
-                    case "COMPort":
-                    case "BaudRate":
-                    case "Parity":
-                    case "Handshake":
-                    case "DataBits":
-                    case "StopBits":
-                        //drop the old port and get another
-                        if( serialPort.IsOpen ) serialPort.Close();
-
-                        serialPort = new SerialPort(
-                            settings.COMPort,
-                            settings.BaudRate,
-                            settings.Parity,
-                            settings.DataBits,
-                            settings.StopBits);
-                        
-                        serialPort.WriteTimeout = settings.WriteTimeout;
-                        serialPort.ReadTimeout = settings.ReadTimeout;
-                        serialPort.NewLine = "\r";
-                        serialPort.Open();
-                        //notify listeners
-                        if( SerialPortChanged != null )
-                        {
-                            SerialPortChanged( this,new EventArgs() );
-                        }
-                        break;
-                }
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(string.Format("Error changing propertied {0}", ex));
-            }
-        }
-
         private void tsbPing_Click(object sender, EventArgs e)
         {
             ping();
@@ -110,7 +63,7 @@ namespace NXTCamView
 
         private void ping()
         {
-            PingCommand cmd = new PingCommand(serialPort);
+            PingCommand cmd = new PingCommand( _serialProvider );
             cmd.Execute();
             if( cmd.IsSuccessful )
             {
@@ -142,6 +95,13 @@ namespace NXTCamView
             Size = new Size(1024, 800);
             Left = Screen.PrimaryScreen.WorkingArea.Width/2 - Width/2;
             Top = Screen.PrimaryScreen.WorkingArea.Height/2 - Height/2;
+            
+            //make sure we are on screen - we could be too high or too left if the screen is < window size
+            if( !Screen.PrimaryScreen.WorkingArea.Contains( Left, Top ) )
+            {
+                Left = Math.Max( Screen.PrimaryScreen.WorkingArea.X, Left );
+                Top = Math.Max(Screen.PrimaryScreen.WorkingArea.Y, Top );
+            }
 
             setupStripCommands();
 
@@ -164,7 +124,7 @@ namespace NXTCamView
         private void setupMenus()
         {
             //file menu
-            StripCommand connectCmd = new ConnectStripCommand();
+            StripCommand connectCmd = new ConnectStripCommand( _serialProvider );
             connectCmd.Completed += connectCmd_Completed;
 
             setupButtonAndMenu(tsbConnect, tsmConnect, "Connect", "Connect to the NXTCam", AppImages.Connect, connectCmd);            
@@ -191,7 +151,9 @@ namespace NXTCamView
 
 
         private bool _isConnected = false;
+
         public bool IsConnected { get { return _isConnected; } }
+
         public event EventHandler< EventArgs > ConnectionStateChanged;
 
         private void connectionStateChanged(bool isConnected)
@@ -223,13 +185,14 @@ namespace NXTCamView
         {
             bool isFound = false;
             string portSettings = Settings.Default.COMPort;
-            foreach( string port in SerialPort.GetPortNames() )
+            foreach( string port in System.IO.Ports.SerialPort.GetPortNames() )
             {
                 if( port.Equals( portSettings ))
                 {
                     isFound = true;
                 }
             }
+            //create the serial provider from config
             if( !isFound )
             {
                 if( MessageBox.Show(
@@ -239,17 +202,6 @@ namespace NXTCamView
                         MessageBoxDefaultButton.Button1) == DialogResult.Yes )
                 {
                     openOptionsCmd.Execute();
-                }
-            }
-            else
-            {
-                try
-                {
-                    serialPort.Open();
-                }
-                catch( Exception ex )
-                {
-                    Debug.WriteLine(string.Format("Error loading mainform {0}", ex));
                 }
             }
         }
@@ -267,7 +219,7 @@ namespace NXTCamView
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (serialPort.IsOpen) serialPort.Close();
+            _serialProvider.EnsureClosed(); 
             Settings.Default.Save();
         }
 

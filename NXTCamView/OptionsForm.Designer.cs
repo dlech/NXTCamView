@@ -50,6 +50,9 @@ namespace NXTCamView
             this.label1 = new System.Windows.Forms.Label();
             this.cobCOMPorts = new System.Windows.Forms.ComboBox();
             this.tabNXTCamSettings = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbTrackingModeObject = new System.Windows.Forms.RadioButton();
+            this.rbTrackingModeLine = new System.Windows.Forms.RadioButton();
             this.lbMessage = new System.Windows.Forms.Label();
             this.btnUploadRegisters = new System.Windows.Forms.Button();
             this.cbUseFlourescentLightFilter = new System.Windows.Forms.CheckBox();
@@ -68,6 +71,7 @@ namespace NXTCamView
             this.tcOptions.SuspendLayout();
             this.tabConnection.SuspendLayout();
             this.tabNXTCamSettings.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabNXTCamSettingsAdv.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -283,6 +287,7 @@ namespace NXTCamView
             // 
             // tabNXTCamSettings
             // 
+            this.tabNXTCamSettings.Controls.Add(this.groupBox1);
             this.tabNXTCamSettings.Controls.Add(this.lbMessage);
             this.tabNXTCamSettings.Controls.Add(this.btnUploadRegisters);
             this.tabNXTCamSettings.Controls.Add(this.cbUseFlourescentLightFilter);
@@ -296,17 +301,52 @@ namespace NXTCamView
             this.tabNXTCamSettings.Text = "NXTCam";
             this.tabNXTCamSettings.UseVisualStyleBackColor = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rbTrackingModeObject);
+            this.groupBox1.Controls.Add(this.rbTrackingModeLine);
+            this.groupBox1.Location = new System.Drawing.Point(17, 87);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(172, 69);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Tracking Mode";
+            // 
+            // rbTrackingModeObject
+            // 
+            this.rbTrackingModeObject.AutoSize = true;
+            this.rbTrackingModeObject.Location = new System.Drawing.Point(6, 20);
+            this.rbTrackingModeObject.Name = "rbTrackingModeObject";
+            this.rbTrackingModeObject.Size = new System.Drawing.Size(62, 17);
+            this.rbTrackingModeObject.TabIndex = 6;
+            this.rbTrackingModeObject.TabStop = true;
+            this.rbTrackingModeObject.Text = "Object";
+            this.rbTrackingModeObject.UseVisualStyleBackColor = true;
+            this.rbTrackingModeObject.CheckedChanged += new System.EventHandler(this.settingsChanged);
+            // 
+            // rbTrackingModeLine
+            // 
+            this.rbTrackingModeLine.AutoSize = true;
+            this.rbTrackingModeLine.Location = new System.Drawing.Point(6, 40);
+            this.rbTrackingModeLine.Name = "rbTrackingModeLine";
+            this.rbTrackingModeLine.Size = new System.Drawing.Size(48, 17);
+            this.rbTrackingModeLine.TabIndex = 6;
+            this.rbTrackingModeLine.TabStop = true;
+            this.rbTrackingModeLine.Text = "Line";
+            this.rbTrackingModeLine.UseVisualStyleBackColor = true;
+            this.rbTrackingModeLine.CheckedChanged += new System.EventHandler(this.settingsChanged);
+            // 
             // lbMessage
             // 
-            this.lbMessage.Location = new System.Drawing.Point(14, 140);
+            this.lbMessage.Location = new System.Drawing.Point(14, 202);
             this.lbMessage.Name = "lbMessage";
-            this.lbMessage.Size = new System.Drawing.Size(317, 93);
+            this.lbMessage.Size = new System.Drawing.Size(317, 71);
             this.lbMessage.TabIndex = 5;
             this.lbMessage.Text = "result";
             // 
             // btnUploadRegisters
             // 
-            this.btnUploadRegisters.Location = new System.Drawing.Point(17, 103);
+            this.btnUploadRegisters.Location = new System.Drawing.Point(17, 167);
             this.btnUploadRegisters.Name = "btnUploadRegisters";
             this.btnUploadRegisters.Size = new System.Drawing.Size(105, 23);
             this.btnUploadRegisters.TabIndex = 1;
@@ -323,7 +363,7 @@ namespace NXTCamView
             this.cbUseFlourescentLightFilter.TabIndex = 0;
             this.cbUseFlourescentLightFilter.Text = "Use flourescent light filter";
             this.cbUseFlourescentLightFilter.UseVisualStyleBackColor = true;
-            this.cbUseFlourescentLightFilter.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
+            this.cbUseFlourescentLightFilter.CheckedChanged += new System.EventHandler(this.settingsChanged);
             // 
             // cbUseAutoAdjust
             // 
@@ -334,7 +374,7 @@ namespace NXTCamView
             this.cbUseAutoAdjust.TabIndex = 0;
             this.cbUseAutoAdjust.Text = "Use AutoAdjust mode";
             this.cbUseAutoAdjust.UseVisualStyleBackColor = true;
-            this.cbUseAutoAdjust.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
+            this.cbUseAutoAdjust.CheckedChanged += new System.EventHandler(this.settingsChanged);
             // 
             // cbUseAutoWhiteBalance
             // 
@@ -345,7 +385,7 @@ namespace NXTCamView
             this.cbUseAutoWhiteBalance.TabIndex = 0;
             this.cbUseAutoWhiteBalance.Text = "Use AutoWhiteBalance mode";
             this.cbUseAutoWhiteBalance.UseVisualStyleBackColor = true;
-            this.cbUseAutoWhiteBalance.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
+            this.cbUseAutoWhiteBalance.CheckedChanged += new System.EventHandler(this.settingsChanged);
             // 
             // tabNXTCamSettingsAdv
             // 
@@ -457,6 +497,8 @@ namespace NXTCamView
             this.tabConnection.PerformLayout();
             this.tabNXTCamSettings.ResumeLayout(false);
             this.tabNXTCamSettings.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabNXTCamSettingsAdv.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -502,5 +544,8 @@ namespace NXTCamView
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.CheckBox cbCheckForUpdates;
         private System.Windows.Forms.Button btnRefreshList;
+        private System.Windows.Forms.RadioButton rbTrackingModeLine;
+        private System.Windows.Forms.RadioButton rbTrackingModeObject;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

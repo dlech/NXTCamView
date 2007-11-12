@@ -18,7 +18,6 @@
 //
 using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Text;
 
 namespace NXTCamView.Commands
@@ -28,8 +27,8 @@ namespace NXTCamView.Commands
         private Dictionary<byte, byte> _registers = new Dictionary<byte, byte>();
         public Dictionary<byte, byte> Register { get { return _registers; } set { _registers = value; } }
 
-        public SetRegistersCommand(SerialPort _serialPort)
-            : base("Upload Settings",_serialPort)
+        public SetRegistersCommand( ISerialProvider serialProvider )
+            : base( "Upload Settings",serialProvider )
         {            
         }
 

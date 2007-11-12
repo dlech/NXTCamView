@@ -18,15 +18,14 @@
 //
 using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Text;
 
 namespace NXTCamView.Commands
 {
     public class SetColorMapCommand : Command
     {
-        public SetColorMapCommand(SerialPort _serialPort)
-            : base("Set Colors",_serialPort)
+        public SetColorMapCommand( ISerialProvider serialProvider )
+            : base("Set Colors", serialProvider )
         {
         }
 
@@ -43,7 +42,8 @@ namespace NXTCamView.Commands
                 if( _colorMap.Count != 16*3 ) throw new ApplicationException(string.Format("ColorMap needs to be 16*3 not {0}", _colorMap.Count));
 
                 StringBuilder sb = new StringBuilder();
-                foreach( byte color in _colorMap )
+
+                foreach (byte color in _colorMap)
                 {
                     sb.AppendFormat("{0} ", color);
                 }

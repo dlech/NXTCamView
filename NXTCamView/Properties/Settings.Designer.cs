@@ -379,5 +379,17 @@ namespace NXTCamView.Properties {
                 this["CheckForUpdates"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TO")]
+        public string TrackingMode {
+            get {
+                return ((string)(this["TrackingMode"]));
+            }
+            set {
+                this["TrackingMode"] = value;
+            }
+        }
     }
 }

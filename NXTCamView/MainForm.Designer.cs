@@ -28,7 +28,6 @@ namespace NXTCamView
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.msMainMenu = new System.Windows.Forms.MenuStrip();
             this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,16 +95,15 @@ namespace NXTCamView
             this.tsbTrackColors = new System.Windows.Forms.ToolStripButton();
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
             this.tsbConnect = new System.Windows.Forms.ToolStripButton();
-            this.tsbDisconnect = new System.Windows.Forms.ToolStripButton();
             this.tsbCapture = new System.Windows.Forms.ToolStripButton();
+            this.tsbDisconnect = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbOpenColors = new System.Windows.Forms.ToolStripButton();
             this.tsbOpenTracking = new System.Windows.Forms.ToolStripButton();
-            this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.ssStatusStrip = new System.Windows.Forms.StatusStrip();
             this.tsslConnectionStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslVersion = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.msMainMenu.SuspendLayout();
             this.tsToolBar.SuspendLayout();
             this.ssStatusStrip.SuspendLayout();
@@ -632,6 +630,13 @@ namespace NXTCamView
             this.tsbConnect.Size = new System.Drawing.Size(82, 22);
             this.tsbConnect.Text = "tsbConnect";
             // 
+            // tsbCapture
+            // 
+            this.tsbCapture.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCapture.Name = "tsbCapture";
+            this.tsbCapture.Size = new System.Drawing.Size(65, 22);
+            this.tsbCapture.Text = "tsbCapture";
+            // 
             // tsbDisconnect
             // 
             this.tsbDisconnect.Image = ((System.Drawing.Image)(resources.GetObject("tsbDisconnect.Image")));
@@ -640,12 +645,10 @@ namespace NXTCamView
             this.tsbDisconnect.Size = new System.Drawing.Size(94, 22);
             this.tsbDisconnect.Text = "tsbDisconnect";
             // 
-            // tsbCapture
+            // toolStripSeparator11
             // 
-            this.tsbCapture.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCapture.Name = "tsbCapture";
-            this.tsbCapture.Size = new System.Drawing.Size(65, 22);
-            this.tsbCapture.Text = "tsbCapture";
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbOpenColors
             // 
@@ -661,17 +664,6 @@ namespace NXTCamView
             this.tsbOpenTracking.Name = "tsbOpenTracking";
             this.tsbOpenTracking.Size = new System.Drawing.Size(92, 22);
             this.tsbOpenTracking.Text = "tsbOpenTracking";
-            // 
-            // serialPort
-            // 
-            this.serialPort.BaudRate = global::NXTCamView.Properties.Settings.Default.BaudRate;
-            this.serialPort.DataBits = global::NXTCamView.Properties.Settings.Default.DataBits;
-            this.serialPort.Handshake = global::NXTCamView.Properties.Settings.Default.Handshake;
-            this.serialPort.Parity = global::NXTCamView.Properties.Settings.Default.Parity;
-            this.serialPort.PortName = global::NXTCamView.Properties.Settings.Default.COMPort;
-            this.serialPort.ReadTimeout = global::NXTCamView.Properties.Settings.Default.ReadTimeout;
-            this.serialPort.StopBits = global::NXTCamView.Properties.Settings.Default.StopBits;
-            this.serialPort.WriteTimeout = global::NXTCamView.Properties.Settings.Default.WriteTimeout;
             // 
             // ssStatusStrip
             // 
@@ -705,11 +697,6 @@ namespace NXTCamView
             this.tsslVersion.Size = new System.Drawing.Size(42, 17);
             this.tsslVersion.Text = "version";
             // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -739,7 +726,6 @@ namespace NXTCamView
 
         #endregion
 
-        private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.MenuStrip msMainMenu;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

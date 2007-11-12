@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO.Ports;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -59,7 +58,7 @@ namespace NXTCamView.Commands
          *
          */
 
-        protected FetchFrameCommand(string name, SerialPort serialPort, BackgroundWorker worker) : base(name,serialPort)
+        protected FetchFrameCommand(string name, ISerialProvider serialProvider, BackgroundWorker worker) : base(name, serialProvider)
         {
             _worker = worker;
         }

@@ -16,6 +16,9 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using System;
+using System.Diagnostics;
+using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
@@ -25,6 +28,13 @@ namespace NXTCamView.StripCommands
     public class ConnectStripCommand : StripCommand
     {
         private string _version;
+        private ISerialProvider _serialProvider;
+
+
+        public ConnectStripCommand(ISerialProvider serialProvider)
+        {
+            _serialProvider = serialProvider;
+        }
 
         public string GetVersion()
         {
@@ -40,18 +50,21 @@ namespace NXTCamView.StripCommands
         {
             bool isOk = false;
             try
-            {
-                if( !MainForm.Instance.SerialPort.IsOpen ) MainForm.Instance.SerialPort.Open();
-                PingCommand pingCmd = new PingCommand(MainForm.Instance.SerialPort);
+            {                                
+                PingCommand pingCmd = new PingCommand( _serialProvider );
                 pingCmd.Execute();
                 isOk = pingCmd.IsSuccessful;
                 if( isOk )
                 {
-                    GetVersionCommand versionCmd = new GetVersionCommand(MainForm.Instance.SerialPort);
+                    GetVersionCommand versionCmd = new GetVersionCommand( _serialProvider );
                     versionCmd.Execute();
                     isOk = versionCmd.IsSuccessful;
                     _version = isOk ? versionCmd.Version : "";
                 }
+            }
+            catch( Exception ex )
+            {
+                Debug.WriteLine(ex);
             }
             finally
             {

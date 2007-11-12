@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
 using NXTCamView.Properties;
@@ -36,7 +35,6 @@ namespace NXTCamView
 
         private bool _isShowingDetail = true;
 
-        private SerialPort _serialPort;
         private TrackingCommand _trackingCmd;
         private List<TrackedColor> _trackedToPaint;
         private Pen _penBlack = new Pen(Color.Red);
@@ -52,7 +50,7 @@ namespace NXTCamView
         private Brush _detailBrush;
 
         //DO NOT CALL THIS DIRECTLY - use the Inst property
-        public TrackingForm()
+        public TrackingForm( ISerialProvider serialProvider )
         {
             InitializeComponent();
 
@@ -64,11 +62,10 @@ namespace NXTCamView
 
             AppState.Inst.StateChanged += AppState_StateChanged;
                         
-            _serialPort = MainForm.Instance.SerialPort;
-            pnlTrackedColors.MyPaint += new PaintEventHandler(pnlTracking_Paint);
-            _trackingCmd = new TrackingCommand(_serialPort, objectsDetected);
+            pnlTrackedColors.MyPaint += new PaintEventHandler(pnlTrackedColors_Paint);
+
+            _trackingCmd = new TrackingCommand( serialProvider, objectsDetected);
             SetupColors();
-            MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
         }
 
         void AppState_StateChanged(object sender, EventArgs e)
@@ -80,14 +77,8 @@ namespace NXTCamView
 
         public static void Init()
         {
-            _instance = new TrackingForm();
+            _instance = new TrackingForm( SerialProvider.Instance );
             StickyWindowsUtil.MakeStickyMDIChild(_instance);
-        }
-
-        private void mainForm_SerialPortChanged(object sender, EventArgs e)
-        {
-            _serialPort = MainForm.Instance.SerialPort;
-            _trackingCmd = new TrackingCommand(_serialPort, objectsDetected);
         }
 
         public void SetupColors()
@@ -202,13 +193,13 @@ namespace NXTCamView
 
             foreach (TrackedColor trackedColor in trackedColors)
             {
-                Debug.WriteLine("ColorIndex: " + trackedColor.ColorIndex);
-                if (trackedColor.ColorIndex <= 0 || trackedColor.ColorIndex > _trackingData.Count)
+                Debug.WriteLine("ColorIndex: " + (trackedColor.ColorIndex + 1));
+                if (trackedColor.ColorIndex < 0 || trackedColor.ColorIndex >= _trackingData.Count)
                 {
                     Debug.WriteLine(string.Format("Bad tracking index: {0}", trackedColor.ColorIndex));
                     continue;
                 }
-                TrackingData data = _trackingData[trackedColor.ColorIndex - 1];
+                TrackingData data = _trackingData[trackedColor.ColorIndex];
                 _matchesTotal++;
                 data.MatchesTotal++;
                 if ((trackedColor.Bounds.Width * trackedColor.Bounds.Height) < nudAreaFilter.Value)
@@ -236,7 +227,7 @@ namespace NXTCamView
 
             foreach (TrackedColor trackedColor in _trackedToPaint)
             {
-                TrackingData data = _trackingData[trackedColor.ColorIndex - 1];
+                TrackingData data = _trackingData[trackedColor.ColorIndex];
                 updateRow(data);
             }
             ////update stats
@@ -251,7 +242,7 @@ namespace NXTCamView
         }
 
 
-        void pnlTracking_Paint(object sender, PaintEventArgs e)
+        void pnlTrackedColors_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.FillRectangle(Brushes.White, 0, 0, pnlTrackedColors.Size.Width, pnlTrackedColors.Size.Height);
             if (_trackedToPaint == null) return;
@@ -259,7 +250,7 @@ namespace NXTCamView
             _trackedToPaint.Sort(new Comparison<TrackedColor>(areaCompare));
             foreach (TrackedColor trackedColor in _trackedToPaint)
             {
-                TrackingData data = _trackingData[trackedColor.ColorIndex - 1];
+                TrackingData data = _trackingData[trackedColor.ColorIndex];
                 updateRow(data);
 
                 Rectangle bounds = new Rectangle(
@@ -267,6 +258,12 @@ namespace NXTCamView
                     trackedColor.Bounds.Y * _scaling,
                     trackedColor.Bounds.Width * _scaling,
                     trackedColor.Bounds.Height * _scaling);
+
+                Rectangle panelBounds = new Rectangle( new Point(0,0), pnlTrackedColors.Size );
+                if (!panelBounds.Contains(bounds))
+                {
+                    Debug.WriteLine(string.Format( "Box cordinates are out of bounds: {0}", trackedColor ));
+                }
 
                 if (cbSolid.Checked)
                 {
@@ -295,7 +292,7 @@ namespace NXTCamView
                 //put the number in the middle
                 if (cbColorNumber.Checked)
                 {
-                    lines.Add(string.Format("C={0}", trackedColor.ColorIndex));
+                    lines.Add(string.Format("C={0}", (trackedColor.ColorIndex + 1) ));
                 }
 
                 if (cbLocation.Checked)
@@ -328,32 +325,32 @@ namespace NXTCamView
                     //make it on screen
                     Point joinStart;
                     Point joinEnd;
-                    if (pnlTrackedColors.Bounds.Contains(rect))
+                    if (panelBounds.Contains(rect))
                     {
                         joinStart = new Point(bounds.X + bounds.Width / 2, bounds.Bottom);
                         joinEnd = new Point(rect.X, rect.Y + rect.Height / 2);
                     }
                     else
                     {
-                        if (bounds.X + (bounds.Width / 2) < pnlTrackedColors.Bounds.Width / 2)
+                        if (bounds.X + (bounds.Width / 2) < panelBounds.Width / 2)
                         {
-                            //on Bottom Left so put the text Top Right
+                            //box is on Bottom Left so put the text Top Right
                             rect = new Rectangle(bounds.Right + offset, bounds.Top - (offset + textHeight), textWidth, textHeight);
                             joinStart = new Point(bounds.X + bounds.Width / 2, bounds.Y);
                             joinEnd = new Point(rect.X, rect.Y + rect.Height / 2);
                         }
                         else
                         {
-                            if (bounds.Y + (bounds.Height / 2) < pnlTrackedColors.Bounds.Height / 2)
+                            if (bounds.Y + (bounds.Height / 2) < panelBounds.Height / 2)
                             {
-                                //on the Top Right so put the text Bottom Left
+                                //box is on the Top Right so put the text Bottom Left
                                 rect = new Rectangle(bounds.X - (offset + textWidth), bounds.Bottom + offset, textWidth, textHeight);
                                 joinStart = new Point(bounds.X + bounds.Width / 2, bounds.Bottom);
                                 joinEnd = new Point(rect.Right, rect.Y + rect.Height / 2);
                             }
                             else
                             {
-                                //on the Bottom Right so put the text Top Left
+                                //box is on the Bottom Right so put the text Top Left
                                 rect = new Rectangle(bounds.X - (offset + textWidth), bounds.Top - (offset + textHeight), textWidth, textHeight);
                                 joinStart = new Point(bounds.X + bounds.Width / 2, bounds.Y);
                                 joinEnd = new Point(rect.Right, rect.Y + rect.Height / 2);

@@ -18,13 +18,12 @@
 //
 using System;
 using System.Diagnostics;
-using System.IO.Ports;
 
 namespace NXTCamView.Commands
 {
     public abstract class Command
     {
-        protected SerialPort _serialPort;
+        protected ISerialProvider _serialProvider;
         protected bool _isCompleted;
         protected bool _isSuccessful;
         protected string _request;
@@ -36,19 +35,19 @@ namespace NXTCamView.Commands
         public string Request { get { return _request; } set { _request = value; } }
         public bool IsCompleted { get { return _isCompleted; } set { _isCompleted = value; } }
         public bool IsSuccessful { get { return _isSuccessful; } }
-        public SerialPort SerialPort { get { return _serialPort; } }
+        public ISerialProvider SerialProvider { get { return _serialProvider; } }
         public string ErrorDescription { get { return _errorDescription; } }
         public bool Aborted { get { return _aborted; } }
 
-        protected Command(string name, SerialPort _serialPort)
-            : this(name, _serialPort, true)
+        protected Command( string name, ISerialProvider serialProvider )
+            : this(name, serialProvider, true)
         {
         }
 
-        protected Command(string name, SerialPort serialPort, bool isLogging)
+        protected Command(string name, ISerialProvider serialProvider, bool isLogging)
         {
             _name = name;
-            _serialPort = serialPort;
+            _serialProvider = serialProvider;
             _isLogging = isLogging;
         }
 
@@ -58,6 +57,7 @@ namespace NXTCamView.Commands
 
         public void SendAndReceive()
         {
+
             _isCompleted = false;
             _isSuccessful = false;
 
@@ -66,8 +66,9 @@ namespace NXTCamView.Commands
             //if (junk != "") Debug.WriteLine(string.Format("Discarded serial junk: {0}", junk));
 
             if (_isLogging) Debug.WriteLine(string.Format("snd: {0}", _request));
-            _serialPort.WriteLine(_request);
-            string responce = _serialPort.ReadLine();
+
+            _serialProvider.WriteLine(_request);
+            string responce = _serialProvider.ReadLine();
 
             if (_isLogging) Debug.WriteLine(string.Format("rcv: {0}", responce));
             _isSuccessful = responce == "ACK";

@@ -30,17 +30,24 @@ namespace NXTCamView
         private Color _maxColor = Color.Blue;
         private bool _isNotSet;
         private ColorFunction _colorFunction;
+        private readonly int COLOR_SCALAR = 17;
 
         public ColorDetail()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Min-color with full range of values (0-255) * 4
+        /// </summary>
         public Color MinColor
         {
             get { return _minColor; }
         }
-        
+
+        /// <summary>
+        /// Max-color with full range of values (0-255) * 4
+        /// </summary>
         public Color MaxColor
         {
             get { return _maxColor; } 
@@ -89,9 +96,9 @@ namespace NXTCamView
 
         private void applyChanges()
         {
-            rbRed.SetRangeMinMax(_minColor.R/16, _maxColor.R/16);
-            rbGreen.SetRangeMinMax(_minColor.G/16, _maxColor.G/16);
-            rbBlue.SetRangeMinMax(_minColor.B/16, _maxColor.B/16);
+            rbRed.SetRangeMinMax(_minColor.R / COLOR_SCALAR, _maxColor.R / COLOR_SCALAR);
+            rbGreen.SetRangeMinMax(_minColor.G / COLOR_SCALAR, _maxColor.G / COLOR_SCALAR);
+            rbBlue.SetRangeMinMax(_minColor.B / COLOR_SCALAR, _maxColor.B / COLOR_SCALAR);
 
             Debug.WriteLine(string.Format("R:{0}-{1},G:{2}-{3},B:{4}-{5}",
                                           rbRed.RangeMinimum,
@@ -135,8 +142,8 @@ namespace NXTCamView
                             g >= rbGreen.RangeMinimum && g <= rbGreen.RangeMaximum &&
                             b >= rbBlue.RangeMinimum && b <= rbBlue.RangeMaximum)
                         {
-                            //0-255 = 0-15 * 17
-                            using (SolidBrush sb = new SolidBrush(Color.FromArgb(r * 17, g * 17, b * 17)))
+                            //0-255 = 0-15 * colorScalar
+                            using (SolidBrush sb = new SolidBrush(Color.FromArgb(r * COLOR_SCALAR, g * COLOR_SCALAR, b * COLOR_SCALAR)))
                             {
                                 gr.FillRectangle(sb, (x % (pixelsAcross)) * pixelSideLen, (x / (pixelsAcross)) * pixelSideLen, pixelSideLen, pixelSideLen);
                             }
@@ -173,9 +180,9 @@ namespace NXTCamView
 
         private void RangeChanging(object sender, EventArgs e)
         {
-            //0-255 = 0-15 * 17
-            _minColor = Color.FromArgb(rbRed.RangeMinimum * 17, rbGreen.RangeMinimum * 17, rbBlue.RangeMinimum * 17);
-            _maxColor = Color.FromArgb(rbRed.RangeMaximum * 17, rbGreen.RangeMaximum * 17, rbBlue.RangeMaximum * 17);
+            //0-255 = 0-15 * colorScalar
+            _minColor = Color.FromArgb(rbRed.RangeMinimum * COLOR_SCALAR, rbGreen.RangeMinimum * COLOR_SCALAR, rbBlue.RangeMinimum * COLOR_SCALAR);
+            _maxColor = Color.FromArgb(rbRed.RangeMaximum * COLOR_SCALAR, rbGreen.RangeMaximum * COLOR_SCALAR, rbBlue.RangeMaximum * COLOR_SCALAR);
             updateAndNotify();
         }
 
@@ -205,39 +212,40 @@ namespace NXTCamView
             rbBlue.ColorFunction = function;
         }
 
-        public void ApplyModifiedRange()
+        public void ApplyModifiedRange( )
         {
-            if (_colorFunction == ColorFunction.AddToColor)
+            if( _colorFunction == ColorFunction.AddToColor )
             {
                 _minColor = Color.FromArgb(
-                    (int) Math.Max(0, Math.Min(rbRed.RangeMinimum, rbRed.Value))*17,
-                    (int)Math.Max(0, Math.Min(rbGreen.RangeMinimum, rbGreen.Value)) * 17,
-                    (int)Math.Max(0, Math.Min(rbBlue.RangeMinimum, rbBlue.Value)) * 17);
+                    (int) Math.Max( 0, Math.Min( rbRed.RangeMinimum, rbRed.Value ) ) * COLOR_SCALAR,
+                    (int) Math.Max( 0, Math.Min( rbGreen.RangeMinimum, rbGreen.Value ) ) * COLOR_SCALAR,
+                    (int) Math.Max( 0, Math.Min( rbBlue.RangeMinimum, rbBlue.Value ) ) * COLOR_SCALAR );
 
                 _maxColor = Color.FromArgb(
-                    (int)Math.Min(255, Math.Max(rbRed.RangeMaximum, rbRed.Value)) * 17,
-                    (int)Math.Min(255, Math.Max(rbGreen.RangeMaximum, rbGreen.Value)) * 17,
-                    (int)Math.Min(255, Math.Max(rbBlue.RangeMaximum, rbBlue.Value)) * 17);
-            } 
-            else if (_colorFunction == ColorFunction.RemoveFromColor)
-            {
-                _minColor = Color.FromArgb(
-                    getRemoved(rbRed, _minColor.R/17, true)*17,
-                    getRemoved(rbGreen, _minColor.G/17, true)*17,
-                    getRemoved(rbBlue, _minColor.B/17, true)*17);
-
-                _maxColor = Color.FromArgb(
-                    getRemoved(rbRed, _maxColor.R / 17, false) * 17,
-                    getRemoved(rbGreen, _maxColor.G / 17, false) * 17,
-                    getRemoved(rbBlue, _maxColor.B / 17, false) * 17);
+                    (int) Math.Min( 255, Math.Max( rbRed.RangeMaximum, rbRed.Value ) ) * COLOR_SCALAR,
+                    (int) Math.Min( 255, Math.Max( rbGreen.RangeMaximum, rbGreen.Value ) ) * COLOR_SCALAR,
+                    (int) Math.Min( 255, Math.Max( rbBlue.RangeMaximum, rbBlue.Value ) ) * COLOR_SCALAR );
             }
-            applyChanges();
-            notifyChanges();
+            else if( _colorFunction == ColorFunction.RemoveFromColor )
+            {
+                _minColor = Color.FromArgb(
+                    getRemoved( rbRed, _minColor.R / COLOR_SCALAR, true ) * COLOR_SCALAR,
+                    getRemoved( rbGreen, _minColor.G / COLOR_SCALAR, true ) * COLOR_SCALAR,
+                    getRemoved( rbBlue, _minColor.B / COLOR_SCALAR, true ) * COLOR_SCALAR );
+
+                _maxColor = Color.FromArgb(
+                    getRemoved( rbRed, _maxColor.R / COLOR_SCALAR, false ) * COLOR_SCALAR,
+                    getRemoved( rbGreen, _maxColor.G / COLOR_SCALAR, false ) * COLOR_SCALAR,
+                    getRemoved( rbBlue, _maxColor.B / COLOR_SCALAR, false ) * COLOR_SCALAR );
+            }
+            applyChanges( );
+            notifyChanges( );
         }
 
         private int getRemoved(RangeBar bar, int current, bool isMin)
         {
             if( bar.Value < bar.RangeMinimum || bar.Value > bar.RangeMaximum) return current;
+
             if( bar.RangeMaximum - bar.Value > bar.Value - bar.RangeMinimum)
             {
                 return (int)(isMin ? bar.Value : bar.RangeMaximum); 

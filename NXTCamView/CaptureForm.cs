@@ -22,7 +22,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
 using NXTCamView.Resources;
@@ -33,7 +32,7 @@ namespace NXTCamView
     {
         private bool _isCaptured = false;
         private Bitmap _resizeInterpolated;
-        private SerialPort _serialPort;
+        private ISerialProvider _serialProvider;
         private string _filename = "";
         private bool _isHighlighting = true;
         private readonly Cursor _addingColor;
@@ -44,23 +43,17 @@ namespace NXTCamView
         {            
         }
 
-        public CaptureForm(SerialPort serialPort)
+        public CaptureForm( ISerialProvider serialProvider )
         {
             InitializeComponent();
             Icon = AppImages.GetIcon(AppImages.Capture);
-            _serialPort = serialPort;
-            MainForm.Instance.SerialPortChanged += mainForm_SerialPortChanged;
+            _serialProvider = serialProvider;
             ColorForm.Instance.HighlightColorsChanged += colorDetail_HighlightColorsChanged;
             ColorForm.Instance.ColorFunctionChanged += colorDetail_ColorFunctionChanged;
             StickyWindowsUtil.MakeStickyMDIChild(this);
 
             _addingColor = AppCursors.AddingColor;
             _removingColor = AppCursors.RemovingColor;
-        }
-
-        private void mainForm_SerialPortChanged(object sender, EventArgs e)
-        {
-            _serialPort = MainForm.Instance.SerialPort;
         }
 
         public string Filename { get { return _filename; } set { _filename = value; } }
@@ -106,7 +99,7 @@ namespace NXTCamView
         /// </summary>
         private void workerCapture_DoWork(object sender, DoWorkEventArgs e)
         {            
-            FetchFrameCommand cmd = new DumpFrameCommand(worker, _serialPort);
+            FetchFrameCommand cmd = new DumpFrameCommand(worker, _serialProvider );
             cmd.Execute();
             if( !cmd.IsSuccessful || cmd.Aborted )
             {
@@ -200,7 +193,8 @@ namespace NXTCamView
             {
                 if( cbHighlightColors.Checked )
                 {
-                    pbInterpolated.TransarentColorLow = ColorForm.Instance.HighlightColorLow;
+                    Color low = Color.FromArgb( 254, ColorForm.Instance.HighlightColorLow);
+                    pbInterpolated.TransarentColorLow = low;
                     pbInterpolated.TransarentColorHigh = ColorForm.Instance.HighlightColorHigh;
                 }
                 else
@@ -214,9 +208,11 @@ namespace NXTCamView
 
         private void pb_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isCaptured) return;
-            Debug.WriteLine(e.X + "  " + e.Y);
-            if (e.X < 0 || e.X >= _resizeInterpolated.Width || e.Y < 0 || e.Y >= _resizeInterpolated.Height)
+            if( !_isCaptured ) return;            
+            if( e.X < 0 || 
+                e.X >= _resizeInterpolated.Width || 
+                e.Y < 0 || 
+                e.Y >= _resizeInterpolated.Height)
             {
                 ColorForm.Instance.SetActiveColor( Color.Empty );
                 return;

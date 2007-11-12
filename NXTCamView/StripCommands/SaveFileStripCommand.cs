@@ -38,7 +38,7 @@ namespace NXTCamView.StripCommands
         {
             if (_openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                CaptureForm form = new CaptureForm(MainForm.Instance.SerialPort);
+                CaptureForm form = new CaptureForm( SerialProvider.Instance );
                 form.MdiParent = MainForm.Instance;
                 form.Show();
                 form.LoadFile(_openFileDialog.FileName);

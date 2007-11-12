@@ -34,8 +34,6 @@ namespace NXTCamView
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.cbtnStart = new NXTCamView.CommandButton();
-            this.cbtnStop = new NXTCamView.CommandButton();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -69,10 +67,12 @@ namespace NXTCamView
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cbtnPause = new NXTCamView.CommandButton();
             this.paintTimer = new System.Windows.Forms.Timer(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.llShowHideDetail = new System.Windows.Forms.LinkLabel();
+            this.cbtnPause = new NXTCamView.CommandButton();
+            this.cbtnStart = new NXTCamView.CommandButton();
+            this.cbtnStop = new NXTCamView.CommandButton();
             this.pnlTrackedColors = new NXTCamView.DoubleBufferedPanel();
             this.lblDummyDetail = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -81,30 +81,6 @@ namespace NXTCamView
             this.groupBox3.SuspendLayout();
             this.pnlTrackedColors.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // cbtnStart
-            // 
-            this.cbtnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbtnStart.Command = null;
-            this.cbtnStart.ExecutionType = NXTCamView.ExecutionType.OnClickExecute;
-            this.cbtnStart.Location = new System.Drawing.Point(271, 445);
-            this.cbtnStart.Name = "cbtnStart";
-            this.cbtnStart.Size = new System.Drawing.Size(87, 23);
-            this.cbtnStart.TabIndex = 0;
-            this.cbtnStart.Text = "Start";
-            this.cbtnStart.UseVisualStyleBackColor = true;
-            // 
-            // cbtnStop
-            // 
-            this.cbtnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbtnStop.Command = null;
-            this.cbtnStop.ExecutionType = NXTCamView.ExecutionType.OnClickExecute;
-            this.cbtnStop.Location = new System.Drawing.Point(457, 444);
-            this.cbtnStop.Name = "cbtnStop";
-            this.cbtnStop.Size = new System.Drawing.Size(87, 23);
-            this.cbtnStop.TabIndex = 0;
-            this.cbtnStop.Text = "Stop";
-            this.cbtnStop.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -182,7 +158,7 @@ namespace NXTCamView
             this.lblMessage.ForeColor = System.Drawing.Color.Red;
             this.lblMessage.Location = new System.Drawing.Point(64, 440);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(208, 30);
+            this.lblMessage.Size = new System.Drawing.Size(282, 30);
             this.lblMessage.TabIndex = 5;
             this.lblMessage.Text = "message";
             this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -359,7 +335,7 @@ namespace NXTCamView
             this.groupBox1.Controls.Add(this.cbArea);
             this.groupBox1.Controls.Add(this.cbSize);
             this.groupBox1.Controls.Add(this.cbColorNumber);
-            this.groupBox1.Location = new System.Drawing.Point(12, 480);
+            this.groupBox1.Location = new System.Drawing.Point(12, 573);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(260, 89);
             this.groupBox1.TabIndex = 8;
@@ -439,7 +415,7 @@ namespace NXTCamView
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.lblMatchesPerFrame);
-            this.groupBox2.Location = new System.Drawing.Point(12, 575);
+            this.groupBox2.Location = new System.Drawing.Point(12, 481);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(260, 86);
             this.groupBox2.TabIndex = 0;
@@ -456,19 +432,6 @@ namespace NXTCamView
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Uploaded Colors";
-            // 
-            // cbtnPause
-            // 
-            this.cbtnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbtnPause.Command = null;
-            this.cbtnPause.ExecutionType = NXTCamView.ExecutionType.OnClickExecute;
-            this.cbtnPause.Location = new System.Drawing.Point(364, 445);
-            this.cbtnPause.Name = "cbtnPause";
-            this.cbtnPause.Size = new System.Drawing.Size(87, 23);
-            this.cbtnPause.TabIndex = 0;
-            this.cbtnPause.Text = "Pause";
-            this.cbtnPause.UseVisualStyleBackColor = true;
-            this.cbtnPause.MouseLeave += new System.EventHandler(this.btnPause_MouseLeave);
             // 
             // paintTimer
             // 
@@ -491,6 +454,43 @@ namespace NXTCamView
             this.llShowHideDetail.Text = "Hide";
             this.llShowHideDetail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowHideDetail_LinkClicked);
             // 
+            // cbtnPause
+            // 
+            this.cbtnPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbtnPause.Command = null;
+            this.cbtnPause.ExecutionType = NXTCamView.ExecutionType.OnClickExecute;
+            this.cbtnPause.Location = new System.Drawing.Point(418, 444);
+            this.cbtnPause.Name = "cbtnPause";
+            this.cbtnPause.Size = new System.Drawing.Size(60, 23);
+            this.cbtnPause.TabIndex = 0;
+            this.cbtnPause.Text = "Pause";
+            this.cbtnPause.UseVisualStyleBackColor = true;
+            this.cbtnPause.MouseLeave += new System.EventHandler(this.btnPause_MouseLeave);
+            // 
+            // cbtnStart
+            // 
+            this.cbtnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbtnStart.Command = null;
+            this.cbtnStart.ExecutionType = NXTCamView.ExecutionType.OnClickExecute;
+            this.cbtnStart.Location = new System.Drawing.Point(352, 444);
+            this.cbtnStart.Name = "cbtnStart";
+            this.cbtnStart.Size = new System.Drawing.Size(60, 23);
+            this.cbtnStart.TabIndex = 0;
+            this.cbtnStart.Text = "Start";
+            this.cbtnStart.UseVisualStyleBackColor = true;
+            // 
+            // cbtnStop
+            // 
+            this.cbtnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbtnStop.Command = null;
+            this.cbtnStop.ExecutionType = NXTCamView.ExecutionType.OnClickExecute;
+            this.cbtnStop.Location = new System.Drawing.Point(484, 444);
+            this.cbtnStop.Name = "cbtnStop";
+            this.cbtnStop.Size = new System.Drawing.Size(60, 23);
+            this.cbtnStop.TabIndex = 0;
+            this.cbtnStop.Text = "Stop";
+            this.cbtnStop.UseVisualStyleBackColor = true;
+            // 
             // pnlTrackedColors
             // 
             this.pnlTrackedColors.BackColor = System.Drawing.Color.White;
@@ -498,7 +498,7 @@ namespace NXTCamView
             this.pnlTrackedColors.Controls.Add(this.lblDummyDetail);
             this.pnlTrackedColors.Location = new System.Drawing.Point(14, 6);
             this.pnlTrackedColors.Name = "pnlTrackedColors";
-            this.pnlTrackedColors.Size = new System.Drawing.Size(528, 432);
+            this.pnlTrackedColors.Size = new System.Drawing.Size(528, 430);
             this.pnlTrackedColors.TabIndex = 0;
             // 
             // lblDummyDetail
@@ -529,6 +529,8 @@ namespace NXTCamView
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TrackingForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Tracking";

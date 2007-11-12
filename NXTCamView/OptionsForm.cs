@@ -31,8 +31,8 @@ namespace NXTCamView
 {
     public partial class OptionsForm : Form
     {
-        private SerialPort _serialPort;
-        private SerialPort _testSerialPort;
+        private ISerialProvider _serialProvider;
+        private ISerialProvider _testSerialProvider;
         private bool _isClosing;
         private bool _isChangeUploadedAdv;
         private List< CustomRegisterSettingControl > _customSettings;
@@ -42,13 +42,13 @@ namespace NXTCamView
         private const int MAX_UPLOAD_REGISTERS = 8;
         static private Dictionary< string, string > _friendlyNameByPort;
 
-        public OptionsForm()
+        public OptionsForm( ISerialProvider serialProvider )
         {
             InitializeComponent();
             
             Icon = Icon.FromHandle(((Bitmap)AppImages.Options).GetHicon());
 
-            _serialPort = MainForm.Instance.SerialPort;
+            _serialProvider = serialProvider;
             SuspendLayout();
 
             List<ComboBinder<Int32>> items = new List< ComboBinder<Int32> >();
@@ -104,6 +104,7 @@ namespace NXTCamView
 
         public class ComboBinder<ValueType>
         {
+            public static readonly ComboBinder<string> None = new ComboBinder<string>("None", "None");
             public readonly string Text;
             public readonly ValueType Value;
 
@@ -141,6 +142,10 @@ namespace NXTCamView
             cbUseAutoWhiteBalance.Checked = settings.AutoWhiteBalance;
             cbUseAutoAdjust.Checked = settings.AutoAdjustMode;
             cbUseFlourescentLightFilter.Checked = settings.FlourescentLightFilter;
+
+            TrackingMode mode = SetTrackingModeCommand.GetModeFromConfig( Settings.Default );
+            rbTrackingModeLine.Checked = mode == TrackingMode.Line;
+            rbTrackingModeObject.Checked = mode == TrackingMode.Object;
 
             cbCheckForUpdates.Checked = settings.CheckForUpdates;
 
@@ -242,19 +247,20 @@ namespace NXTCamView
             {
                 btnTest.Enabled = false;
                 lbResult.Text = "Aborting";
-                backgroundWorker.CancelAsync();
+                backgroundWorker.CancelAsync( );
 
                 //hack - must force the serial port to stop from this thread - hmmm
-                _testSerialPort.Close();
+                _testSerialProvider.EnsureClosed( );
             }
             else
             {
-                string port = ((ComboBinder< string >) cobCOMPorts.SelectedItem).Value;
+                string COMPort = ((ComboBinder< string >) cobCOMPorts.SelectedItem).Value;
+                if( COMPort.Equals( ComboBinder<string>.None.Value ) ) return;
                 
-                //if we are testing the currently selected port & its open, then close it
-                if( port.Equals(Settings.Default.COMPort) && _serialPort.IsOpen ) 
+                //if we are testing the currently selected port then close it
+                if( COMPort.Equals( Settings.Default.COMPort ) )
                 {
-                    _serialPort.Close();
+                    _serialProvider.EnsureClosed( );
                 }
 
                 btnTest.Enabled = true;
@@ -262,23 +268,20 @@ namespace NXTCamView
 
                 lbResult.ForeColor = Color.Black;
                 lbResult.Text = "Searching for NXTCam...";
-                lbResult.Refresh();
+                lbResult.Refresh( );
 
                 _hasDoneTest = true;
 
                 //setup a new port to test
-                _testSerialPort = new SerialPort(port,
-                    ((ComboBinder<Int32>)cobBaudRate.SelectedItem).Value,
-                    (Parity) ((ComboBinder<Int32>)cobParity.SelectedItem).Value,
-                    ((ComboBinder<Int32>)cobDataBits.SelectedItem).Value,
-                    (StopBits) ((ComboBinder<Int32>)cobStopBits.SelectedItem).Value);
-                _testSerialPort.Handshake = (Handshake) ((ComboBinder<Int32>)cobHandshake.SelectedItem).Value;
-                _testSerialPort.NewLine = "\r";
-                _testSerialPort.WriteTimeout = _serialPort.WriteTimeout;
-                _testSerialPort.ReadTimeout = _serialPort.ReadTimeout;                    
-
-                backgroundWorker.RunWorkerAsync();
+                _testSerialProvider = SerialProvider.CreateTestProvider(
+                    COMPort,
+                    ((ComboBinder< Int32 >) cobBaudRate.SelectedItem).Value,
+                    (Parity) ((ComboBinder< Int32 >) cobParity.SelectedItem).Value,
+                    ((ComboBinder< Int32 >) cobDataBits.SelectedItem).Value,
+                    (StopBits) ((ComboBinder< Int32 >) cobStopBits.SelectedItem).Value,
+                    (Handshake) ((ComboBinder< Int32 >) cobHandshake.SelectedItem).Value );
             }
+            backgroundWorker.RunWorkerAsync( );
         }
 
         private class Result
@@ -297,8 +300,7 @@ namespace NXTCamView
         {
             try
             {
-                if (!_testSerialPort.IsOpen) _testSerialPort.Open();
-                PingCommand cmd = new PingCommand(_testSerialPort);
+                PingCommand cmd = new PingCommand( _testSerialProvider );
                 e.Result = cmd;
                 cmd.Execute();
                 if( cmd.IsCompleted && cmd.IsSuccessful )
@@ -332,8 +334,16 @@ namespace NXTCamView
             btnTest.Text = "Test";
             btnTest.Enabled = true;
 
-            if( _testSerialPort.IsOpen) _testSerialPort.Close();
-
+            _testSerialProvider.EnsureClosed( );
+            try
+            {
+                _serialProvider.EnsureOpen( );            
+            }
+            catch( Exception )
+            {
+                //the original port may not have been valid anyway
+            }
+            
             //the form was trying to close but the busy test stopped it, so make it close
             if( _isClosing ) Close();
         }
@@ -384,8 +394,26 @@ namespace NXTCamView
             lbMessage.Text = "Uploading settings";
             lbMessage.ForeColor = Color.Black;
             lbMessage.Refresh();
-            
-            SetRegistersCommand cmd = new SetRegistersCommand(_serialPort);
+
+            string errorDescription;
+            bool isOk = sendSetRegisterCommand( out errorDescription );
+
+            if (isOk)
+            {
+                isOk = sendSetTrackingModeCommand( out errorDescription );
+            }
+
+            lbMessage.Text = isOk ? "Upload succeeded" : errorDescription;
+            lbMessage.ForeColor = isOk ? Color.Black : Color.Red;
+            _isChangeUploaded = isOk;
+            btnUploadRegisters.Enabled = true;
+
+            return isOk;
+        }
+
+        private bool sendSetRegisterCommand( out string error )
+        {
+            SetRegistersCommand cmd = new SetRegistersCommand( _serialProvider );
             cmd.IsAutoWhiteBalance = cbUseAutoWhiteBalance.Checked;
             cmd.IsAutoAdjustMode = cbUseAutoAdjust.Checked;
             cmd.HasFlourescentLightFilter = cbUseFlourescentLightFilter.Checked;
@@ -402,16 +430,29 @@ namespace NXTCamView
                 settings.FlourescentLightFilter = cbUseFlourescentLightFilter.Checked;
                 settings.Save();
             }
-
-            lbMessage.Text = isOk ? "Upload succeeded" : cmd.ErrorDescription;
-            lbMessage.ForeColor = isOk ? Color.Black : Color.Red;
-            _isChangeUploaded = isOk;
-            btnUploadRegisters.Enabled = true;
-
+            error = cmd.ErrorDescription;
             return isOk;
         }
 
-        private void cb_CheckedChanged(object sender, EventArgs e)
+        private bool sendSetTrackingModeCommand(out string error)
+        {
+            TrackingMode mode = rbTrackingModeLine.Checked ? TrackingMode.Line : TrackingMode.Object;
+            SetTrackingModeCommand cmd = new SetTrackingModeCommand( _serialProvider, mode );
+            cmd.Execute();
+
+            bool isOk = cmd.IsSuccessful;
+
+            if (isOk)
+            {
+                //save the settings
+                SetTrackingModeCommand.SetModeInConfig( Settings.Default, mode );
+                Settings.Default.Save();
+            }
+            error = cmd.ErrorDescription;
+            return isOk;
+        }
+
+        private void settingsChanged(object sender, EventArgs e)
         {
             lbMessage.ForeColor = Color.Black;
             lbMessage.Text = "Changes not yet uploaded";
@@ -431,9 +472,9 @@ namespace NXTCamView
         }
 
         private bool uploadSettingsAdv()
-        {
+        {            
             int count = 0;
-            SetRegistersCommand cmd = new SetRegistersCommand(_serialPort);
+            SetRegistersCommand cmd = new SetRegistersCommand( _serialProvider );
             foreach( CustomRegisterSettingControl control in _customSettings )
             {
                 if( control.RegisterEnabled )
@@ -518,7 +559,14 @@ namespace NXTCamView
             List<ComboBinder<string>> ports = new List< ComboBinder< string > >();
             foreach( string port in SerialPort.GetPortNames())
             {
-                ports.Add(createComboBinder(port));
+                ports.Add( createComboBinder(port) );
+            }
+
+            btnTest.Enabled = ports.Count > 0; 
+            
+            if (ports.Count == 0) 
+            {
+                ports.Add( ComboBinder<string>.None );                
             }
 
             ComboBinder<string> old = (ComboBinder<string>)cobCOMPorts.SelectedItem;

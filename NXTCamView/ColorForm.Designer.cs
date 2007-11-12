@@ -35,7 +35,6 @@ namespace NXTCamView
             this.pnlColorPanels = new System.Windows.Forms.Panel();
             this.pnlSample = new System.Windows.Forms.Panel();
             this.lbActiveColor = new System.Windows.Forms.Label();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipPanel = new System.Windows.Forms.ToolTip(this.components);
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
             this.tsbSetColor = new System.Windows.Forms.ToolStripButton();
@@ -252,7 +251,6 @@ namespace NXTCamView
         private System.Windows.Forms.Panel pnlColorMain;
         private System.Windows.Forms.Panel pnlActiveColor;
         private System.Windows.Forms.Label lbActiveColor;
-        private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ToolTip toolTipPanel;
         private System.Windows.Forms.Panel pnlColorPanels;
         private System.Windows.Forms.Panel pnlSample;

@@ -41,14 +41,14 @@ namespace NXTCamView
         private ColorDetail _colorDetail = new ColorDetail();
         private Panel[] _colorPanels = new Panel[TRACKED_COLORS];
         private OverlapInfo[] _overlapInfos = new OverlapInfo[TRACKED_COLORS];
-        private Image _errorImage;
+        private static Image _errorImage;
         private int _selectedColorIndex;
         private bool _isColorDetailVisible = false;
         private Color _highlightColorLow;
         private Color _highlightColorHigh;
         private ColorFunction _colorFunctionTemp;
         private ColorFunction _colorFunctionMode;
-        private HighlightColorStripCommand highlightColorCmd;
+        private HighlightColorStripCommand _highlightColorCmd;
 
         [Category("Custom")]
         public event EventHandler HighlightColorsChanged;
@@ -69,6 +69,12 @@ namespace NXTCamView
             setupToolbar();
             initErrorImage();
             MainForm.Instance.ConnectionStateChanged += mainForm_ConnectionStateChanged;
+            AppState.Inst.StateChanged += AppStateChanged;
+        }
+
+        private void AppStateChanged(object sender, EventArgs e)
+        {
+            updateAllEnablement();
         }
 
         private void mainForm_ConnectionStateChanged(object sender, EventArgs e)
@@ -199,11 +205,11 @@ namespace NXTCamView
             setupItem(tsbAddToColor, "Add to color", "Use color adding mode (or press CTRL while clicking)", AppImages.AddToColor, new SetColorFunctionModeStripCommand(this, ColorFunction.AddToColor));
             setupItem(tsbRemoveFromColor, "Remove from color", "Use color removing mode (or press CTRL+SHIFT while clicking)", AppImages.RemoveFromColor, new SetColorFunctionModeStripCommand(this, ColorFunction.RemoveFromColor));
 
-            setupItem(tsbUpload, "Upload", "Upload tracking colors to NXTCam", AppImages.UploadColors, new UploadColorsStripCommand(this));
+            setupItem(tsbUpload, "Upload", "Upload tracking colors to NXTCam", AppImages.UploadColors, new UploadColorsStripCommand( this,  SerialProvider.Instance ));
             setupItem(tsbClear, "Clear", "Clear color", AppImages.ClearColor, new ClearColorsStripCommand(false, this));
             setupItem(tsbClearAll, "Clear All", "Clear all colors", AppImages.ClearAllColors, new ClearColorsStripCommand(true, this));
-            highlightColorCmd = new HighlightColorStripCommand(true, this);
-            setupItem(tsbHighlight, "Highlight", "Highlight the color in the capture", AppImages.HighlightColor, highlightColorCmd);
+            _highlightColorCmd = new HighlightColorStripCommand(true, this);
+            setupItem(tsbHighlight, "Highlight", "Highlight the color in the capture", AppImages.HighlightColor, _highlightColorCmd);
             setupItem(tslShowHide, "Hide", "Show/Hide colors", null, new ToggleShowHideStripCommand(this));
         }
 
@@ -288,7 +294,7 @@ namespace NXTCamView
         {
             if (toolTipPanel.Active) toolTipPanel.Hide(this);
             setSelectedColor((int)((Panel)sender).Tag);
-            if (highlightColorCmd.CanExecute())
+            if (_highlightColorCmd.CanExecute())
             {
                 setHighlightColors();
             }
@@ -525,7 +531,7 @@ namespace NXTCamView
 
         private void setHighlightColors()
         {
-            bool isOn = highlightColorCmd.HasExecuted();
+            bool isOn = _highlightColorCmd.HasExecuted();
             _highlightColorLow = isOn ? getHightlightColor(Settings.Default.MinColors[_selectedColorIndex]) : Color.Empty;
             _highlightColorHigh = isOn ? getHightlightColor(Settings.Default.MaxColors[_selectedColorIndex]) : Color.Empty;
             raiseHighlightColorChanged();

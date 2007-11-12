@@ -90,8 +90,10 @@
     <Compile Include="CommandButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Commands\SetTrackingModeCommand.cs" />
     <Compile Include="Commands\FetchFrameCommand.cs" />
     <Compile Include="Commands\InterpolateFrameCommand.cs" />
+    <Compile Include="Commands\ISerialProvider.cs" />
     <Compile Include="Commands\SetColorMap.cs" />
     <Compile Include="Commands\SetRegistersCommand.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Resources\AppCursors.cs" />
     <Compile Include="Resources\AppImages.cs" />
     <Compile Include="SerialHelper.cs" />
+    <Compile Include="SerialProvider.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StickyWindow.cs" />
     <Compile Include="StickyWindowsUtil.cs" />
