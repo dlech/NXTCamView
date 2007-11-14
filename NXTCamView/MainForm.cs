@@ -17,6 +17,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -54,6 +55,30 @@ namespace NXTCamView
 
             AppState.Inst.StateChanged += AppStateChanged;
             AppState.Inst.State = State.NotConnected;
+
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+        }
+
+        void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            Debug.WriteLine( "Unhandled thread exception: " + e.Exception );
+        }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            //TEST DEBUGGING
+            //MessageBox.Show( this,
+            //                 string.Format( "Unfortunately a problem has occurred and {0} needs to close.  \nSorry for the inconvienience", Application.ProductName ),
+            //                 string.Format("{0} - {1}", 
+            //                 Application.ProductName, 
+            //                 Application.ProductVersion));
+
+            //This is most probably caused by the USB cable being removed and causing an issue 
+            //with an unhandled exception. 
+            //See http://forums.microsoft.com/MSDN/ShowPost.aspx?PostID=523638&SiteID=1
+            //Workaround is via the app config!
+            Debug.WriteLine("Unhandled exception: " + e.ExceptionObject);            
         }
 
         private void tsbPing_Click(object sender, EventArgs e)
