@@ -16,10 +16,21 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using System.Threading;
+using System.Windows.Forms;
+using NXTCamView.Commands;
+
 namespace NXTCamView.StripCommands
 {
     public class DisconnectStripCommand : StripCommand
     {
+        private ISerialProvider _serialProvider;
+
+        public DisconnectStripCommand( ISerialProvider serialProvider )
+        {
+            _serialProvider = serialProvider;
+        }
+
         public override bool CanExecute()
         {
             return AppState.Inst.State != State.NotConnected;
@@ -27,10 +38,42 @@ namespace NXTCamView.StripCommands
 
         public override bool Execute()
         {
-            //maybe need to consider tracking?
+            bool wasBusy = false;
+            foreach( Form form in MainForm.Instance.MdiChildren )
+            {
+                ITaskRunner taskRunner = form as ITaskRunner;
+                if( taskRunner != null )
+                {
+                    //if we're someone is busy (like capturing) we will ask them to abort,
+                    //then disconnect once the abort is complete
+                    if (taskRunner.IsBusy())
+                    {
+                        taskRunner.AbortCompleted += delegate { disconnect( ); };
+                        taskRunner.Abort( );
+                        wasBusy = true;
+                    }
+                }
+            }
+            //if nothing was busy, then we can just "disconnect" now
+            if( !wasBusy )
+            {
+                disconnect( );
+            }
+            return true;
+        }
+
+        private void disconnect( )
+        {
+            //this is not so pretty, but we want to clear away any junk
+            //that would cause a connect to fail later
+            do
+            {
+                _serialProvider.ReadExisting( );
+                Thread.Sleep( 100 );
+            } while( _serialProvider.BytesToRead > 0 );
+
             AppState.Inst.State = State.NotConnected;
             OnCompeted();
-            return true;
         }
 
         public override bool HasExecuted()

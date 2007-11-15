@@ -9,6 +9,7 @@ v0.2.1
 - fixed mainform displaying offscreen
 - re-ordered tracking window panels
 - added selection of Line Tracking Mode and Object Tracking Mode to options
+- improved disconnect while capturing
 
 v0.2.0
 - fix bug in release version parsing

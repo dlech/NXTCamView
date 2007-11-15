@@ -18,7 +18,6 @@
 //
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -28,7 +27,7 @@ using NXTCamView.Resources;
 
 namespace NXTCamView
 {
-    public partial class CaptureForm : Form
+    public partial class CaptureForm : Form, ITaskRunner
     {
         private bool _isCaptured = false;
         private Bitmap _resizeInterpolated;
@@ -111,7 +110,7 @@ namespace NXTCamView
         }
         
         private void workerCapture_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
+        {            
             if (e.ProgressPercentage < 100)
             {
                 lbStatus.Text = "Capturing";
@@ -141,6 +140,11 @@ namespace NXTCamView
             worker.RunWorkerCompleted -= workerCapture_RunWorkerCompleted;
             completeFetch(e);
             AppState.Inst.State = State.Connected;
+            //was any one interested if we aborted?
+            if( e.Cancelled && AbortCompleted!= null )
+            {
+                AbortCompleted( this, new EventArgs( ) );
+            }
         }
 
         private void completeFetch(RunWorkerCompletedEventArgs e)
@@ -246,7 +250,25 @@ namespace NXTCamView
             ColorForm.Instance.SetSelectedColor();
         }
 
+
         private void btnAbort_Click(object sender, EventArgs e)
+        {
+            Abort( );
+        }
+
+        public bool IsBusy()
+        {
+            return worker.IsBusy;
+        }
+
+        public void Abort( )
+        {
+            worker.CancelAsync();
+        }
+
+        public event EventHandler< EventArgs > AbortCompleted;
+
+        public void AbortJob( )
         {
             worker.CancelAsync();
         }

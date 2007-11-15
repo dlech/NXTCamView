@@ -154,7 +154,7 @@ namespace NXTCamView
 
             setupButtonAndMenu(tsbConnect, tsmConnect, "Connect", "Connect to the NXTCam", AppImages.Connect, connectCmd);            
 
-            StripCommand disconnectCmd = new DisconnectStripCommand();
+            StripCommand disconnectCmd = new DisconnectStripCommand( SerialProvider.Instance );
             disconnectCmd.Completed += disconnectCmd_Completed;
             setupButtonAndMenu(tsbDisconnect, tsmDisconnect, "Disconnect", "Disconnect from the NXTCam", AppImages.Disconnect, disconnectCmd);
 
