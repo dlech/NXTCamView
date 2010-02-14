@@ -17,29 +17,32 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System.Windows.Forms;
+using NXTCamView.Forms;
 
 namespace NXTCamView.StripCommands
 {
     public class SaveFileStripCommand : StripCommand
     {
-        private bool _isSaveAs;
-        private SaveFileDialog _saveFileDialog;
+        private readonly bool _isSaveAs;
+        private readonly MainForm _mainForm;
+        private readonly SaveFileDialog _saveFileDialog;
 
-        public SaveFileStripCommand(SaveFileDialog saveFileDialog, bool isSaveAs)
+        public SaveFileStripCommand(IAppState appState, MainForm mainForm, SaveFileDialog saveFileDialog, bool isSaveAs) : base(appState)
         {
+            _mainForm = mainForm;
             _saveFileDialog = saveFileDialog;
             _isSaveAs = isSaveAs;
         }
 
         public override bool CanExecute()
         {
-            CaptureForm form = MainForm.Instance.ActiveMdiChild as CaptureForm;
+            var form = _mainForm.ActiveMdiChild as CaptureForm;
             return form != null;
         }
 
         public override bool Execute()
         {
-            CaptureForm form = MainForm.Instance.ActiveMdiChild as CaptureForm;
+            var form = _mainForm.ActiveMdiChild as CaptureForm;
             if( form == null ) return false;
             if( form.Filename == "" || _isSaveAs )
             {

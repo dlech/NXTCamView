@@ -22,6 +22,13 @@ namespace NXTCamView.StripCommands
 {
     public class StripCommand
     {
+        protected readonly IAppState _appState;
+
+        public StripCommand( IAppState appState )
+        {
+            _appState = appState;
+        }
+
         public event EventHandler< EventArgs > Completed;
 
         /// <summary>
@@ -46,9 +53,10 @@ namespace NXTCamView.StripCommands
 
         public virtual void OnCompeted()
         {
-            if( Completed != null )
+            var completed = Completed;
+            if( completed != null )
             {
-                Completed(this, new EventArgs());
+                completed(this, new EventArgs());
             }
         }
 
@@ -60,9 +68,9 @@ namespace NXTCamView.StripCommands
             return false;
         }
 
-        protected void setState(State state)
+        protected void SetState(State state)
         {
-            AppState.Inst.State = state;
+            _appState.State = state;
         }
     }
 }

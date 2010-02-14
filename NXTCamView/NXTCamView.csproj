@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -23,6 +24,14 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationVersion>1.0.1.0</ApplicationVersion>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <StartupObject>NXTCamView.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,12 +59,14 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisRuleAssemblies>C:\Program Files\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject">
+      <HintPath>..\tools\ninject\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -67,33 +78,16 @@
     <Compile Include="..\build\AssemblyInfoCommon.cs">
       <Link>AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="AboutBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="AppState.cs" />
-    <Compile Include="CaptureForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CaptureForm.Designer.cs">
-      <DependentUpon>CaptureForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ColorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ColorForm.Designer.cs">
-      <DependentUpon>ColorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="ColorUtils.cs" />
-    <Compile Include="CommandButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Commands\SetTrackingModeCommand.cs" />
     <Compile Include="Commands\FetchFrameCommand.cs" />
     <Compile Include="Commands\InterpolateFrameCommand.cs" />
-    <Compile Include="Commands\ISerialProvider.cs" />
+    <Compile Include="Comms\CommsPort.cs" />
+    <Compile Include="Comms\CommsPortFactory.cs" />
+    <Compile Include="Comms\CommsPortSettings.cs" />
+    <Compile Include="Comms\ConfigCommsPort.cs" />
+    <Compile Include="Comms\ICommsPort.cs" />
     <Compile Include="Commands\SetColorMap.cs" />
     <Compile Include="Commands\SetRegistersCommand.cs" />
     <Compile Include="Commands\Command.cs" />
@@ -101,64 +95,103 @@
     <Compile Include="Commands\TrackingCommand.cs" />
     <Compile Include="Commands\GetVersionCommand.cs" />
     <Compile Include="Commands\PingCommand.cs" />
-    <Compile Include="ColorDetail.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ColorDetail.Designer.cs">
-      <DependentUpon>ColorDetail.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomRegisterSettingControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomRegisterSettingControl.Designer.cs">
-      <DependentUpon>CustomRegisterSettingControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DoubleBufferedPanel.cs">
+    <Compile Include="Comms\SerialHelper.cs" />
+    <Compile Include="Controls\CommandButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ITaskRunner.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Controls\RangeBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\StickyWindow.cs" />
+    <Compile Include="Controls\StickyWindowsUtil.cs" />
+    <Compile Include="Controls\TransparentPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CaptureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CaptureForm.Designer.cs">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ColorDetail.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ColorDetail.Designer.cs">
+      <DependentUpon>ColorDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ColorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ColorForm.Designer.cs">
+      <DependentUpon>ColorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CustomRegisterSettingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\CustomRegisterSettingControl.Designer.cs">
+      <DependentUpon>CustomRegisterSettingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OptionsForm.cs">
+    <Compile Include="Forms\OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OptionsForm.Designer.cs">
+    <Compile Include="Forms\OptionsForm.Designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TrackingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TrackingForm.Designer.cs">
+      <DependentUpon>TrackingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ITaskRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Controls\RangeBar.resx">
+      <DependentUpon>RangeBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CaptureForm.resx">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Forms\CaptureForm.resx">
       <DependentUpon>CaptureForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ColorDetail.resx">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Forms\ColorDetail.resx">
       <DependentUpon>ColorDetail.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Forms\ColorForm.resx">
+      <DependentUpon>ColorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CustomRegisterSettingControl.resx">
+      <DependentUpon>CustomRegisterSettingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OptionsForm.resx">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Forms\OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TrackingForm.resx">
+      <DependentUpon>TrackingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TrackingForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>TrackingForm.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -175,16 +208,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RangeBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Resources\AppCursors.cs" />
     <Compile Include="Resources\AppImages.cs" />
-    <Compile Include="SerialHelper.cs" />
-    <Compile Include="SerialProvider.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="StickyWindow.cs" />
-    <Compile Include="StickyWindowsUtil.cs" />
     <Compile Include="StripCommands\ConnectStripCommand.cs" />
     <Compile Include="StripCommands\CaptureStripCommand.cs" />
     <Compile Include="StripCommands\UploadColorsStripCommand.cs" />
@@ -194,15 +220,7 @@
     <Compile Include="StripCommands\OpenColorStripCommand.cs" />
     <Compile Include="StripCommands\OpenOptionsStripCommand.cs" />
     <Compile Include="StripCommands\DisconnectStripCommand.cs" />
-    <Compile Include="TrackingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TrackingForm.Designer.cs">
-      <DependentUpon>TrackingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TransparentPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Tracer.cs" />
     <Compile Include="StripCommands\StripCommand.cs" />
     <Compile Include="VersionUpdater\ReleaseInfo.cs" />
     <Compile Include="VersionUpdater\Updater.cs" />
@@ -224,18 +242,6 @@
     <None Include="Resources\otheroptions.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ColorForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ColorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomRegisterSettingControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>CustomRegisterSettingControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RangeBar.resx">
-      <DependentUpon>RangeBar.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Error.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +309,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\UploadColors.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CameraPic.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

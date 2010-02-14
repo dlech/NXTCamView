@@ -93,7 +93,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="TrackingMode" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TO</Value>
+      <Value Profile="(Default)">Object</Value>
     </Setting>
   </Settings>
 </SettingsFile>

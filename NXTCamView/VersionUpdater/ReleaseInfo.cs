@@ -16,10 +16,15 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+#region using
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+
+#endregion
 
 namespace NXTCamView.VersionUpdater
 {
@@ -33,7 +38,7 @@ namespace NXTCamView.VersionUpdater
         public readonly string PubDate = "";
         private DateTime _releaseDate = DateTime.MinValue;
 
-        public ReleaseInfo(string title, string link, string description, string author, string comment, string pubDate)
+        public ReleaseInfo( string title, string link, string description, string author, string comment, string pubDate )
         {
             Title = title;
             Link = link;
@@ -45,26 +50,27 @@ namespace NXTCamView.VersionUpdater
 
         public Version Version
         {
-            get 
+            get
             {
-                Regex regex = new Regex(@"NXTCamView\sinstall\s(\d+\.\d+\.\d+)\sreleased", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                var regex = new Regex( @"NXTCamView\sinstall\s(\d+\.\d+\.\d+)\sreleased",
+                                       RegexOptions.Singleline | RegexOptions.IgnoreCase );
                 Match match = regex.Match( Title );
                 //capture[0] is in the form "1.2.3"
-                if (match.Groups.Count == 2) return new Version(match.Groups[1].Value);
+                if ( match.Groups.Count == 2 ) return new Version( match.Groups[1].Value );
                 //this is not a valid version
-                return new Version("0.0.0.1");
+                return new Version( "0.0.0.1" );
             }
         }
 
-        public DateTime ReleaseDate 
-        { 
-            get 
+        public DateTime ReleaseDate
+        {
+            get
             {
-                if( _releaseDate == DateTime.MinValue )
+                if ( _releaseDate == DateTime.MinValue )
                 {
                     try
                     {
-                        _releaseDate = DateTime.Parse(PubDate);
+                        _releaseDate = DateTime.Parse( PubDate );
                     }
                     catch
                     {
@@ -72,28 +78,28 @@ namespace NXTCamView.VersionUpdater
                     }
                 }
                 return _releaseDate;
-            } 
+            }
         }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Title: {0}", Title);
-            sb.AppendFormat("Link: {0}", Link);
-            sb.AppendFormat("Description: {0}", Description);
-            sb.AppendFormat("Author: {0}", Author);
-            sb.AppendFormat("Comment: {0}", Comment);
+            var sb = new StringBuilder();
+            sb.AppendFormat( "Title: {0}", Title );
+            sb.AppendFormat( "Link: {0}", Link );
+            sb.AppendFormat( "Description: {0}", Description );
+            sb.AppendFormat( "Author: {0}", Author );
+            sb.AppendFormat( "Comment: {0}", Comment );
             return sb.ToString();
         }
     }
 
-    public class ReleaseInfoComparer : IComparer< ReleaseInfo >
+    public class ReleaseInfoComparer : IComparer<ReleaseInfo>
     {
-        public int Compare(ReleaseInfo x, ReleaseInfo y)
+        public int Compare( ReleaseInfo x, ReleaseInfo y )
         {
             //compare by version first, then release date
             int diff = y.Version.CompareTo( x.Version );
-            if( diff != 0 ) return diff;
+            if ( diff != 0 ) return diff;
             return y.ReleaseDate.CompareTo( x.ReleaseDate );
         }
     }

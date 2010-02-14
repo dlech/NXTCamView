@@ -17,15 +17,24 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System.Windows.Forms;
+using NXTCamView.Commands;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
 
 namespace NXTCamView.StripCommands
 {
     public class OpenFileStripCommand : StripCommand
     {
-        private OpenFileDialog _openFileDialog;
-        
-        public OpenFileStripCommand(OpenFileDialog openFileDialog)
+        private readonly MainForm _mainForm;
+        private readonly OpenFileDialog _openFileDialog;
+        private readonly ICommsPort _commsPort;
+        private readonly ColorForm _colorForm;
+
+        public OpenFileStripCommand(IAppState appState, MainForm mainForm, ColorForm colorForm, OpenFileDialog openFileDialog, ICommsPort commsPort) : base(appState)
         {
+            _mainForm = mainForm;
+            _colorForm = colorForm;
+            _commsPort = commsPort;
             _openFileDialog = openFileDialog;
         }
 
@@ -38,8 +47,7 @@ namespace NXTCamView.StripCommands
         {
             if (_openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                CaptureForm form = new CaptureForm( SerialProvider.Instance );
-                form.MdiParent = MainForm.Instance;
+                var form = new CaptureForm( _appState, _colorForm, _commsPort ) {MdiParent = _mainForm};
                 form.Show();
                 form.LoadFile(_openFileDialog.FileName);
                 return true;

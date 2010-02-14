@@ -1,23 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamView", "NXTCamView\NXTCamView.csproj", "{3B21513D-9D72-4301-B835-DD246194A9AE}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NXTCamViewSetup", "NXTCamViewSetup\NXTCamViewSetup.vdproj", "{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9787A8FB-2497-48B2-BF89-FEF565A03236}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
 		build\AssemblyInfoCommon.cs = build\AssemblyInfoCommon.cs
 		web\htdocs\DemoScreenCam.htm = web\htdocs\DemoScreenCam.htm
@@ -25,17 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		localtestrun.testrunconfig = localtestrun.testrunconfig
 		build\NXTCamView.build = build\NXTCamView.build
 		NXTCamView.vsmdi = NXTCamView.vsmdi
+		NXTCamView1.vsmdi = NXTCamView1.vsmdi
 		build\ReleaseNotes.txt = build\ReleaseNotes.txt
 		build\version.txt = build\version.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamView", "NXTCamView\NXTCamView.csproj", "{3B21513D-9D72-4301-B835-DD246194A9AE}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NXTCamViewSetup", "NXTCamViewSetup\NXTCamViewSetup.vdproj", "{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamViewTests", "NXTCamViewTests\NXTCamViewTests.csproj", "{39F1EA52-1B27-46C1-8C8E-578CDD644E12}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NXTCamView1.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		DebugInstall|Any CPU = DebugInstall|Any CPU

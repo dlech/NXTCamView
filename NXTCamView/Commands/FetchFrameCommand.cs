@@ -23,6 +23,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
+using NXTCamView.Comms;
 
 namespace NXTCamView.Commands
 {
@@ -58,24 +59,24 @@ namespace NXTCamView.Commands
          *
          */
 
-        protected FetchFrameCommand(string name, ISerialProvider serialProvider, BackgroundWorker worker) : base(name, serialProvider)
+        protected FetchFrameCommand(IAppState appState, string name, ICommsPort commsPort, BackgroundWorker worker) : base( appState, name, commsPort)
         {
-            _worker = worker;
+            Worker = worker;
         }
 
-        public const int IMAGE_WIDTH = 176;
-        public const int IMAGE_HEIGHT = 144;
-        public const int PIXELS_PER_PACKET = IMAGE_WIDTH;
-        public const int PACKET_COUNT = PACKETS_IN_DUMP;
-        protected const int BYTES_PER_PACKET = 3 + PIXELS_PER_PACKET;
-        protected const int PACKETS_IN_DUMP = IMAGE_HEIGHT / 2;
-        private Dictionary<int, byte[]> bytesByLine = new Dictionary<int, byte[]>();
-        protected BackgroundWorker _worker;
-        protected Bitmap _bmBayer = new Bitmap(IMAGE_WIDTH, IMAGE_HEIGHT);
-        protected Bitmap _bmInterpolated  = new Bitmap(IMAGE_WIDTH,IMAGE_HEIGHT);
-        public Bitmap Interpolated { get { return _bmInterpolated; } }
+        public const int ImageWidth = 176;
+        public const int ImageHeight = 144;
+        public const int PixelsPerPacket = ImageWidth;
+        public const int PacketCount = PacketsInDump;
+        protected const int BytesPerPacket = 3 + PixelsPerPacket;
+        protected const int PacketsInDump = ImageHeight / 2;
+        private readonly Dictionary<int, byte[]> _bytesByLine = new Dictionary<int, byte[]>();
+        protected BackgroundWorker Worker;
+        protected Bitmap BmBayer = new Bitmap(ImageWidth, ImageHeight);
+        protected Bitmap BmInterpolated  = new Bitmap(ImageWidth,ImageHeight);
+        public Bitmap Interpolated { get { return BmInterpolated; } }
 
-        protected void setAborted()
+        protected void SetAborted()
         {
             _isSuccessful = false;
             _aborted = true;
@@ -83,50 +84,50 @@ namespace NXTCamView.Commands
             return;
         }
 
-        public LinePair getLinePair(byte[] buffer)
+        public LinePair GetLinePair(byte[] buffer)
         {
             //176*144
             //88 * 72 packet with 2 lines in each
-            if( buffer.Length != BYTES_PER_PACKET ) throw new ApplicationException("Bad byte count");
+            if( buffer.Length != BytesPerPacket ) throw new ApplicationException("Bad byte count");
             if( buffer[0] != 0x0B ) throw new ApplicationException("Bad start byte");
-            if( buffer[BYTES_PER_PACKET - 1] != 0x0F ) throw new ApplicationException("Bad end byte");
+            if( buffer[BytesPerPacket - 1] != 0x0F ) throw new ApplicationException("Bad end byte");
             int line = buffer[1];
             if( line < 0 || line > 144 ) throw new ApplicationException(string.Format("Bad line number {0}", line));
-            byte[] pixelData = new byte[PIXELS_PER_PACKET];
+            var pixelData = new byte[PixelsPerPacket];
             Array.Copy(buffer, 2, pixelData, 0, pixelData.Length);
-            bytesByLine.Add(line, buffer);
+            _bytesByLine.Add(line, buffer);
             int x = 0;
             int y = line*2;
             LinePair linePair = new LinePair(y);
             //update the 2 lines now
-            for( int index = 0; index < PIXELS_PER_PACKET; index++ )
+            for( int index = 0; index < PixelsPerPacket; index++ )
             {
                 if( index%2 == 0 )
                 {
                     Color blue = Color.FromArgb(0x0, 0x0, (pixelData[index] & 0x0F) * 16);
                     linePair.Colors[x, 1] = blue;
-                    _bmBayer.SetPixel(x, y + 1, blue);
+                    BmBayer.SetPixel(x, y + 1, blue);
                     Color green = Color.FromArgb(0x0, (pixelData[index] >> 4) * 16, 0x0);
                     linePair.Colors[x + 1, 1] = green;
-                    _bmBayer.SetPixel(x + 1, y + 1, green);
+                    BmBayer.SetPixel(x + 1, y + 1, green);
                 }
                 else
                 {
                     Color green = Color.FromArgb(0x0, (pixelData[index] & 0x0F) * 16, 0x0);
                     linePair.Colors[x, 0] = green;
-                    _bmBayer.SetPixel(x, y, green);
+                    BmBayer.SetPixel(x, y, green);
                     Color red = Color.FromArgb((pixelData[index] >> 4) * 16, 0x0, 0x0);
                     linePair.Colors[x + 1, 0] = red;
-                    _bmBayer.SetPixel(x + 1, y, red);
+                    BmBayer.SetPixel(x + 1, y, red);
                     x+=2;
                 }
             }
             return linePair;
         }
 
-        public Bitmap createBitmap(int width, int height, byte[] data)
+        public Bitmap CreateBitmap(int width, int height, byte[] data)
         {
-            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            var bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             //Create a BitmapData and Lock all pixels to be written 
             BitmapData bmpData = bitmap.LockBits(
                                  new Rectangle(0, 0, bitmap.Width, bitmap.Height),
@@ -146,9 +147,9 @@ namespace NXTCamView.Commands
             GreenOdd = 0x3
         }
 
-        protected Color getInterpolatedColor(int x, int y)
+        protected Color GetInterpolatedColor(int x, int y)
         {
-            PixelState pixelState = (PixelState)(((y%2)<<1) | x%2);
+            var pixelState = (PixelState)(((y%2)<<1) | x%2);
             int red;
             int green;
             int blue;
@@ -214,18 +215,18 @@ namespace NXTCamView.Commands
         private Color getColor(int x, int y, ref int goodColors)
         {
             //Only get colors for valid pixels
-            if (x<0 || x>=IMAGE_WIDTH || y<0 || y >=IMAGE_HEIGHT)
+            if (x<0 || x>=ImageWidth || y<0 || y >=ImageHeight)
             {
                 return Color.Black;
             }
             goodColors++;
-            return _bmBayer.GetPixel(x, y);
+            return BmBayer.GetPixel(x, y);
         }
 
         protected static string DumpBytes(byte[] buffer)
         {
             char[] hexMap = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-            StringBuilder sb = new StringBuilder(buffer.Length * 3);
+            var sb = new StringBuilder(buffer.Length * 3);
             foreach (byte b in buffer)
             {
                 sb.Append(hexMap[b >> 4]);
@@ -235,30 +236,30 @@ namespace NXTCamView.Commands
             return sb.ToString();
         }
 
-        protected void updateInterpolateImage()
+        protected void UpdateInterpolateImage()
         {
-            byte[] colorData = new byte[IMAGE_HEIGHT*IMAGE_WIDTH*3];
+            byte[] colorData = new byte[ImageHeight*ImageWidth*3];
             int index = 0;
             //just do them all! (inefficient, but easy for now)
-            for (int y = 0; y < IMAGE_HEIGHT; y++)
+            for (int y = 0; y < ImageHeight; y++)
             {
-                for( int x = 0; x < IMAGE_WIDTH; x++ )
+                for( int x = 0; x < ImageWidth; x++ )
                 {
-                    Color color = getInterpolatedColor(x, y);
+                    Color color = GetInterpolatedColor(x, y);
                     colorData[index] = color.B;
                     colorData[index+1] = color.G;
                     colorData[index + 2] = color.R;
                     index += 3;
                 }
-                if (((100*(y+1)/IMAGE_HEIGHT) % 5) == 0) _worker.ReportProgress(100 + (100 * y / IMAGE_HEIGHT));
-                if (_worker.CancellationPending)
+                if (((100*(y+1)/ImageHeight) % 5) == 0) Worker.ReportProgress(100 + (100 * y / ImageHeight));
+                if (Worker.CancellationPending)
                 {
-                    setAborted();
+                    SetAborted();
                     return;
                 }
             }
             //Create the bitmap
-            _bmInterpolated = createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, colorData);
+            BmInterpolated = CreateBitmap(ImageWidth, ImageHeight, colorData);
         }
     }
 
@@ -266,7 +267,7 @@ namespace NXTCamView.Commands
     {
         public readonly int Y;
         //Two lines worth of color
-        public Color[,] Colors = new Color[FetchFrameCommand.IMAGE_WIDTH, 2];
+        public Color[,] Colors = new Color[FetchFrameCommand.ImageWidth, 2];
 
         public LinePair(int y)
         {

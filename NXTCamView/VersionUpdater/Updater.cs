@@ -25,10 +25,14 @@ using NXTCamView.Properties;
 
 namespace NXTCamView.VersionUpdater
 {
-    public class Updater
+    public interface IUpdater
     {
-        public static readonly Updater Instance = new Updater();        
+        void CheckForUpdates();
+        void CheckForUpdates( bool isAlwaysShowingResult );
+    }
 
+    public class Updater : IUpdater
+    {
         public void CheckForUpdates()
         {
             CheckForUpdates(false);
@@ -75,14 +79,14 @@ namespace NXTCamView.VersionUpdater
 
         private List<ReleaseInfo> getReleases()
         {
-            List<ReleaseInfo> releases = new List<ReleaseInfo>();
+            var releases = new List<ReleaseInfo>();
             try
             {                
-                string releaseRssURL = Settings.Default.RRSReleaseFeed;
-                if( string.IsNullOrEmpty(releaseRssURL) ) releaseRssURL = @"http://sourceforge.net/export/rss2_projfiles.php?group_id=203058";
+                string releaseRssUrl = Settings.Default.RRSReleaseFeed;
+                if( string.IsNullOrEmpty(releaseRssUrl) ) releaseRssUrl = @"http://sourceforge.net/export/rss2_projfiles.php?group_id=203058";
 
                 // Get the feed as a doc
-                XPathDocument doc = new XPathDocument(releaseRssURL);
+                var doc = new XPathDocument(releaseRssUrl);
                 releases = getReleases(doc);
             }
             catch (Exception ex)

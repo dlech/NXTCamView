@@ -22,37 +22,43 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using NXTCamView.Commands;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
 using NXTCamView.Properties;
 
 namespace NXTCamView.StripCommands
 {
     public class UploadColorsStripCommand : StripCommand
     {
-        private ColorForm _form;
-        private ISerialProvider _serialProvider;
+        private readonly ColorForm _colorForm;
+        private readonly IColorTarget _colorTarget;
+        private readonly ICommsPort _commsPort;
 
-        public UploadColorsStripCommand(ColorForm form, ISerialProvider serialProvider)
+        public UploadColorsStripCommand(IAppState appState, ColorForm colorForm, IColorTarget colorTarget, ICommsPort commsPort)
+            : base(appState)
         {
-            _serialProvider = serialProvider;
-            _form = form;
+            _commsPort = commsPort;
+            _colorForm = colorForm;
+            _colorTarget = colorTarget;
         }
 
         public override bool CanExecute()
         {
-            return AppState.Inst.State == State.Connected && !_form.IsAnyOverlapped();
+            return _appState.State == State.Connected && 
+                !_colorForm.IsAnyOverlapped();
         }
 
         public override bool Execute()
         {
-            int red = 0;
-            int green = 16;
-            int blue = 32;
+            const int red = 0;
+            const int green = 16;
+            const int blue = 32;
             try
             {
-                int TOTAL_COLORS = ColorForm.TRACKED_COLORS - 1;
+                const int totalColors = ColorForm.TrackedColors - 1;
                 //prepare the color map
-                byte[] colorMap = new byte[3*16];
-                for( int objectNum = 0; objectNum < ColorForm.TRACKED_COLORS; objectNum++ )
+                var colorMap = new byte[3*16];
+                for( int objectNum = 0; objectNum < ColorForm.TrackedColors; objectNum++ )
                 {
                     Color minColor = Settings.Default.MinColors[objectNum];
                     Color maxColor = Settings.Default.MaxColors[objectNum];
@@ -61,38 +67,37 @@ namespace NXTCamView.StripCommands
                     {
                         //this is weird, but the gets us to the layout we need
                         //div by 17 to get it back to 0-15
-                        byte redMask =
-                            (byte)((offset >= minColor.R / 17 && offset <= maxColor.R / 17) ? (1 << (TOTAL_COLORS-objectNum)) : 0);
+                        var redMask =
+                            (byte)((offset >= minColor.R / 17 && offset <= maxColor.R / 17) ? (1 << (totalColors-objectNum)) : 0);
                         colorMap[red + offset] |= redMask;
 
-                        byte greenMask =
-                            (byte)((offset >= minColor.G / 17 && offset <= maxColor.G / 17) ? (1 << (TOTAL_COLORS - objectNum)) : 0);
+                        var greenMask =
+                            (byte)((offset >= minColor.G / 17 && offset <= maxColor.G / 17) ? (1 << (totalColors - objectNum)) : 0);
                         colorMap[green + offset] |= greenMask;
 
-                        byte blueMask =
-                            (byte)((offset >= minColor.B / 17 && offset <= maxColor.B / 17) ? (1 << (TOTAL_COLORS - objectNum)) : 0);
+                        var blueMask =
+                            (byte)((offset >= minColor.B / 17 && offset <= maxColor.B / 17) ? (1 << (totalColors - objectNum)) : 0);
                         colorMap[blue + offset] |= blueMask;
                     }
                 }
 
-                dumpColorMap( colorMap );
+                DumpColorMap( colorMap );
 
-                SetColorMapCommand cmd = new SetColorMapCommand( _serialProvider );
-                cmd.ColorMap = new List< byte >(colorMap);
+                var cmd = new SetColorMapCommand( _appState, _commsPort ) {ColorMap = new List<byte>(colorMap)};
                 cmd.Execute();
                 if( cmd.IsSuccessful )
                 {
                     Settings.Default.UploadedMinColors = (Color[]) Settings.Default.MinColors.Clone();
                     Settings.Default.UploadedMaxColors = (Color[]) Settings.Default.MaxColors.Clone();
                     Settings.Default.LastColorUpload = DateTime.Now;
-                    TrackingForm.Instance.SetupColors();
+                    _colorTarget.SetupColors();
 
-                    MessageBox.Show(_form, "Color upload was successful!", Application.ProductName,
+                    MessageBox.Show(_colorForm, "Color upload was successful!", Application.ProductName,
                                     MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
                 else
                 {
-                    MessageBox.Show(_form, cmd.ErrorDescription, Application.ProductName, MessageBoxButtons.OK,
+                    MessageBox.Show(_colorForm, cmd.ErrorDescription, Application.ProductName, MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                 }
             }
@@ -104,7 +109,7 @@ namespace NXTCamView.StripCommands
             return true;
         }
 
-        private static void dumpColorMap( byte[] colorMap )
+        private static void DumpColorMap( byte[] colorMap )
         {
             Debug.Write("colorMap: ");
             for( int i = 0; i < 16*3; i++ )

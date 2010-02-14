@@ -16,10 +16,19 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using NXTCamView.Forms;
+
 namespace NXTCamView.StripCommands
 {
     public class OpenColorStripCommand : StripCommand
     {
+        private readonly ColorForm _colorForm;
+
+        public OpenColorStripCommand(IAppState appState, ColorForm colorForm) : base(appState)
+        {
+            _colorForm = colorForm;
+        }
+
         public override bool CanExecute()
         {
             return true;
@@ -27,13 +36,13 @@ namespace NXTCamView.StripCommands
 
         public override bool Execute()
         {
-            ColorForm.Instance.SetVisibility(!HasExecuted());
+            _colorForm.SetVisibility(!HasExecuted());
             return true;
         }
 
         public override bool HasExecuted()
         {
-            return ColorForm.Instance.Visible;
+            return _colorForm.Visible;
         }
     }
 }

@@ -17,13 +17,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
+using NXTCamView.Comms;
 
 namespace NXTCamView.Commands
 {
     public class PingCommand : Command
     {
-        public PingCommand( ISerialProvider serialProvider )
-            : base("Search", serialProvider)
+        public PingCommand(IAppState appState, ICommsPort commsPort)
+            : base(appState, "Search", commsPort)
         {
         }
 

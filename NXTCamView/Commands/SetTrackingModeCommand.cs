@@ -17,6 +17,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
+using NXTCamView.Comms;
 using NXTCamView.Properties;
 
 namespace NXTCamView.Commands
@@ -29,8 +30,8 @@ namespace NXTCamView.Commands
 
     public class SetTrackingModeCommand : Command
     {
-        public SetTrackingModeCommand(ISerialProvider serialProvider, TrackingMode mode )
-            : base("Set Tracking Mode", serialProvider )
+        public SetTrackingModeCommand(IAppState appState, ICommsPort commsPort, TrackingMode mode )
+            : base( appState, "Set Tracking Mode", commsPort )
         {
             _mode = mode;
         }

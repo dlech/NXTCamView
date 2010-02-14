@@ -16,17 +16,22 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+#region using
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using NXTCamView.Comms;
+
+#endregion
 
 namespace NXTCamView.Commands
 {
-
     public class DumpFrameCommand : FetchFrameCommand
     {
-        public DumpFrameCommand(BackgroundWorker worker, ISerialProvider serialProvider)
-            : base("Capture", serialProvider, worker)
+        public DumpFrameCommand( IAppState appState, BackgroundWorker worker, ICommsPort commsPort )
+            : base( appState, "Capture", commsPort, worker )
         {
         }
 
@@ -41,30 +46,30 @@ namespace NXTCamView.Commands
             {
                 _request = "DF";
                 SendAndReceive();
-                if (_isLogging) Debug.WriteLine("Capture start:");
-                for (int count = 0; count < PACKETS_IN_DUMP; count++)
+                if ( _isLogging ) Debug.WriteLine( "Capture start:" );
+                for ( int count = 0; count < PacketsInDump; count++ )
                 {
-                    byte[] buffer = new byte[BYTES_PER_PACKET];
+                    var buffer = new byte[BytesPerPacket];
                     int totalRead = 0;
-                    while (totalRead < BYTES_PER_PACKET)
+                    while ( totalRead < BytesPerPacket )
                     {
-                        totalRead += _serialProvider.Read(buffer, totalRead, BYTES_PER_PACKET - totalRead);
+                        totalRead += _commsPort.Read( buffer, totalRead, BytesPerPacket - totalRead );
                     }
 
-                    if (_isLogging) Debug.WriteLine(string.Format("Pkt:{0} :{1}", count, DumpBytes(buffer)));
-                    LinePair linePair = getLinePair(buffer);
-                    _worker.ReportProgress(100 * count / PACKETS_IN_DUMP, linePair);
-                    if (_worker.CancellationPending)
+                    if ( _isLogging ) Debug.WriteLine( string.Format( "Pkt:{0} :{1}", count, DumpBytes( buffer ) ) );
+                    LinePair linePair = GetLinePair( buffer );
+                    Worker.ReportProgress( 100*count/PacketsInDump, linePair );
+                    if ( Worker.CancellationPending )
                     {
-                        setAborted();
+                        SetAborted();
                         return;
                     }
                 }
-                updateInterpolateImage();
+                UpdateInterpolateImage();
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                setError(ex);
+                setError( ex );
             }
             finally
             {

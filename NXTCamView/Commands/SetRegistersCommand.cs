@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NXTCamView.Comms;
 
 namespace NXTCamView.Commands
 {
@@ -27,8 +28,8 @@ namespace NXTCamView.Commands
         private Dictionary<byte, byte> _registers = new Dictionary<byte, byte>();
         public Dictionary<byte, byte> Register { get { return _registers; } set { _registers = value; } }
 
-        public SetRegistersCommand( ISerialProvider serialProvider )
-            : base( "Upload Settings",serialProvider )
+        public SetRegistersCommand(IAppState appState, ICommsPort commsPort)
+            : base( appState, "Upload Settings",commsPort )
         {            
         }
 

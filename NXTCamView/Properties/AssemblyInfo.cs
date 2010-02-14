@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NXTCamView")]
-[assembly: AssemblyCopyright("Copyright Paul Tingey  ©  2007")]
+[assembly: AssemblyCopyright("Copyright Paul Tingey  ©  2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

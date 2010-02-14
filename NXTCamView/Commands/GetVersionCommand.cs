@@ -16,9 +16,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+#region using
+
 using System;
-using NXTCamView;
-using NXTCamView.Commands;
+using NXTCamView.Comms;
+
+#endregion
 
 namespace NXTCamView.Commands
 {
@@ -26,10 +30,13 @@ namespace NXTCamView.Commands
     {
         private string _version = "";
 
-        public string Version { get { return _version; } }
+        public string Version
+        {
+            get { return _version; }
+        }
 
-        public GetVersionCommand(ISerialProvider serialProvider)
-            : base("Version", serialProvider)
+        public GetVersionCommand( IAppState appState, ICommsPort commsPort )
+            : base( appState, "Version", commsPort )
         {
         }
 
@@ -41,24 +48,24 @@ namespace NXTCamView.Commands
         {
             try
             {
-                SetState(State.ConnectedBusy);
+                SetState( State.ConnectedBusy );
                 _request = "GV";
                 SendAndReceive();
-                if (_isSuccessful)
+                if ( _isSuccessful )
                 {
-                    _version = _serialProvider.ReadLine();
+                    _version = _commsPort.ReadLine();
                 }
                 _isCompleted = true;
-                SetState(State.Connected);
+                SetState( State.Connected );
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                setError(ex);
+                setError( ex );
             }
             finally
             {
                 completeCommand();
-                SetState(_isSuccessful ? State.Connected : State.NotConnected);
+                SetState( _isSuccessful ? State.Connected : State.NotConnected );
             }
         }
     }

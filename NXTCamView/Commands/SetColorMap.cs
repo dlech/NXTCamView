@@ -19,13 +19,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NXTCamView.Comms;
 
 namespace NXTCamView.Commands
 {
     public class SetColorMapCommand : Command
     {
-        public SetColorMapCommand( ISerialProvider serialProvider )
-            : base("Set Colors", serialProvider )
+        public SetColorMapCommand(IAppState appState, ICommsPort commsPort)
+            : base(appState, "Set Colors", commsPort )
         {
         }
 

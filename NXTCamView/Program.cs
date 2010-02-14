@@ -18,6 +18,11 @@
 //
 using System;
 using System.Windows.Forms;
+using Ninject;
+using Ninject.Modules;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
+using NXTCamView.VersionUpdater;
 
 namespace NXTCamView
 {
@@ -31,7 +36,33 @@ namespace NXTCamView
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            var kernal = new StandardKernel( new NxtCamViewModule() );
+            var mainForm = kernal.Get<MainForm>();
+            Application.Run( mainForm );
+        }
+
+        private class NxtCamViewModule : Module
+        {
+            public override void Load()
+            {
+                Bind<ITracer>().To<Tracer>();
+                Bind<IAppState>().To<AppState>();
+                Bind<IUpdater>().To<Updater>();
+
+                Bind<ICommsPortFactory>().To<CommsPortFactory>().InSingletonScope();
+                Bind<IConfigCommsPort>().To<ConfigCommsPort>().InSingletonScope();
+                Bind<ICommsPort>().To<CommsPort>().InTransientScope();
+
+                Bind<ColorForm>().ToSelf();
+
+                //hackish to allow different interfaces to provide the same singleton
+                Bind<TrackingForm>().ToSelf();
+                Bind<ITrackingForm>().ToMethod( x => (ITrackingForm) x.Kernel.Get<TrackingForm>() );
+                Bind<IColorTarget>().ToMethod( x => (IColorTarget) x.Kernel.Get<TrackingForm>() );
+
+                Bind<MainForm>().ToSelf();
+            }
         }
     }
 }

@@ -16,19 +16,32 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using NXTCamView.Commands;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
+
 namespace NXTCamView.StripCommands
 {
     public class OpenOptionsStripCommand : StripCommand
     {
+        private readonly ICommsPort _commsPort;
+        private readonly ICommsPortFactory _commsPortFactory;
+
+        public OpenOptionsStripCommand(IAppState appState, ICommsPort commsPort, ICommsPortFactory commsPortFactory ) : base(appState)
+        {
+            _commsPort = commsPort;
+            _commsPortFactory = commsPortFactory;
+        }
+
         public override bool CanExecute()
         {
             //don't all options to be changed if tracking or serial comms are outstanding
-            return AppState.Inst.State == State.Connected || AppState.Inst.State == State.NotConnected;
+            return _appState.State == State.Connected || _appState.State == State.NotConnected;
         }
 
         public override bool Execute()
         {
-            OptionsForm form = new OptionsForm( SerialProvider.Instance );
+            var form = new OptionsForm( _appState, _commsPort, _commsPortFactory );
             form.ShowDialog();
             return true;
         }

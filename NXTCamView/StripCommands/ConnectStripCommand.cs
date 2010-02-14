@@ -18,9 +18,10 @@
 //
 using System;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Windows.Forms;
 using NXTCamView.Commands;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
 using NXTCamView.Properties;
 
 namespace NXTCamView.StripCommands
@@ -28,12 +29,16 @@ namespace NXTCamView.StripCommands
     public class ConnectStripCommand : StripCommand
     {
         private string _version;
-        private ISerialProvider _serialProvider;
+        private readonly ICommsPort _commsPort;
+        private readonly MainForm _mainForm;
+        private readonly ICommsPortFactory _commsPortFactory;
 
 
-        public ConnectStripCommand(ISerialProvider serialProvider)
+        public ConnectStripCommand(IAppState appState, ICommsPort commsPort, MainForm mainForm, ICommsPortFactory commsPortFactory ) : base(appState)
         {
-            _serialProvider = serialProvider;
+            _commsPort = commsPort;
+            _commsPortFactory = commsPortFactory;
+            _mainForm = mainForm;
         }
 
         public string GetVersion()
@@ -43,7 +48,7 @@ namespace NXTCamView.StripCommands
 
         public override bool CanExecute()
         {
-            return AppState.Inst.State == State.NotConnected;            
+            return _appState.State == State.NotConnected;            
         }
 
         public override bool Execute()
@@ -51,12 +56,12 @@ namespace NXTCamView.StripCommands
             bool isOk = false;
             try
             {                                
-                PingCommand pingCmd = new PingCommand( _serialProvider );
+                var pingCmd = new PingCommand( _appState, _commsPort );
                 pingCmd.Execute();
                 isOk = pingCmd.IsSuccessful;
                 if( isOk )
                 {
-                    GetVersionCommand versionCmd = new GetVersionCommand( _serialProvider );
+                    var versionCmd = new GetVersionCommand(_appState, _commsPort);
                     versionCmd.Execute();
                     isOk = versionCmd.IsSuccessful;
                     _version = isOk ? versionCmd.Version : "";
@@ -71,7 +76,7 @@ namespace NXTCamView.StripCommands
                 OnCompeted();
                 if( !isOk )
                 {
-                    if (MessageBox.Show(MainForm.Instance, 
+                    if (MessageBox.Show(_mainForm, 
                         string.Format("Connection failed on port {0}.  \nWould you like to change the settings?",Settings.Default.COMPort), 
                         Application.ProductName, 
                         MessageBoxButtons.YesNo,
@@ -79,7 +84,7 @@ namespace NXTCamView.StripCommands
                         MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         //show options
-                        OpenOptionsStripCommand cmd = new OpenOptionsStripCommand();
+                        var cmd = new OpenOptionsStripCommand(_appState,_commsPort, _commsPortFactory );
                         cmd.Execute();
                     }
                 }

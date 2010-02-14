@@ -16,53 +16,64 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+#region using
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading;
+using NXTCamView.Comms;
+
+#endregion
 
 namespace NXTCamView.Commands
 {
     public class TrackingCommand : Command
     {
-        private EventHandler< ObjectsDetectedEventArgs > _handler;
-        private List< TrackedColor > _trackedObjects;
+        private readonly EventHandler<ObjectsDetectedEventArgs> _handler;
+        private List<TrackedColor> _trackedObjects;
 
         //syncroot protects these
-        private object _syncRoot = new object( );
-        private bool _wasACKed = false;
+        private readonly object _syncRoot = new object();
+        private bool _wasAcked;
         private bool _needsResync;
-        public List< TrackedColor > TrackedObjects { get { return _trackedObjects; } }
 
-        public TrackingCommand( ISerialProvider serialProvider, EventHandler< ObjectsDetectedEventArgs > handler )
-            : base( "Tracking", serialProvider )
+        public List<TrackedColor> TrackedObjects
+        {
+            get { return _trackedObjects; }
+        }
+
+        public TrackingCommand( IAppState appState, ICommsPort commsPort,
+                                EventHandler<ObjectsDetectedEventArgs> handler )
+            : base( appState, "Tracking", commsPort )
         {
             _handler = handler;
         }
 
-        public override void Execute( )
+        public override void Execute()
         {
             try
             {
-                string junk = _serialProvider.ReadExisting();
-                if( junk != "" ) Debug.WriteLine( string.Format( "Discarded serial junk: {0}", junk ) );
+                string junk = _commsPort.ReadExisting();
+                if ( junk != "" ) Debug.WriteLine( string.Format( "Discarded serial junk: {0}", junk ) );
                 _request = "ET";
                 _isCompleted = false;
                 _isSuccessful = false;
 
-                if( _isLogging ) Debug.WriteLine( string.Format( "snd: {0}", _request ) );
-                lock( _syncRoot )
+                if ( _isLogging ) Debug.WriteLine( string.Format( "snd: {0}", _request ) );
+                lock ( _syncRoot )
                 {
-                    _wasACKed = false;
-                    _serialProvider.DataReceived += processReceive;
-                    _serialProvider.WriteLine(_request);
+                    _wasAcked = false;
+                    _commsPort.DataReceived += processReceive;
+                    _commsPort.WriteLine( _request );
                     //wait for indication of ACK or NACK
                     //this is needed as the object data may arrive before the ACK or NACK
-                    if( Monitor.Wait( _syncRoot, 2000 ) )
+                    if ( Monitor.Wait( _syncRoot, 2000 ) )
                     {
-                        if( !_wasACKed ) throw new ApplicationException( "NACKed" );
+                        if ( !_wasAcked ) throw new ApplicationException( "NACKed" );
                         _isSuccessful = true;
                     }
                     else
@@ -71,29 +82,29 @@ namespace NXTCamView.Commands
                     }
                 }
             }
-            catch( Exception ex )
+            catch ( Exception ex )
             {
                 setError( ex );
             }
             _isCompleted = true;
         }
 
-        public bool StopTracking( )
+        public bool StopTracking()
         {
-            bool isStopSuccessful = false;
+            const bool isStopSuccessful = false;
             try
             {
-                lock( _syncRoot )
+                lock ( _syncRoot )
                 {
-                    _wasACKed = false;
+                    _wasAcked = false;
                     _request = "DT";
-                    if( _isLogging ) Debug.WriteLine( string.Format( "snd: {0}", _request ) );
-                    _serialProvider.WriteLine(_request);
+                    if ( _isLogging ) Debug.WriteLine( string.Format( "snd: {0}", _request ) );
+                    _commsPort.WriteLine( _request );
                     //wait for indication of ACK or NACK
                     //this is needed as the object data may arrive before the ACK or NACK
-                    if( Monitor.Wait( _syncRoot, 2000 ) )
+                    if ( Monitor.Wait( _syncRoot, 2000 ) )
                     {
-                        if( !_wasACKed ) throw new ApplicationException( "NACKed" );
+                        if ( !_wasAcked ) throw new ApplicationException( "NACKed" );
                         _isSuccessful = true;
                     }
                     else
@@ -102,14 +113,14 @@ namespace NXTCamView.Commands
                     }
                 }
             }
-            catch( Exception ex )
+            catch ( Exception ex )
             {
                 setError( ex );
             }
             finally
-            {                
-                _serialProvider.DataReceived -= processReceive;
-                completeCommand( );
+            {
+                _commsPort.DataReceived -= processReceive;
+                completeCommand();
                 //Not true, but make it so for now as the responce form the cam seems to be bad
                 _isSuccessful = true;
             }
@@ -119,51 +130,51 @@ namespace NXTCamView.Commands
         private void processReceive( object sender, SerialDataReceivedEventArgs e )
         {
             try
-            {
-                processReceive( );
+            {                
+                processReceive();
             }
-            catch( Exception ex )
+            catch ( Exception ex )
             {
                 Console.WriteLine( "Unhandled error during receive. " + ex.Message );
             }
         }
 
-        private void processReceive( )
+        private void processReceive()
         {
-            const int OBJECT_DATA_SIZE = 5;
-            if (_serialProvider.BytesToRead == 0) return;
+            const int objectDataSize = 5;
+            if ( _commsPort.BytesToRead == 0 ) return;
 
             //clear out junk if necessary
-            if( _needsResync )
+            if ( _needsResync )
             {
                 int i = 0;
                 int data;
                 do
                 {
-                    data = _serialProvider.ReadByte();
+                    data = _commsPort.ReadByte();
                     i++;
-                } while( i < 250 && data != 0xFF );
+                } while ( i < 250 && data != 0xFF );
                 _needsResync = false;
             }
 
-            byte[] buffer = getData( _serialProvider, 2);
+            byte[] buffer = getData( _commsPort, 2 );
 
             //Check if we get anything other than a good packet start byte
-            if( buffer[ 0 ] != 0x0A )
+            if ( buffer[0] != 0x0A )
             {
-                lock( _syncRoot )
+                lock ( _syncRoot )
                 {
-                    if( buffer[ 0 ] == 'A' )
+                    if ( buffer[0] == 'A' )
                     {
                         //ack
-                        _wasACKed = true;
+                        _wasAcked = true;
                         Monitor.Pulse( _syncRoot );
                         Debug.WriteLine( "rcv: ACK" );
                     }
-                    else if( buffer[ 0 ] == 'N' )
+                    else if ( buffer[0] == 'N' )
                     {
                         //nack
-                        _wasACKed = false;
+                        _wasAcked = false;
                         Monitor.Pulse( _syncRoot );
                         Debug.WriteLine( "rcv: NACK" );
                     }
@@ -173,43 +184,43 @@ namespace NXTCamView.Commands
                     }
                 }
                 //clear away the rest of the ACK or NACK
-                _serialProvider.ReadLine( );
+                _commsPort.ReadLine();
                 return;
             }
 
-            int objectCount = buffer[ 1 ];
-            if( objectCount < 0 || objectCount > 8 )
+            int objectCount = buffer[1];
+            if ( objectCount < 0 || objectCount > 8 )
                 throw new ApplicationException( string.Format( "Bad object count: {0}", objectCount ) );
 
-            buffer = getData( _serialProvider, objectCount * OBJECT_DATA_SIZE + 1 );
+            buffer = getData( _commsPort, objectCount*objectDataSize + 1 );
 
-            _trackedObjects = new List< TrackedColor >( objectCount );
+            _trackedObjects = new List<TrackedColor>( objectCount );
             int index = 0;
-            for( int count = 0; count < objectCount; count++ )
+            for ( int count = 0; count < objectCount; count++ )
             {
                 _trackedObjects.Add( new TrackedColor( buffer, index, count ) );
-                index += OBJECT_DATA_SIZE;
+                index += objectDataSize;
             }
 
-            if( buffer[ index ] != 0xFF )
+            if ( buffer[index] != 0xFF )
             {
                 Debug.WriteLine( "Bad byte end detected during tracking - resyncing" );
                 _needsResync = true;
             }
 
             //notify any interested
-            if( _handler != null )
+            if ( _handler != null )
             {
                 _handler( this, new ObjectsDetectedEventArgs( _trackedObjects ) );
             }
         }
 
-        private byte[] getData( ISerialProvider serialProvider, int remaining )
+        private byte[] getData( ICommsPort commsPort, int remaining )
         {
-            byte[] buffer = new byte[remaining];
-            while( remaining > 0 )
+            var buffer = new byte[remaining];
+            while ( remaining > 0 )
             {
-                remaining -= serialProvider.Read(buffer, buffer.Length - remaining, remaining);
+                remaining -= commsPort.Read( buffer, buffer.Length - remaining, remaining );
             }
             return buffer;
         }
@@ -217,9 +228,9 @@ namespace NXTCamView.Commands
 
     public class ObjectsDetectedEventArgs : EventArgs
     {
-        public readonly List< TrackedColor > TrackedColors;
+        public readonly List<TrackedColor> TrackedColors;
 
-        public ObjectsDetectedEventArgs( List< TrackedColor > trackedObjects )
+        public ObjectsDetectedEventArgs( List<TrackedColor> trackedObjects )
         {
             TrackedColors = trackedObjects;
         }
@@ -227,26 +238,38 @@ namespace NXTCamView.Commands
 
     public struct TrackedColor
     {
-        private int _id;
-        private int _colorIndex;
+        private readonly int _id;
+        private readonly int _colorIndex;
         private Rectangle _bounds;
 
-        public int Id { get { return _id; } }
-        public int ColorIndex { get { return _colorIndex; } }
-        public Rectangle Bounds { get { return _bounds; } }
+        public int Id
+        {
+            get { return _id; }
+        }
+
+        public int ColorIndex
+        {
+            get { return _colorIndex; }
+        }
+
+        public Rectangle Bounds
+        {
+            get { return _bounds; }
+        }
 
         public TrackedColor( byte[] buffer, int index, int id )
         {
             _id = id;
-            _colorIndex = buffer[ index ];
+            _colorIndex = buffer[index];
             _bounds =
-                Rectangle.FromLTRB( buffer[ index + 1 ], buffer[ index + 2 ], buffer[ index + 3 ], buffer[ index + 4 ] );
+                Rectangle.FromLTRB( buffer[index + 1], buffer[index + 2], buffer[index + 3], buffer[index + 4] );
         }
 
-        public override string ToString( )
+        public override string ToString()
         {
             return
-                string.Format( "Object:{0} Color:{1} Rect[{2},{3},{4},{5}]", _id, (_colorIndex+1), _bounds.Left, _bounds.Top,
+                string.Format( "Object:{0} Color:{1} Rect[{2},{3},{4},{5}]", _id, ( _colorIndex + 1 ), _bounds.Left,
+                               _bounds.Top,
                                _bounds.Right,
                                _bounds.Bottom );
         }

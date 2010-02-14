@@ -16,63 +16,80 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+
+#region using
+
+using System;
 using System.Threading;
 using System.Windows.Forms;
 using NXTCamView.Commands;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
+
+#endregion
 
 namespace NXTCamView.StripCommands
 {
     public class DisconnectStripCommand : StripCommand
     {
-        private ISerialProvider _serialProvider;
+        private readonly MainForm _mainForm;
+        private readonly ICommsPort _commsPort;
 
-        public DisconnectStripCommand( ISerialProvider serialProvider )
+        public DisconnectStripCommand( IAppState appState, MainForm mainForm, ICommsPort commsPort )
+            : base( appState )
         {
-            _serialProvider = serialProvider;
+            _mainForm = mainForm;
+            _commsPort = commsPort;
         }
 
         public override bool CanExecute()
         {
-            return AppState.Inst.State != State.NotConnected;
+            return _appState.State != State.NotConnected;
         }
 
         public override bool Execute()
         {
             bool wasBusy = false;
-            foreach( Form form in MainForm.Instance.MdiChildren )
+            foreach ( Form form in _mainForm.MdiChildren )
             {
-                ITaskRunner taskRunner = form as ITaskRunner;
-                if( taskRunner != null )
+                var taskRunner = form as ITaskRunner;
+                if ( taskRunner != null )
                 {
                     //if we're someone is busy (like capturing) we will ask them to abort,
                     //then disconnect once the abort is complete
-                    if (taskRunner.IsBusy())
+                    if ( taskRunner.IsBusy() )
                     {
-                        taskRunner.AbortCompleted += delegate { disconnect( ); };
-                        taskRunner.Abort( );
+                        taskRunner.AbortCompleted += disconnect;
+                        taskRunner.Abort();
                         wasBusy = true;
                     }
                 }
             }
             //if nothing was busy, then we can just "disconnect" now
-            if( !wasBusy )
+            if ( !wasBusy )
             {
-                disconnect( );
+                disconnect();
             }
             return true;
         }
 
-        private void disconnect( )
+        private void disconnect( object sender, EventArgs e )
+        {
+            disconnect();
+        }
+
+        private void disconnect()
         {
             //this is not so pretty, but we want to clear away any junk
             //that would cause a connect to fail later
             do
             {
-                _serialProvider.ReadExisting( );
+                _commsPort.ReadExisting();
                 Thread.Sleep( 100 );
-            } while( _serialProvider.BytesToRead > 0 );
+            } while ( _commsPort.BytesToRead > 0 );
 
-            AppState.Inst.State = State.NotConnected;
+            _appState.State = State.NotConnected;
+            _commsPort.EnsureClosed();
             OnCompeted();
         }
 

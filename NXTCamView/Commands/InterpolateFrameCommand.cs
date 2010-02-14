@@ -20,15 +20,16 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using NXTCamView.Commands;
+using NXTCamView.Comms;
 
 namespace NXTCamView.Commands
 {
     public class InterpolateFrameCommand : FetchFrameCommand
     {
-        public InterpolateFrameCommand(BackgroundWorker worker, ISerialProvider serialProvider, Image image)
-            : base("Interpolate", serialProvider, worker)
+        public InterpolateFrameCommand(IAppState appState, BackgroundWorker worker, ICommsPort commsPort, Image image)
+            : base(appState, "Interpolate", commsPort, worker)
         {
-            _bmBayer = (Bitmap)image;
+            BmBayer = (Bitmap)image;
         }
 
         public override void Execute()
@@ -40,7 +41,7 @@ namespace NXTCamView.Commands
 
             try
             {
-                updateInterpolateImage();
+                UpdateInterpolateImage();
                 _isSuccessful = true;
             }
             catch (Exception ex)

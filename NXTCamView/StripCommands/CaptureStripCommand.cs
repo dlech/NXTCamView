@@ -16,21 +16,34 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using NXTCamView.Commands;
+using NXTCamView.Comms;
+using NXTCamView.Forms;
+
 namespace NXTCamView.StripCommands
 {
     public class CaptureStripCommand : StripCommand
     {
+        private readonly MainForm _mainForm;
+        private readonly ColorForm _colorForm;
+        private readonly ICommsPort _commsPort;
+
+        public CaptureStripCommand( IAppState appState, MainForm mainForm, ColorForm colorForm, ICommsPort commsPort) : base(appState)
+        {
+            _mainForm = mainForm;
+            _colorForm = colorForm;
+            _commsPort = commsPort;
+        }
+
         public override bool CanExecute()
         {
-            return AppState.Inst.State == State.Connected;
+            return _appState.State == State.Connected;
         }
 
         public override bool Execute()
         {
-            setState(State.ConnectedBusy);
-            CaptureForm form = new CaptureForm( SerialProvider.Instance );
-            form.MdiParent = MainForm.Instance;
-            form.Visible = true;
+            SetState(State.ConnectedBusy);
+            var form = new CaptureForm( _appState, _colorForm, _commsPort ) {MdiParent = _mainForm, Visible = true};
             form.StartCapture();
             return true;
         }

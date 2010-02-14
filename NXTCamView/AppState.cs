@@ -28,11 +28,15 @@ namespace NXTCamView
         ConnectedTracking
     }
 
-    public class AppState
+    public interface IAppState
+    {
+        event EventHandler<EventArgs> StateChanged;
+        State State { get; set; }
+    }
+
+    public class AppState : IAppState
     {
         public event EventHandler<EventArgs> StateChanged;
-
-        static public readonly AppState Inst = new AppState();
         private State _state;
 
         public State State

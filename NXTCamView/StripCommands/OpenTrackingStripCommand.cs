@@ -16,10 +16,19 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using NXTCamView.Forms;
+
 namespace NXTCamView.StripCommands
 {
     public class OpenTrackingStripCommand : StripCommand
     {
+        private readonly ITrackingForm _trackingForm;
+
+        public OpenTrackingStripCommand( IAppState appState, ITrackingForm trackingForm ) : base( appState )
+        {
+            _trackingForm = trackingForm;
+        }
+
         public override bool CanExecute()
         {
             return true;
@@ -27,13 +36,13 @@ namespace NXTCamView.StripCommands
 
         public override bool Execute()
         {
-            TrackingForm.Instance.SetVisibility(!HasExecuted());
+            _trackingForm.SetVisibility( !HasExecuted() );
             return true;
         }
 
         public override bool HasExecuted()
         {
-            return TrackingForm.Instance.Visible;
+            return _trackingForm.IsVisible;
         }
     }
 }

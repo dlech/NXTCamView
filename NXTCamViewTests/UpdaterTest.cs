@@ -51,6 +51,7 @@ namespace NXTCamViewTests
         #endregion
 
         private XPathDocument _sampleDoc;
+        private readonly Updater _updater = new Updater();
 
         [TestInitialize()]
         public void TestInitialize()
@@ -64,7 +65,7 @@ namespace NXTCamViewTests
         [TestMethod]
         public void ParsingReleaseInfo()
         {
-            List<ReleaseInfo> releases = Updater.Instance.GetReleasesTest(_sampleDoc);
+            List<ReleaseInfo> releases = _updater.GetReleasesTest(_sampleDoc);
             Assert.IsTrue(releases.Count == 3);
             Assert.IsTrue(releases[0].ReleaseDate.Date.Equals(new DateTime(2007, 8, 12)));
             Assert.IsTrue(releases[0].Version.ToString() == "2.0.0");
@@ -73,7 +74,7 @@ namespace NXTCamViewTests
         [TestMethod]
         public void SortingReleaseInfo()
         {
-            List<ReleaseInfo> releases = Updater.Instance.GetReleasesTest(_sampleDoc);
+            List<ReleaseInfo> releases = _updater.GetReleasesTest(_sampleDoc);
             Assert.IsTrue(releases.Count == 3);
             Assert.IsTrue(releases[0].ReleaseDate.Date.Equals(new DateTime(2007, 8, 12)));
             Assert.IsTrue(releases[0].Version.ToString() == "2.0.0");
