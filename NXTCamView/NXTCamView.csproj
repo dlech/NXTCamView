@@ -248,7 +248,6 @@
     <None Include="camera.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="COPYING.txt" />
     <None Include="COPYING.RTF">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
