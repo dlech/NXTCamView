@@ -19,8 +19,9 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using NXTCamView.Commands;
-using NXTCamView.Comms;
+using NXTCamView.Core;
+using NXTCamView.Core.Commands;
+using NXTCamView.Core.Comms;
 using NXTCamView.Forms;
 using NXTCamView.Properties;
 

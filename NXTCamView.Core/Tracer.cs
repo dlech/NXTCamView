@@ -19,7 +19,7 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace NXTCamView
+namespace NXTCamView.Core
 {
     public interface ITracer
     {
@@ -29,7 +29,7 @@ namespace NXTCamView
         void TraceReadLine( string line );
     }
 
-    internal class Tracer : ITracer
+    public class Tracer : ITracer
     {
         public void TraceWriteLine( string line )
         {

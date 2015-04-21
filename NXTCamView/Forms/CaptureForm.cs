@@ -22,8 +22,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using NXTCamView.Commands;
-using NXTCamView.Comms;
+using NXTCamView.Core;
+using NXTCamView.Core.Commands;
+using NXTCamView.Core.Comms;
 using NXTCamView.Controls;
 using NXTCamView.Resources;
 

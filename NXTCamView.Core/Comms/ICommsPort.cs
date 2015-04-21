@@ -18,7 +18,7 @@
 //
 using System.IO.Ports;
 
-namespace NXTCamView.Comms
+namespace NXTCamView.Core.Comms
 {
     public interface IConfigCommsPort : ICommsPort
     {

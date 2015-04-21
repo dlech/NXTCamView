@@ -22,9 +22,11 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
 
+using NXTCamView.Core;
+
 namespace NXTCamView.Properties 
 {
-    internal sealed partial class Settings 
+    internal sealed partial class Settings : ISettings
     {
         private void forceRead()
         {

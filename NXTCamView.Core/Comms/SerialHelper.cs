@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 //.NET - Diving into System Programming - Part 2
 
-namespace NXTCamView.Comms
+namespace NXTCamView.Core.Comms
 {
     class DeviceInfo
     {

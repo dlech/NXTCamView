@@ -20,11 +20,11 @@
 #region using
 
 using System;
-using NXTCamView.Comms;
+using NXTCamView.Core.Comms;
 
 #endregion
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
     public class GetVersionCommand : Command
     {

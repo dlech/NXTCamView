@@ -19,9 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NXTCamView.Comms;
+using NXTCamView.Core.Comms;
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
     public class SetRegistersCommand : Command
     {

@@ -1,4 +1,4 @@
-﻿//
+//
 //    Copyright 2007 Paul Tingey
 //
 //    This file is part of NXTCamView.
@@ -16,29 +16,43 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-using Ninject;
-using Ninject.Parameters;
+using System;
 
-namespace NXTCamView.Comms
+namespace NXTCamView.Core
 {
-    public interface ICommsPortFactory
+    public enum State
     {
-        ICommsPort Create( CommsPortSettings settings );
+        NotConnected,
+        Connected,
+        ConnectedBusy,
+        ConnectedTracking
     }
 
-    public class CommsPortFactory : ICommsPortFactory
+    public interface IAppState
     {
-        private readonly IKernel _kernel;
+        event EventHandler<EventArgs> StateChanged;
+        State State { get; set; }
+    }
 
-        public CommsPortFactory( IKernel kernel )
-        {
-            _kernel = kernel;
-        }
+    public class AppState : IAppState
+    {
+        public event EventHandler<EventArgs> StateChanged;
+        private State _state;
 
-        public ICommsPort Create( CommsPortSettings settings )
+        public State State
         {
-            var port = _kernel.Get<ICommsPort>( new ConstructorArgument( "settings", settings ) );
-            return port;
+            get
+            {
+                return _state;
+            }
+            set
+            {
+                _state = value;
+                if( StateChanged != null )
+                {
+                    StateChanged(this, new EventArgs());
+                }
+            }
         }
     }
 }

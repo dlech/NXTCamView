@@ -22,11 +22,11 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using NXTCamView.Comms;
+using NXTCamView.Core.Comms;
 
 #endregion
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
     public class DumpFrameCommand : FetchFrameCommand
     {

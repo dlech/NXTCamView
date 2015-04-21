@@ -17,10 +17,10 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
-using NXTCamView.Comms;
-using NXTCamView.Properties;
+using NXTCamView.Core;
+using NXTCamView.Core.Comms;
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
     public enum TrackingMode
     {
@@ -59,12 +59,12 @@ namespace NXTCamView.Commands
             }
         }
 
-        internal static void SetModeInConfig( Settings settings, TrackingMode mode )
+        public static void SetModeInConfig(ISettings settings, TrackingMode mode)
         {
             settings.TrackingMode = mode.ToString();
         }
 
-        internal static TrackingMode GetModeFromConfig( Settings settings )
+        public static TrackingMode GetModeFromConfig(ISettings settings)
         {
             try
             {

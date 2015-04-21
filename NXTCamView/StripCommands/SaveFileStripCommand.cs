@@ -17,8 +17,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System.Windows.Forms;
-using NXTCamView.Commands;
-using NXTCamView.Comms;
+using NXTCamView.Core;
+using NXTCamView.Core.Comms;
 using NXTCamView.Forms;
 
 namespace NXTCamView.StripCommands

@@ -22,8 +22,8 @@
 using System;
 using System.Threading;
 using System.Windows.Forms;
-using NXTCamView.Commands;
-using NXTCamView.Comms;
+using NXTCamView.Core;
+using NXTCamView.Core.Comms;
 using NXTCamView.Forms;
 
 #endregion

@@ -25,11 +25,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading;
-using NXTCamView.Comms;
+using NXTCamView.Core.Comms;
 
 #endregion
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
     public class TrackingCommand : Command
     {

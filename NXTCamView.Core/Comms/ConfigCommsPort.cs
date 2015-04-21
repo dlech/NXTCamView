@@ -19,22 +19,20 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using NXTCamView.Properties;
+using NXTCamView.Core;
 
-namespace NXTCamView.Comms
+namespace NXTCamView.Core.Comms
 {
     public class ConfigCommsPort : CommsPort, IConfigCommsPort
     {
-        public ConfigCommsPort( ITracer tracer ) : base( GetSettingsFromConfig(), tracer )
+        public ConfigCommsPort (ITracer tracer, ISettings settings) : base (GetSettingsFromConfig(settings), tracer)
         {
-            Properties.Settings.Default.PropertyChanged += settingsPropertyChanged;
+            settings.PropertyChanged += settingsPropertyChanged;
         }
 
-        private void settingsPropertyChanged( object sender, PropertyChangedEventArgs e )
+        void settingsPropertyChanged (object sender, PropertyChangedEventArgs e)
         {
-            var settings = (Settings) sender;
-            if ( settings != Properties.Settings.Default )
-                throw new ApplicationException( "Only allow changing of Settings.Default" );
+            var settings = (ISettings)sender;
 
             try
             {
@@ -46,7 +44,7 @@ namespace NXTCamView.Comms
                     case "Handshake":
                     case "DataBits":
                     case "StopBits":
-                        Settings = GetSettingsFromConfig();
+                        Settings = GetSettingsFromConfig(settings);
                         //only open if we were already open
                         if( SerialPort != null && 
                             SerialPort.IsOpen )
@@ -63,9 +61,8 @@ namespace NXTCamView.Comms
             }
         }
 
-        private static CommsPortSettings GetSettingsFromConfig()
+        static CommsPortSettings GetSettingsFromConfig (ISettings settings)
         {
-            Settings settings = Properties.Settings.Default;
             return new CommsPortSettings( settings.COMPort, settings.BaudRate, settings.Parity, settings.DataBits,
                                           settings.StopBits, settings.Handshake );
         }

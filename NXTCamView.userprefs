@@ -1,0 +1,33 @@
+﻿<Properties StartupItem="NXTCamView/NXTCamView.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 3.2.8 (Debian)" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="NXTCamView.Core/Commands/TrackingCommand.cs">
+    <Files>
+      <File FileName="NXTCamView/Forms/CaptureForm.cs" Line="24" Column="28" />
+      <File FileName="NXTCamView/ITaskRunner.cs" Line="21" Column="21" />
+      <File FileName="NXTCamView.Core/Commands/FetchFrameCommand.cs" Line="152" Column="19" />
+      <File FileName="NXTCamView.Core/Commands/SetTrackingModeCommand.cs" Line="71" Column="99" />
+      <File FileName="NXTCamView.Core/Comms/CommsPortFactory.cs" Line="19" Column="7" />
+      <File FileName="NXTCamViewCore/MyClass.cs" Line="21" Column="16" />
+      <File FileName="NXTCamView.Core/Commands/TrackingCommand.cs" Line="26" Column="17" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="NXTCamView" expanded="True">
+            <Node name="NXTCamView" expanded="True">
+              <Node name="References" expanded="True" />
+            </Node>
+            <Node name="NXTCamView.Core" expanded="True" selected="True">
+              <Node name="Commands" expanded="True" />
+            </Node>
+            <Node name="NXTCamViewCore" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

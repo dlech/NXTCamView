@@ -17,32 +17,24 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
-using System.ComponentModel;
-using System.Drawing;
-using NXTCamView.Commands;
-using NXTCamView.Comms;
+using NXTCamView.Core.Comms;
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
-    public class InterpolateFrameCommand : FetchFrameCommand
+    public class PingCommand : Command
     {
-        public InterpolateFrameCommand(IAppState appState, BackgroundWorker worker, ICommsPort commsPort, Image image)
-            : base(appState, "Interpolate", commsPort, worker)
+        public PingCommand(IAppState appState, ICommsPort commsPort)
+            : base(appState, "Search", commsPort)
         {
-            BmBayer = (Bitmap)image;
         }
 
         public override void Execute()
         {
-            ////DEBUG
-            //_isSuccessful = true;
-            //_isCompleted = true;
-            //return;
-
             try
             {
-                UpdateInterpolateImage();
-                _isSuccessful = true;
+                _request = "PG";
+                SendAndReceive();
+                _isCompleted = true;
             }
             catch (Exception ex)
             {

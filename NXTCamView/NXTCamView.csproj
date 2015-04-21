@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3B21513D-9D72-4301-B835-DD246194A9AE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -32,6 +32,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <StartupObject>NXTCamView.Program</StartupObject>
+    <ReleaseVersion>2.99</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,7 +55,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugInstall|AnyCPU' ">
     <OutputPath>bin\DebugInstall\</OutputPath>
+    <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseInstall|AnyCPU' ">
     <OutputPath>bin\ReleaseInstall\</OutputPath>
@@ -65,41 +68,25 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject">
-      <HintPath>..\tools\ninject\Ninject.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.Mono.3.0.1.13\lib\net40\Ninject.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\build\AssemblyInfoCommon.cs">
       <Link>AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="AppState.cs" />
     <Compile Include="ColorUtils.cs" />
-    <Compile Include="Commands\SetTrackingModeCommand.cs" />
-    <Compile Include="Commands\FetchFrameCommand.cs" />
-    <Compile Include="Commands\InterpolateFrameCommand.cs" />
-    <Compile Include="Comms\CommsPort.cs" />
-    <Compile Include="Comms\CommsPortFactory.cs" />
-    <Compile Include="Comms\CommsPortSettings.cs" />
-    <Compile Include="Comms\ConfigCommsPort.cs" />
-    <Compile Include="Comms\ICommsPort.cs" />
-    <Compile Include="Commands\SetColorMap.cs" />
-    <Compile Include="Commands\SetRegistersCommand.cs" />
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\DumpFrameCommand.cs" />
-    <Compile Include="Commands\TrackingCommand.cs" />
-    <Compile Include="Commands\GetVersionCommand.cs" />
-    <Compile Include="Commands\PingCommand.cs" />
-    <Compile Include="Comms\SerialHelper.cs" />
     <Compile Include="Controls\CommandButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -214,20 +201,20 @@
     </Compile>
     <Compile Include="Resources\AppCursors.cs" />
     <Compile Include="Resources\AppImages.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="StripCommands\ConnectStripCommand.cs" />
-    <Compile Include="StripCommands\CaptureStripCommand.cs" />
-    <Compile Include="StripCommands\UploadColorsStripCommand.cs" />
-    <Compile Include="StripCommands\SaveFileStripCommand.cs" />
-    <Compile Include="StripCommands\OpenFileStripCommand.cs" />
-    <Compile Include="StripCommands\OpenTrackingStripCommand.cs" />
-    <Compile Include="StripCommands\OpenColorStripCommand.cs" />
-    <Compile Include="StripCommands\OpenOptionsStripCommand.cs" />
-    <Compile Include="StripCommands\DisconnectStripCommand.cs" />
-    <Compile Include="Tracer.cs" />
-    <Compile Include="StripCommands\StripCommand.cs" />
     <Compile Include="VersionUpdater\ReleaseInfo.cs" />
     <Compile Include="VersionUpdater\Updater.cs" />
+    <Compile Include="StripCommands\CaptureStripCommand.cs" />
+    <Compile Include="StripCommands\ConnectStripCommand.cs" />
+    <Compile Include="StripCommands\DisconnectStripCommand.cs" />
+    <Compile Include="StripCommands\OpenColorStripCommand.cs" />
+    <Compile Include="StripCommands\OpenFileStripCommand.cs" />
+    <Compile Include="StripCommands\OpenOptionsStripCommand.cs" />
+    <Compile Include="StripCommands\OpenTrackingStripCommand.cs" />
+    <Compile Include="StripCommands\SaveFileStripCommand.cs" />
+    <Compile Include="StripCommands\StripCommand.cs" />
+    <Compile Include="StripCommands\UploadColorsStripCommand.cs" />
+    <Compile Include="Settings.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\search.ico" />
@@ -324,4 +311,10 @@
   -->
   <Target Name="AfterBuild">
   </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\NXTCamView.Core\NXTCamView.Core.csproj">
+      <Project>{BA681407-63F9-4A36-B57F-F89C526C8373}</Project>
+      <Name>NXTCamView.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

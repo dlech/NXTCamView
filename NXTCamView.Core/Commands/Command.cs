@@ -18,9 +18,9 @@
 //
 using System;
 using System.Diagnostics;
-using NXTCamView.Comms;
+using NXTCamView.Core.Comms;
 
-namespace NXTCamView.Commands
+namespace NXTCamView.Core.Commands
 {
     public abstract class Command
     {
