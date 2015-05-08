@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<metadata>
+    <attr path="/api/namespace" name="name">GLib</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']" name="parent">GObject</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='GetStrv']/return-type" name="null_term_array">1</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='GetStrv']/return-type" name="owned">true</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='ListChildren']/return-type" name="null_term_array">1</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='ListChildren']/return-type" name="owned">true</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='ListKeys']/return-type" name="null_term_array">1</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='ListKeys']/return-type" name="owned">true</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='ListRelocatableSchemas']/return-type" name="null_term_array">1</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='ListSchemas']/return-type" name="null_term_array">1</attr>
+    <attr path="/api/namespace/object[@cname='GSettings']/method[@name='SetStrv']/*/*[@name='value']" name="null_term_array">1</attr>
+</metadata>

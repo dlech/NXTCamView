@@ -1,0 +1,69 @@
+<schemalist>
+
+  <enum id="org.ev3dev.NxtCamView.Parity">
+    <value nick="Even" value="0"/>
+    <value nick="Mark" value="1"/>
+    <value nick="None" value="2"/>
+    <value nick="Odd" value="3"/>
+    <value nick="Space" value="4"/>
+  </enum>
+
+  <enum id="org.ev3dev.NxtCamView.StopBits">
+    <value nick="None" value="0"/>
+    <value nick="One" value="1"/>
+    <value nick="OnePointFive" value="2"/>
+    <value nick="Two" value="3"/>
+  </enum>
+
+  <enum id="org.ev3dev.NxtCamView.Handshake">
+    <value nick="None" value="0"/>
+    <value nick="RTS" value="1"/>
+    <value nick="RTS+Xon/Xoff" value="2"/>
+    <value nick="Xon/Xoff" value="3"/>
+  </enum>
+
+  <schema id="org.ev3dev.NxtCamView" path="/org/ev3dev/NxtCamView/" gettext-domain="nxtcamview">
+
+    <key name="tracking-mode" type="s">
+      <default>"Hello, earthlings"</default>
+      <summary>A greeting</summary>
+      <description>
+        Greeting of the invading martians
+      </description>
+    </key>
+
+    <key name="serial-port" type="s">
+      <default>"/dev/ttyUSB0"</default>
+      <summary>Serial port</summary>
+      <description>
+        The USB serial port the NxtCam is connected to.
+      </description>
+    </key>
+
+    <key name="baud-rate" type="i">
+      <default>115200</default>
+      <summary>Baud rate</summary>
+    </key>
+
+    <key name="parity" enum="org.ev3dev.NxtCamView.Parity">
+      <default>"None"</default>
+      <summary>Parity</summary>
+    </key>
+
+    <key name="data-bits" type="i">
+      <default>8</default>
+      <summary>Data bits</summary>
+    </key>
+
+    <key name="stop-bits" enum="org.ev3dev.NxtCamView.StopBits">
+      <default>"One"</default>
+      <summary>Stop bits</summary>
+    </key>
+
+    <key name="handshake" enum="org.ev3dev.NxtCamView.Handshake">
+      <default>"None"</default>
+      <summary>Handshake</summary>
+    </key>
+
+  </schema>
+</schemalist>

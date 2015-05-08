@@ -203,6 +203,8 @@
     <Compile Include="Resources\AppImages.cs" />
     <Compile Include="VersionUpdater\ReleaseInfo.cs" />
     <Compile Include="VersionUpdater\Updater.cs" />
+    <Compile Include="Settings.cs" />
+    <None Include="packages.config" />
     <Compile Include="StripCommands\CaptureStripCommand.cs" />
     <Compile Include="StripCommands\ConnectStripCommand.cs" />
     <Compile Include="StripCommands\DisconnectStripCommand.cs" />
@@ -213,8 +215,6 @@
     <Compile Include="StripCommands\SaveFileStripCommand.cs" />
     <Compile Include="StripCommands\StripCommand.cs" />
     <Compile Include="StripCommands\UploadColorsStripCommand.cs" />
-    <Compile Include="Settings.cs" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\search.ico" />

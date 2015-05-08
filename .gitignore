@@ -29,5 +29,8 @@ _ReSharper*/
 # nuget
 packages/
 
+# MonoDevelop
+*.userprefs
+
 *.orig
 *~

@@ -1,0 +1,6 @@
+# Generated files
+gsettings.h
+gsettings.raw
+gsettings.xml
+generated/
+glib-2.0/

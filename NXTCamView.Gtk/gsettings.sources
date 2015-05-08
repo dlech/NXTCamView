@@ -1,0 +1,10 @@
+ <gapi-parser-input>
+  <api filename="gsettings.raw">
+    <library name="libgio-2.0.dll">
+      <namespace name="G">
+        <file>gsettings.h</file>
+      </namespace>
+    </library>
+  </api>
+ </gapi-parser-input>
+
