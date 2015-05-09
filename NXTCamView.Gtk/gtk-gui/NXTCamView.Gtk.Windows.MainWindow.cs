@@ -79,7 +79,7 @@ namespace NXTCamView.Gtk.Windows
 			this.CheckAction = new global::Gtk.Action ("CheckAction", global::Mono.Unix.Catalog.GetString ("Check "), null, null);
 			this.CheckAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Check ");
 			w1.Add (this.CheckAction, null);
-			this.CaptureAction = new global::Gtk.Action ("CaptureAction", global::Mono.Unix.Catalog.GetString ("Capture"), null, "camera-video");
+			this.CaptureAction = new global::Gtk.Action ("CaptureAction", global::Mono.Unix.Catalog.GetString ("Capture"), null, null);
 			this.CaptureAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Capture");
 			w1.Add (this.CaptureAction, null);
 			this.openAction = new global::Gtk.Action ("openAction", null, null, "gtk-open");
@@ -160,6 +160,7 @@ namespace NXTCamView.Gtk.Windows
 			this.DefaultHeight = 300;
 			this.Show ();
 			this.aboutAction.Activated += new global::System.EventHandler (this.OnAboutActionActivated);
+			this.CaptureAction.Activated += new global::System.EventHandler (this.OnCaptureActionActivated);
 			this.quitAction.Activated += new global::System.EventHandler (this.OnQuitActionActivated);
 			this.connectAction.Activated += new global::System.EventHandler (this.OnConnectActionActivated);
 			this.disconnectAction.Activated += new global::System.EventHandler (this.OnDisconnectActionActivated);

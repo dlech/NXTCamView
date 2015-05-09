@@ -51,7 +51,7 @@
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Capture</property>
         <property name="ShortLabel" translatable="yes">Capture</property>
-        <property name="StockId">camera-video</property>
+        <signal name="Activated" handler="OnCaptureActionActivated" />
       </action>
       <action id="openAction">
         <property name="Type">Action</property>
@@ -590,6 +590,111 @@
             <property name="Expand">False</property>
             <property name="Fill">False</property>
           </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="Gtk.Window" id="NXTCamView.Gtk.Windows.CaptureWindow" design-size="400 411">
+    <property name="MemberName" />
+    <property name="Title" translatable="yes">CaptureWindow</property>
+    <property name="WindowPosition">CenterOnParent</property>
+    <child>
+      <widget class="Gtk.VBox" id="vbox2">
+        <property name="MemberName" />
+        <property name="Spacing">6</property>
+        <child>
+          <widget class="NXTCamView.Gtk.Widgets.StretchyImage" id="stretchyImage">
+            <property name="MemberName" />
+            <property name="Events">ButtonPressMask</property>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Statusbar" id="statusbar">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <placeholder />
+            </child>
+            <child>
+              <widget class="Gtk.ProgressBar" id="progressbar">
+                <property name="MemberName" />
+                <property name="WidthRequest">1</property>
+                <property name="Visible">False</property>
+              </widget>
+              <packing>
+                <property name="PackType">End</property>
+                <property name="Position">2</property>
+                <property name="AutoSize">True</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="PackType">End</property>
+            <property name="Position">1</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.HBox" id="hbox1">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <widget class="Gtk.CheckButton" id="showIterpolatedCheckbutton">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="Label" translatable="yes">Interpolated</property>
+                <property name="DrawIndicator">True</property>
+                <property name="HasLabel">True</property>
+                <property name="UseUnderline">True</property>
+                <signal name="Toggled" handler="OnShowIterpolatedCheckbuttonToggled" />
+              </widget>
+              <packing>
+                <property name="Position">0</property>
+                <property name="AutoSize">True</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder />
+            </child>
+            <child>
+              <placeholder />
+            </child>
+          </widget>
+          <packing>
+            <property name="PackType">End</property>
+            <property name="Position">2</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="Gtk.Bin" id="NXTCamView.Gtk.Widgets.StretchyImage" design-size="300 300">
+    <property name="MemberName" />
+    <property name="Visible">False</property>
+    <child>
+      <widget class="Gtk.ScrolledWindow" id="scrolledwindow1">
+        <property name="MemberName" />
+        <property name="CanFocus">True</property>
+        <child>
+          <widget class="Gtk.Viewport" id="GtkViewport">
+            <property name="MemberName" />
+            <property name="ShadowType">None</property>
+            <child>
+              <widget class="Gtk.Image" id="image">
+                <property name="MemberName" />
+                <signal name="ExposeEvent" handler="OnImageExposeEvent" />
+              </widget>
+            </child>
+          </widget>
         </child>
       </widget>
     </child>

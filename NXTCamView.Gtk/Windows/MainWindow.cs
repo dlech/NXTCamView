@@ -44,7 +44,7 @@ namespace NXTCamView.Gtk.Windows
         public MainWindow () : base (WindowType.Toplevel)
         {
             this.Build ();
-            StockManager.Add(new StockItem() { StockId = "camera-photo" });
+            this.CaptureAction.IconName = "camera-photo";
         }
 
         [Inject]
@@ -150,6 +150,13 @@ namespace NXTCamView.Gtk.Windows
 
             appState.State = NXTCamView.Core.State.NotConnected;
             commsPort.EnsureClosed ();
+        }
+
+        protected void OnCaptureActionActivated (object sender, EventArgs e)
+        {
+            var window = new CaptureWindow (appState, commsPort);
+            window.Show ();
+            window.StartCapture ();
         }
     }
 }

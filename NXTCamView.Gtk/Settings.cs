@@ -26,11 +26,12 @@ namespace NXTCamView.Gtk
 {
     public class Settings : ISettings
     {
-        GLib.Settings gsettings;
+        readonly GLib.Settings gsettings;
 
         public Settings ()
         {
 #if DEBUG
+            // Schema may not be installed, so this makes it findable.
             var xdg_data_dirs = Environment.GetEnvironmentVariable ("XDG_DATA_DIRS");
             var localSchemasDir = System.IO.Path.GetFullPath ("../../");
             System.Diagnostics.Debug.Assert (System.IO.Directory.Exists (
