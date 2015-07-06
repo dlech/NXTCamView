@@ -79,7 +79,7 @@ namespace NXTCamView.Gtk.Windows
 			this.CheckAction = new global::Gtk.Action ("CheckAction", global::Mono.Unix.Catalog.GetString ("Check "), null, null);
 			this.CheckAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Check ");
 			w1.Add (this.CheckAction, null);
-			this.CaptureAction = new global::Gtk.Action ("CaptureAction", global::Mono.Unix.Catalog.GetString ("Capture"), null, null);
+			this.CaptureAction = new global::Gtk.Action ("CaptureAction", global::Mono.Unix.Catalog.GetString ("Capture"), global::Mono.Unix.Catalog.GetString ("Capture and image from the camera"), null);
 			this.CaptureAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Capture");
 			w1.Add (this.CaptureAction, null);
 			this.openAction = new global::Gtk.Action ("openAction", null, null, "gtk-open");
@@ -103,14 +103,14 @@ namespace NXTCamView.Gtk.Windows
 			this.PingAction = new global::Gtk.Action ("PingAction", global::Mono.Unix.Catalog.GetString ("Ping"), null, null);
 			this.PingAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Ping");
 			w1.Add (this.PingAction, null);
-			this.connectAction = new global::Gtk.Action ("connectAction", null, null, "gtk-connect");
+			this.connectAction = new global::Gtk.Action ("connectAction", null, global::Mono.Unix.Catalog.GetString ("Connect to NxtCam"), "gtk-connect");
 			w1.Add (this.connectAction, null);
-			this.disconnectAction = new global::Gtk.Action ("disconnectAction", null, null, "gtk-disconnect");
+			this.disconnectAction = new global::Gtk.Action ("disconnectAction", null, global::Mono.Unix.Catalog.GetString ("Disconnect from NxtCam"), "gtk-disconnect");
 			w1.Add (this.disconnectAction, null);
 			this.EditAction = new global::Gtk.Action ("EditAction", global::Mono.Unix.Catalog.GetString ("_Edit"), null, null);
 			this.EditAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Edit");
 			w1.Add (this.EditAction, null);
-			this.preferencesAction = new global::Gtk.Action ("preferencesAction", global::Mono.Unix.Catalog.GetString ("_Preferences"), null, "gtk-preferences");
+			this.preferencesAction = new global::Gtk.Action ("preferencesAction", global::Mono.Unix.Catalog.GetString ("_Preferences"), global::Mono.Unix.Catalog.GetString ("Open preferences"), "gtk-preferences");
 			this.preferencesAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("_Preferences");
 			w1.Add (this.preferencesAction, null);
 			this.UIManager.InsertActionGroup (w1, 0);

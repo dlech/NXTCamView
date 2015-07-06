@@ -51,6 +51,7 @@
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Capture</property>
         <property name="ShortLabel" translatable="yes">Capture</property>
+        <property name="Tooltip" translatable="yes">Capture and image from the camera</property>
         <signal name="Activated" handler="OnCaptureActionActivated" />
       </action>
       <action id="openAction">
@@ -97,12 +98,14 @@
         <property name="Type">Action</property>
         <property name="Label" translatable="yes" />
         <property name="StockId">gtk-connect</property>
+        <property name="Tooltip" translatable="yes">Connect to NxtCam</property>
         <signal name="Activated" handler="OnConnectActionActivated" />
       </action>
       <action id="disconnectAction">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes" />
         <property name="StockId">gtk-disconnect</property>
+        <property name="Tooltip" translatable="yes">Disconnect from NxtCam</property>
         <signal name="Activated" handler="OnDisconnectActionActivated" />
       </action>
       <action id="EditAction">
@@ -115,6 +118,7 @@
         <property name="Label" translatable="yes">_Preferences</property>
         <property name="ShortLabel" translatable="yes">_Preferences</property>
         <property name="StockId">gtk-preferences</property>
+        <property name="Tooltip" translatable="yes">Open preferences</property>
         <signal name="Activated" handler="OnPreferencesActionActivated" />
       </action>
     </action-group>
