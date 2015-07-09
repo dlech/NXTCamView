@@ -98,7 +98,7 @@ namespace NXTCamView.Gtk.Windows
         {
             Application.Invoke (delegate {
                 if (e.ProgressPercentage >= 100) {
-                    progressbar.Fraction = 1;
+                    progressbar.Fraction = 1.0;
                     return;
                 }
                 //Copy in the next line
@@ -106,9 +106,13 @@ namespace NXTCamView.Gtk.Windows
                 var width = linePair.Colors.GetUpperBound (0);
                 for (int x = 0; x < width; x++) {
                     var offset = 3 * x + rawPixbuf.Rowstride * linePair.Y;
-                    Marshal.WriteInt32 (rawPixbuf.Pixels, offset, linePair.Colors [x, 0].ToArgb ());
+                    Marshal.WriteByte (rawPixbuf.Pixels, offset + 0, linePair.Colors [x, 0].R);
+                    Marshal.WriteByte (rawPixbuf.Pixels, offset + 1, linePair.Colors [x, 0].G);
+                    Marshal.WriteByte (rawPixbuf.Pixels, offset + 2, linePair.Colors [x, 0].B);
                     offset += rawPixbuf.Rowstride;
-                    Marshal.WriteInt32 (rawPixbuf.Pixels, offset, linePair.Colors [x, 1].ToArgb ());
+                    Marshal.WriteByte (rawPixbuf.Pixels, offset + 0, linePair.Colors [x, 1].R);
+                    Marshal.WriteByte (rawPixbuf.Pixels, offset + 1, linePair.Colors [x, 1].G);
+                    Marshal.WriteByte (rawPixbuf.Pixels, offset + 2, linePair.Colors [x, 1].B);
                 }
                 stretchyImage.NotifyPixbufChanged ();
                 progressbar.Fraction = e.ProgressPercentage / 100d;
@@ -134,29 +138,38 @@ namespace NXTCamView.Gtk.Windows
 
         void completeFetch(RunWorkerCompletedEventArgs e)
         {
-            if (e.Cancelled)
-            {
+            if (e.Cancelled) {
                 statusbar.Push (mainStatusBarContext, "Aborted");
                 statusbar.ModifyText (StateType.Normal, new Gdk.Color () { Red = 255 });
                 //btnAbort.Enabled = false;
                 return;
             }
-            if (e.Result is string)
-            {
-                statusbar.Push (mainStatusBarContext, (string) e.Result);
+            var errorMessage = e.Result as string;
+            if (errorMessage != null) {
+                statusbar.Push (mainStatusBarContext, errorMessage);
                 statusbar.ModifyText (StateType.Normal, new Gdk.Color () { Red = 255 });
                 //btnAbort.Enabled = false;
                 return;
             }
 
             var bitmap = (Bitmap)e.Result;
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            var rect = new System.Drawing.Rectangle (0, 0, bitmap.Width, bitmap.Height);
             var data = bitmap.LockBits (rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             interpolatedPixbuf = new Pixbuf (Colorspace.Rgb, false, 8, bitmap.Width, bitmap.Height);
-            for (int i = 0; i < data.Stride * data.Height; i++) {
-                Marshal.WriteByte (interpolatedPixbuf.Pixels, i, Marshal.ReadByte (data.Scan0, i));
+            var pixelCount = data.Stride * data.Height / 3;
+            for (int i = 0; i < pixelCount; i++) {
+                var offset = i * 3;
+                // System.Drawing.Bitmap is BRG order, Gtk.Pixmap is RGB order.
+                var b = Marshal.ReadByte (data.Scan0, offset + 0);
+                var g = Marshal.ReadByte (data.Scan0, offset + 1);
+                var r = Marshal.ReadByte (data.Scan0, offset + 2);
+                Marshal.WriteByte (interpolatedPixbuf.Pixels, offset + 0, r);
+                Marshal.WriteByte (interpolatedPixbuf.Pixels, offset + 1, g);
+                Marshal.WriteByte (interpolatedPixbuf.Pixels, offset + 2, b);
             }
             bitmap.UnlockBits (data);
+
+            showIterpolatedCheckbutton.Active = true;
             //_isCaptured = true;
             //_colorForm.SetVisibility(true);
         }
