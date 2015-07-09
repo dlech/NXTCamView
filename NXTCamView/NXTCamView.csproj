@@ -303,6 +303,12 @@
   <ItemGroup>
     <Content Include="CameraPic.JPG" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NXTCamView.Core\NXTCamView.Core.csproj">
+      <Project>{ba681407-63f9-4a36-b57f-f89c526c8373}</Project>
+      <Name>NXTCamView.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -311,10 +317,4 @@
   -->
   <Target Name="AfterBuild">
   </Target>
-  <ItemGroup>
-    <ProjectReference Include="..\NXTCamView.Core\NXTCamView.Core.csproj">
-      <Project>{BA681407-63F9-4A36-B57F-F89C526C8373}</Project>
-      <Name>NXTCamView.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

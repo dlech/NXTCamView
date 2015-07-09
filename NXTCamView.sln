@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9787A8FB-2497-48B2-BF89-FEF565A03236}"
 	ProjectSection(SolutionItems) = preProject
 		build\AssemblyInfoCommon.cs = build\AssemblyInfoCommon.cs
@@ -15,10 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamView", "NXTCamView\NXTCamView.csproj", "{3B21513D-9D72-4301-B835-DD246194A9AE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BA681407-63F9-4A36-B57F-F89C526C8373} = {BA681407-63F9-4A36-B57F-F89C526C8373}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NXTCamViewSetup", "NXTCamViewSetup\NXTCamViewSetup.vdproj", "{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamViewTests", "NXTCamViewTests\NXTCamViewTests.csproj", "{39F1EA52-1B27-46C1-8C8E-578CDD644E12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A6E92E3E-AA30-40FF-80BF-B11D68D90E75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NXTCamView.Core", "NXTCamView.Core\NXTCamView.Core.csproj", "{BA681407-63F9-4A36-B57F-F89C526C8373}"
 EndProject
@@ -32,14 +39,6 @@ Global
 		ReleaseInstall|Any CPU = ReleaseInstall|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.DebugInstall|Any CPU.ActiveCfg = Debug|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.DebugInstall|Any CPU.Build.0 = Debug|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.ReleaseInstall|Any CPU.ActiveCfg = ReleaseInstall|Any CPU
-		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.ReleaseInstall|Any CPU.Build.0 = ReleaseInstall|Any CPU
 		{3B21513D-9D72-4301-B835-DD246194A9AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B21513D-9D72-4301-B835-DD246194A9AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B21513D-9D72-4301-B835-DD246194A9AE}.DebugInstall|Any CPU.ActiveCfg = Debug|Any CPU
@@ -53,14 +52,14 @@ Global
 		{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}.DebugInstall|Any CPU.Build.0 = Debug|Any CPU
 		{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EC87F79-DE90-46C8-B6BF-9B4DD0393B75}.ReleaseInstall|Any CPU.ActiveCfg = ReleaseInstall|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.DebugInstall|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.DebugInstall|Any CPU.Build.0 = Debug|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.ReleaseInstall|Any CPU.ActiveCfg = Release|Any CPU
-		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.ReleaseInstall|Any CPU.Build.0 = Release|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.DebugInstall|Any CPU.ActiveCfg = Debug|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.DebugInstall|Any CPU.Build.0 = Debug|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.ReleaseInstall|Any CPU.ActiveCfg = ReleaseInstall|Any CPU
+		{39F1EA52-1B27-46C1-8C8E-578CDD644E12}.ReleaseInstall|Any CPU.Build.0 = ReleaseInstall|Any CPU
 		{BA681407-63F9-4A36-B57F-F89C526C8373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BA681407-63F9-4A36-B57F-F89C526C8373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA681407-63F9-4A36-B57F-F89C526C8373}.DebugInstall|Any CPU.ActiveCfg = Debug|Any CPU
@@ -69,8 +68,17 @@ Global
 		{BA681407-63F9-4A36-B57F-F89C526C8373}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA681407-63F9-4A36-B57F-F89C526C8373}.ReleaseInstall|Any CPU.ActiveCfg = Release|Any CPU
 		{BA681407-63F9-4A36-B57F-F89C526C8373}.ReleaseInstall|Any CPU.Build.0 = Release|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.DebugInstall|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.DebugInstall|Any CPU.Build.0 = Debug|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.ReleaseInstall|Any CPU.ActiveCfg = Release|Any CPU
+		{9FCD41DC-78E7-4FA5-BCFC-6BFB0569BFD5}.ReleaseInstall|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
@@ -216,7 +224,7 @@ Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = NXTCamView1.vsmdi
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NXTCamView1.vsmdi
 	EndGlobalSection
 EndGlobal
