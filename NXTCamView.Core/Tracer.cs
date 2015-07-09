@@ -16,8 +16,8 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
+using System;
 using System.Diagnostics;
-using System.Text;
 
 namespace NXTCamView.Core
 {
@@ -43,7 +43,7 @@ namespace NXTCamView.Core
 
         public void TraceRead( byte[] data )
         {
-            string myString = Encoding.ASCII.GetString(data);
+            string myString = BitConverter.ToString (data);
             Debug.WriteLine("Reading: " + myString);
         }
 
