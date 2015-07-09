@@ -148,7 +148,7 @@ namespace NXTCamView.Forms
 
             setupStripCommands();
 
-            if ( Settings.Default.CheckForUpdates ) _updater.CheckForUpdates();
+            //if ( Settings.Default.CheckForUpdates ) _updater.CheckForUpdates();
 
             tsslVersion.Text = "";
 
