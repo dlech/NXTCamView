@@ -48,7 +48,7 @@ namespace NXTCamView
             public override void Load()
             {
                 Bind<ITracer>().To<Tracer>();
-                Bind<IAppState>().To<AppState>();
+                Bind<IAppState>().ToConstant<AppState>(new AppState());
                 Bind<IUpdater>().To<Updater>();
                 Bind<ISettings> ().ToConstant<Properties.Settings> (Properties.Settings.Default);
 
